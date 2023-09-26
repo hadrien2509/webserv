@@ -1,37 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Server.cpp                                         :+:      :+:    :+:   */
+/*   Location.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/09/26 17:25:19 by hgeissle         ###   ########.fr       */
+/*   Created: 2023/09/26 17:20:40 by hgeissle          #+#    #+#             */
+/*   Updated: 2023/09/26 17:21:02 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
+#ifndef LOCATION_HPP
+# define LOCATION_HPP
 
-Server::Server()
-{
-	
-}
+# include <iostream>
 
-Server::Server(const Server &copy)
+class Location
 {
-	*this = copy;
-}
-
-Server::~Server()
-{
-	
-}
-
-Server &Server::operator=(const Server &copy)
-{
-	if (this != &copy)
-	{
+	private:
 		
-	}
-	return (*this);
-}
+	public :
+		Location();
+		Location(const Location &);
+		~Location();
+		Location &operator=(const Location &);
+};
+
+#endif

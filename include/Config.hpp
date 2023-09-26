@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/09/26 16:46:24 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/09/26 17:34:16 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <string>
 # include <vector>
 # include "Server.hpp"
+# include "Location.hpp"
 
 class Config
 {
@@ -30,10 +31,12 @@ class Config
 		void		_parseListen(std::istringstream &);
 		void		_openConfig(const std::string &);
 		std::string	_ignoreComments(std::string line);
-		// std::vector<Server> _cluster;
+		//std::vector<Server> _cluster;
 		std::ifstream _configFile;
 		
 	public :
+		std::vector<int>	getPorts() const;
+		std::string 		getServerName() const;
 
 		Config();
 		Config(const std::string &);

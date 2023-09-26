@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/09/26 16:47:52 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/09/26 17:25:02 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,18 @@
 
 void Config::_parseListen(std::istringstream &ss)
 {
-	std::string port;
+	int	port;
 	ss >> port;
+	if (ss.fail())
+		throw std::runtime_error("Invalid port");
+	_ports.push_back(port);
 	std::cout << "Port : " << port << std::endl;
 }
 
 void Config::_parseServerName(std::istringstream &ss)
 {
-	std::string serverName;
-	ss >> serverName;
-	std::cout << "Server name : " << serverName << std::endl;
+	ss >> _serverName;
+	std::cout << "Server name : " << _serverName << std::endl;
 }
 
 std::string Config::_ignoreComments(std::string line) //skip comments and empty lines

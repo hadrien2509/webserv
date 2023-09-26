@@ -1,33 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Server.cpp                                         :+:      :+:    :+:   */
+/*   Location.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/09/26 17:25:19 by hgeissle         ###   ########.fr       */
+/*   Created: 2023/09/26 17:21:31 by hgeissle          #+#    #+#             */
+/*   Updated: 2023/09/26 17:25:09 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
+#include "Location.hpp"
 
-Server::Server()
+Location::Location()
 {
 	
 }
 
-Server::Server(const Server &copy)
+Location::Location(const Location &copy)
 {
 	*this = copy;
 }
 
-Server::~Server()
+Location::~Location()
 {
 	
 }
 
-Server &Server::operator=(const Server &copy)
+Location &Location::operator=(const Location &copy)
 {
 	if (this != &copy)
 	{
