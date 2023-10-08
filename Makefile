@@ -3,21 +3,46 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+         #
+#    By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/14 18:00:17 by hgeissle          #+#    #+#              #
-#    Updated: 2023/09/26 14:07:13 by hgeissle         ###   ########.fr        #
+#    Updated: 2023/10/08 10:31:43 by jusilanc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+# ============================================================================= #
+
 NAME = Webserv
 
-SRCS =	srcs/main.cpp\
-		srcs/Config.cpp\
+# ============================================================================= #
+
+SRCS =	main.cpp\
+		Config.cpp\
+
+CLASS =
+
+TEMPLATE =
+
+# ============================================================================= #
 		
+BASE_SRC = $(addprefix srcs/, $(SRCS))
+CLASS_SRC = $(addprefix srcs/class/, $(CLASS))
+TEMPLATE_SRC = $(addprefix srcs/template/, $(TEMPLATE))
+
+# ============================================================================= #
+
 INCLUDE_DIR = include
-		
-OBJS		= $(SRCS:.cpp=.o)
+
+# ============================================================================= #
+
+BASE_OBJS = $(BASE_SRC:.cpp=.o)
+CLASS_OBJS = $(CLASS_SRC:.cpp=.o)
+TEMPLATE_OBJS = $(TEMPLATE_SRC:.cpp=.o)
+
+OBJS		= $(BASE_OBJS) $(CLASS_OBJS) $(TEMPLATE_OBJS)
+
+# ============================================================================= #
+
 RM			= rm -f
 COMPILER	= c++
 FLAGS		= -Wall -Wextra -Werror -std=c++98 -fsanitize=address -g3
@@ -27,6 +52,8 @@ FLAGS		= -Wall -Wextra -Werror -std=c++98 -fsanitize=address -g3
 
 $(NAME): ${OBJS}
 	${COMPILER} ${FLAGS} $(OBJS) -o $(NAME)
+
+# ============================================================================= #
 
 all: $(NAME)
     
@@ -39,3 +66,5 @@ clean:
 re: fclean all
 
 .PHONY: all clean fclean re .cpp.o
+
+# ============================================================================= #
