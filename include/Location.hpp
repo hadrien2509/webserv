@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:20:40 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/06 13:20:47 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/09 14:28:19 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,11 @@ class Location
 {
 	private:
 		std::vector<std::string>	_index;
-		DIR*						_root;	
+		DIR*						_root;
+		std::string					_autoIndex;
+		std::string					_allowMethods;
+		std::string					_cgiExtension;
+		std::string					_cgiPath;
 		
 	public :
 		Location();
@@ -27,12 +31,12 @@ class Location
 		~Location();
 		Location &operator=(const Location &);
 		
-		std::string		getRoot() const;
-		std::string		getIndex() const;
-		std::string		getAutoIndex() const;
-		std::string		getAllowMethods() const;
-		std::string		getCgiExtension() const;
-		std::string		getCgiPath() const;
+		DIR*							getRoot() const;
+		std::vector<std::string>		getIndex() const;
+		std::string						getAutoIndex() const;
+		std::string						getAllowMethods() const;
+		std::string						getCgiExtension() const;
+		std::string						getCgiPath() const;
 
 		void			setRoot(DIR *);
 		void			addIndex(std::string);

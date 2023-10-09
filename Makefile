@@ -4,7 +4,7 @@ NAME = Webserv
 
 # ============================================================================= #
 
-SRCS =	main.cpp Config.cpp
+SRCS =	main.cpp Config.cpp Location.cpp Server.cpp
 
 CLASS =
 

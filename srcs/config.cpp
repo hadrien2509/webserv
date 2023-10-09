@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/06 17:06:16 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/09 14:20:17 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,10 +178,6 @@ void Config::_parseLocation(std::istringstream &ss, Server *server)
 		// 	_parseAllowMethods(ss, location);
 		// else if (type == "cgi")
 		// 	_parseCgi(ss, location);
-		else if (type == "}")
-			return ;
-		else
-			throw std::runtime_error("Unknown type in configuration file");
 		else if (type == "}")
 			return ;
 		else

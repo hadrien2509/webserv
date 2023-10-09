@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/06 16:20:38 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/09 14:31:48 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,14 @@ void	Server::setHost(std::string host)
 	_host = host;
 }
 
-void	Server::setRoot(std::string root)
+void	Server::setRoot(DIR* root)
 {
 	_root = root;
 }
 
-void	Server::setIndex(std::vector<std::string> index)
+void	Server::addIndex(std::string index)
 {
-	_index = index;
+	_index.push_back(index);
 }
 
 void	Server::setErrorPage(std::string errorPage)

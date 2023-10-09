@@ -3,6 +3,8 @@
 
 # include "Config.hpp"
 
+class Location;
+
 class Server
 {
     public:
@@ -32,6 +34,6 @@ class Server
 
         std::string 						_cgi_path;  //needed here?
         std::string 						_cgi_extension;
-};	
+};
 
 #endif
