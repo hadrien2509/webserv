@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:21:31 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/09 14:29:19 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/09 18:49:53 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,39 +35,45 @@ Location &Location::operator=(const Location &copy)
 	return (*this);
 }
 
-DIR*		Location::getRoot() const
+const DIR*		Location::getRoot() const
 {
 	return (this->_root);
 }
 
-std::vector<std::string>		Location::getIndex() const
+std::string		Location::getRootPath() const
+{
+	return (this->_rootPath);
+}
+
+const std::vector<std::string>&	Location::getIndex() const
 {
 	return (this->_index);
 }
 
-std::string		Location::getAutoIndex() const
+const std::string&	Location::getAutoIndex() const
 {
 	return (this->_autoIndex);
 }
 
-std::string		Location::getAllowMethods() const
+const std::string&	Location::getAllowMethods() const
 {
 	return (this->_allowMethods);
 }
 
-std::string		Location::getCgiExtension() const
+const std::string&	Location::getCgiExtension() const
 {
 	return (this->_cgiExtension);
 }
 
-std::string		Location::getCgiPath() const
+const std::string&	Location::getCgiPath() const
 {
 	return (this->_cgiPath);
 }
 
-void			Location::setRoot(DIR *dir)
+void Location::setRoot(DIR *dir, std::string rootPath)
 {
 	this->_root = dir;
+	this->_rootPath = rootPath;
 }
 
 void			Location::addIndex(std::string index)

@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/09 14:20:17 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/09 18:47:39 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,10 @@ void Config::_parseServer(std::istringstream &ssold)
 	ssold >> brace;
 	if ((brace != "{") || ssold.fail())
 		throw std::runtime_error("Invalid server block");
+
 	Server* server = new Server;
+	_cluster.push_back(server);
+
 	std::string line, type;
 	while (std::getline(_configFile, line))
 	{
@@ -61,7 +64,7 @@ void Config::_parseServer(std::istringstream &ssold)
 		ss >> type;
 		if (type == "location")
 			_parseLocation(ss, server);
-		if (type == "server")
+		else if (type == "server")
 			throw std::runtime_error("Server block inside server block");
 		else if (type == "listen")
 			_parseListen(ss, server);
@@ -116,7 +119,7 @@ void Config::_parseRoot(std::istringstream &ss, Location *location)
 	dir = opendir(_root.c_str());
 	if (!dir)
 		throw std::runtime_error("Invalid root file path");
-	location->setRoot(dir);
+	location->setRoot(dir, _root);
 	std::cout << "Root : " << _root << std::endl;
 }
 
@@ -132,7 +135,7 @@ void Config::_parseRoot(std::istringstream &ss, Server *server)
 	dir = opendir(_root.c_str());
 	if (!dir)
 		throw std::runtime_error("Invalid root file path");
-	server->setRoot(dir);
+	server->setRoot(dir, _root);
 	std::cout << "Root : " << _root << std::endl;
 }
 
@@ -151,7 +154,6 @@ void Config::_parseLocation(std::istringstream &ss, Server *server)
 	ressourceType = _getRessourceType(ss);
 
 	Location *location = new Location;
-	std::cout << ressourceType << std::endl;
 	server->addLocation(ressourceType, location);
 
 	std::string line, type;

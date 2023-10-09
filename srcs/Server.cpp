@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/09 14:31:48 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/09 18:53:06 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,10 @@ void	Server::setHost(std::string host)
 	_host = host;
 }
 
-void	Server::setRoot(DIR* root)
+void	Server::setRoot(DIR* root, std::string rootPath)
 {
 	_root = root;
+	_rootPath = rootPath;
 }
 
 void	Server::addIndex(std::string index)
@@ -79,4 +80,24 @@ void	Server::addPort(int port)
 void	Server::addLocation(std::string ressourceType, Location *location)
 {
 	_locations[ressourceType] = location;
+}
+
+const std::string&	Server::getServerName() const
+{
+	return (_serverName);
+}
+
+DIR*			Server::getRoot() const
+{
+	return (_root);
+}
+
+std::string		Server::getRootPath() const
+{
+	return (_rootPath);
+}
+
+const std::vector<std::string>&	Server::getIndex() const
+{
+	return (_index);
 }

@@ -15,7 +15,7 @@ class Server
 
 		void	setServerName(std::string serverName);
 		void	setHost(std::string host);
-		void	setRoot(DIR * root);
+		void	setRoot(DIR * root, std::string rootPath);
 		void	addIndex(std::string index);
 		void	setErrorPage(std::string errorPage);
 		void	setCgiPath(std::string cgi_path);
@@ -23,12 +23,20 @@ class Server
 		void	addPort(int port);
 		void	addLocation(std::string ressourceType, Location *location);
 
+		const int&			getPort() const;
+		const std::string&	getServerName() const;
+		DIR*				getRoot() const;
+		std::string			getRootPath() const;
+		const std::vector<std::string>&	getIndex() const;
+		
+
     private:
 		std::vector<int> 					_ports;
 		std::string							_serverName;
 		std::map<std::string,Location*>		_locations;
 		std::string							_host;
 		DIR*								_root;
+		std::string							_rootPath;
 		std::vector<std::string>			_index;
 		std::string							_errorPage;
 

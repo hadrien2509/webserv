@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/09 14:30:00 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/09 18:40:00 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@
 # include <vector>
 # include <map>
 # include <dirent.h>
+# include <sys/socket.h> // For socket functions
+# include <netinet/in.h> // For sockaddr_in
+# include <iostream> // For cout
+# include <unistd.h> // For read
+# include <string.h> // For memset
 
 # include "Location.hpp"
 # include "Server.hpp"
@@ -51,9 +56,9 @@ class Config
 		std::ifstream			_configFile;
 		
 	public :
-		std::vector<int>	getPorts() const;
-		std::string 		getServerName() const;
-
+	
+		void run();
+		
 		Config();
 		Config(const std::string &);
 		~Config();
