@@ -1,11 +1,102 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bienvenue chez les Webmajordomes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #007BFF;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+        }
+
+        p {
+            font-size: 18px;
+            margin: 20px;
+        }
+
+        nav {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav li {
+            margin: 0 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Bienvenue chez les Webmajordomes</h1>
-    <p>C'est un plaisir de vous accueillir sur notre site.</p>
+    <header>
+        <h1>Bienvenue chez les Webmajordomes</h1>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#presentation">Présentation</a></li>
+            <li><a href="#services">Nos Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="presentation">
+            <h2>Présentation</h2>
+            <p>Bienvenue sur notre site Web. Chez les Webmajordomes, nous sommes dédiés à fournir les meilleurs services web.</p>
+        </section>
+        
+        <section id="services">
+            <h2>Nos Services</h2>
+            <ul>
+                <li>Conception de sites Web</li>
+                <li>Développement d'applications Web</li>
+                <li>Optimisation SEO</li>
+                <li>Hébergement Web</li>
+            </ul>
+        </section>
+        
+        <section id="contact">
+            <h2>Contact</h2>
+            <p>N'hésitez pas à nous contacter pour toute question ou demande de devis.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Webmajordomes. Tous droits réservés.</p>
+    </footer>
 </body>
 </html>
