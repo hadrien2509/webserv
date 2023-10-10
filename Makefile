@@ -1,56 +1,33 @@
-# ============================================================================= #
+NAME = webserv
 
-NAME = Webserv
+FLAGS = -Wall -Werror -Wextra -std=c++98
+FSANITIZE = -g3 -fsanitize=address
 
-# ============================================================================= #
-
-SRCS =	main.cpp Config.cpp Location.cpp Server.cpp Run.cpp
-CLASS =
-
-TEMPLATE =
-
-# ============================================================================= #
-		
-BASE_SRC = $(addprefix srcs/, $(SRCS))
-CLASS_SRC = $(addprefix srcs/class/, $(CLASS))
-TEMPLATE_SRC = $(addprefix srcs/template/, $(TEMPLATE))
-
-# ============================================================================= #
-
+FILES = main.cpp config.cpp Location.cpp Server.cpp Run.cpp
 INCLUDE_DIR = include
 
-# ============================================================================= #
-
-BASE_OBJS = $(BASE_SRC:.cpp=.o)
-CLASS_OBJS = $(CLASS_SRC:.cpp=.o)
-TEMPLATE_OBJS = $(TEMPLATE_SRC:.cpp=.o)
-
-OBJS		= $(BASE_OBJS) $(CLASS_OBJS) $(TEMPLATE_OBJS)
-
-# ============================================================================= #
-
-RM			= rm -f
-COMPILER	= c++
-FLAGS		= -Wall -Wextra -Werror -std=c++98 -fsanitize=address -g3
-
-.cpp.o:
-	${COMPILER} ${FLAGS} -I$(INCLUDE_DIR) -c $< -o ${<:.cpp=.o}
-
-$(NAME): ${OBJS}
-	${COMPILER} ${FLAGS} $(OBJS) -o $(NAME)
-
-# ============================================================================= #
+OBJS_DIR = objs
+SRCS_DIR = srcs
+SRCS = $(addprefix ${SRCS_DIR}/, $(FILES))
+OBJS = $(addprefix ${OBJS_DIR}/, ${FILES:%.cpp=%.o})
+RM		= rm -rf
 
 all: $(NAME)
-    
-fclean: clean
-	$(RM) $(NAME)
-    
+
+$(NAME): $(OBJS)
+	c++ $(FLAGS) -o $(NAME) $(OBJS) $(FSANITIZE)
+
+${OBJS_DIR}/%.o: ${SRCS_DIR}/%.cpp
+	@mkdir -p ${@D}
+	c++ $(FLAGS) -I $(INCLUDE_DIR) $(FSANITIZE) -c $< -o $@
+
 clean:
-	$(RM) -f $(OBJS) $(OBJS_B)
-    
+	@${RM} -r ${OBJS_DIR}
+	rm -f $(OBJS)
+
+fclean: clean
+	rm -f $(NAME)
+
 re: fclean all
 
-.PHONY: all clean fclean re .cpp.o
-
-# ============================================================================= #
+.PHONY: all clean fclean re
