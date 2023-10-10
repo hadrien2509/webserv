@@ -29,6 +29,7 @@ class Server
 		std::string			getRootPath() const;
 		const std::vector<std::string>&	getIndex() const;
 		
+		void				openRoot();
 
     private:
 		std::vector<int> 					_ports;
