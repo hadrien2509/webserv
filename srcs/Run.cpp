@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/10 15:40:50 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/10 18:01:48 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,8 @@ void Config::run()
 		file.close(); // Close the file when done
 
 		// Now, 'file_contents' contains the entire file as a string
-		std::cout << file_contents << std::endl;
+		
+		// std::cout << file_contents << std::endl;
 		
 		std::string response = file_contents;
 		send(connection, response.c_str(), response.size(), 0);
