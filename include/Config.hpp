@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/10 18:21:29 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/11 11:07:56 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 
 # include "Location.hpp"
 # include "Server.hpp"
+# include "Request.hpp"
 
 class Server;
 

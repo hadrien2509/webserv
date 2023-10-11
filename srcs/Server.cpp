@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/10 15:38:37 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/11 12:11:11 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,4 +107,9 @@ void Server::openRoot()
 	_root = opendir(_rootPath.c_str());
 	if (_root == NULL)
 		throw std::runtime_error("Error: Could not open root directory" + _rootPath);
+}
+
+const std::map<std::string,Location*>&	Server::getLocations() const
+{
+	return (_locations);
 }

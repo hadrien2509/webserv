@@ -28,6 +28,7 @@ class Server
 		DIR*				getRoot() const;
 		std::string			getRootPath() const;
 		const std::vector<std::string>&	getIndex() const;
+		const std::map<std::string,Location*>&	getLocations() const;
 		
 		void				openRoot();
 
