@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/11 13:21:40 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/11 14:47:15 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ void Config::run()
 		std::string filePath;
 		while ((entry = readdir(_cluster[0]->getRoot())) != NULL)
 		{
-			// std::cout << entry->d_name << std::endl;
 			if (entry->d_name == request.getPath().substr(1, request.getPath().size() - 1))
 			{
 				filePath = _cluster[0]->getRootPath() + request.getPath();
