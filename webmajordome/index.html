@@ -6,15 +6,18 @@
     <title>Bienvenue chez les Webmajordomes</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: #fff;
             margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         header {
             background-color: #007BFF;
-            color: #fff;
             text-align: center;
             padding: 20px;
         }
@@ -30,7 +33,6 @@
 
         nav {
             background-color: #333;
-            color: #fff;
             text-align: center;
             padding: 10px;
         }
@@ -52,11 +54,21 @@
             font-weight: bold;
         }
 
+        main {
+            flex-grow: 1;
+        }
+
         footer {
             background-color: #333;
-            color: #fff;
             text-align: center;
             padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .logo {
+            white-space: pre;
         }
     </style>
 </head>
@@ -74,6 +86,18 @@
     </nav>
 
     <main>
+		<div class="logo">
+            <!-- Your ASCII Art Logo -->
+	$$\      $$\ $$$$$$$$\ $$$$$$$\   $$$$$$\  $$$$$$$$\ $$$$$$$\  $$\    $$\ 
+	$$ | $\  $$ |$$  _____|$$  __$$\ $$  __$$\ $$  _____|$$  __$$\ $$ |   $$ |
+	$$ |$$$\ $$ |$$ |      $$ |  $$ |$$ /  \__|$$ |      $$ |  $$ |$$ |   $$ |
+	$$ $$ $$\$$ |$$$$$\    $$$$$$$\ |\$$$$$$\  $$$$$\    $$$$$$$  |\$$\  $$  |
+	$$$$  _$$$$ |$$  __|   $$  __$$\  \____$$\ $$  __|   $$  __$$<  \$$\$$  / 
+	$$$  / \$$$ |$$ |      $$ |  $$ |$$\   $$ |$$ |      $$ |  $$ |  \$$$  /  
+	$$  /   \$$ |$$$$$$$$\ $$$$$$$  |\$$$$$$  |$$$$$$$$\ $$ |  $$ |   \$  /   
+	\__/     \__|\________|\_______/  \______/ \________|\__|  \__|    \_/    
+        </div>
+		<img src="rickroll.jpg" />
         <section id="presentation">
             <h2>Présentation</h2>
             <p>Bienvenue sur notre site Web. Chez les Webmajordomes, nous sommes dédiés à fournir les meilleurs services web.</p>

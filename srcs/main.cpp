@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: samy <samy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:44:27 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/09 15:33:52 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/11 08:57:33 by samy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,22 @@
 #include <sys/socket.h> // For socket functions
 #include <netinet/in.h> // For sockaddr_in
 
+void displayName() {
+    std::cout << "$$\\      $$\\ $$$$$$$$\\ $$$$$$$\\   $$$$$$\\  $$$$$$$$\\ $$$$$$$\\  $$\\    $$\\" << std::endl;
+    std::cout << "$$ | $\\  $$ |$$  _____|$$  __$$\\ $$  __$$\\ $$  _____|$$  __$$\\ $$ |   $$ |" << std::endl;
+    std::cout << "$$ |$$$\\ $$ |$$ |      $$ |  $$ |$$ /  \\__|$$ |      $$ |  $$ |$$ |   $$ |" << std::endl;
+    std::cout << "$$ $$ $$\\$$ |$$$$$\\    $$$$$$$\\ |\\$$$$$$\\  $$$$$\\    $$$$$$$  |\\$$\\  $$  |" << std::endl;
+    std::cout << "$$$$  _$$$$ |$$  __|   $$  __$$\\  \\____$$\\ $$  __|   $$  __$$<  \\$$\\$$  /" << std::endl;
+    std::cout << "$$$  / \\$$$ |$$ |      $$ |  $$ |$$\\   $$ |$$ |      $$ |  $$ |  \\$$$  /" << std::endl;
+    std::cout << "$$  /   \\$$ |$$$$$$$$\\ $$$$$$$  |\\$$$$$$  |$$$$$$$$\\ $$ |  $$ |   \\$  /" << std::endl;
+    std::cout << "\\__/     \\__|\\________|\\_______/  \\______/ \\________|\\__|  \\__|    \\_/" << std::endl;
+}
+
 int main(int ac, char **av)
 {
 	std::string configPath;
-
+	
+	displayName();
 	switch (ac)
 	{
 		case 1:
@@ -33,7 +45,7 @@ int main(int ac, char **av)
 	try
 	{
 		Config conf(configPath);
-		
+		conf.init();
 		conf.run();
 	}
 	catch (std::exception &e)

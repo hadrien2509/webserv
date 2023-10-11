@@ -15,11 +15,13 @@ RM		= rm -rf
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	c++ $(FLAGS) -o $(NAME) $(OBJS) $(FSANITIZE)
+	@c++ $(FLAGS) -o $(NAME) $(OBJS) $(FSANITIZE)
+	@echo "\n\033[0;32mDone !\n\033[0m"
 
 ${OBJS_DIR}/%.o: ${SRCS_DIR}/%.cpp
 	@mkdir -p ${@D}
-	c++ $(FLAGS) -I $(INCLUDE_DIR) $(FSANITIZE) -c $< -o $@
+	@printf "\033[0;33mGenerating webserv objects... %-38.38s\r" $@
+	@c++ $(FLAGS) -I $(INCLUDE_DIR) $(FSANITIZE) -c $< -o $@
 
 clean:
 	@${RM} -r ${OBJS_DIR}
