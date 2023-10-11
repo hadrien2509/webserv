@@ -4,11 +4,13 @@ FLAGS = -Wall -Werror -Wextra -std=c++98
 FSANITIZE = -g3 -fsanitize=address
 
 FILES = main.cpp Config.cpp Location.cpp Server.cpp Run.cpp Request.cpp
+FILES_CGI = Cgi.cpp cgiHandler.cpp
 INCLUDE_DIR = include
 
 OBJS_DIR = objs
 SRCS_DIR = srcs
 SRCS = $(addprefix ${SRCS_DIR}/, $(FILES))
+SRCS_CGI = $(addprefix ${SRCS_DIR}/cgi/, $(FILES_CGI))
 OBJS = $(addprefix ${OBJS_DIR}/, ${FILES:%.cpp=%.o})
 RM		= rm -rf
 
