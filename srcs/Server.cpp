@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/11 12:11:11 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/11 19:06:43 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,6 @@ void	Server::setRoot(DIR* root, std::string rootPath)
 void	Server::addIndex(std::string index)
 {
 	_index.push_back(index);
-}
-
-void	Server::setErrorPage(std::string errorPage)
-{
-	_errorPage = errorPage;
 }
 
 void	Server::setCgiPath(std::string cgi_path)
@@ -112,4 +107,33 @@ void Server::openRoot()
 const std::map<std::string,Location*>&	Server::getLocations() const
 {
 	return (_locations);
+}
+
+void Server::setErrorPage(int errorCode, std::string errorPage)
+{
+	_errorPage[errorCode] = errorPage;
+}
+
+const std::string Server::getRessource(Request &request) const
+{
+	if (request.getPath() == "/")
+	{
+		for (std::vector<std::string>::const_iterator it = _index.begin(); it != _index.end(); it++)
+		{
+			std::string	completePath = _rootPath + (*it);
+			if (access(completePath.c_str(), F_OK) == 0)
+				return (*it);
+		}
+		if (_autoIndex)
+		{
+			std::cout << "AutoIndex" << std::endl;
+			return (_errorPage.at(403));
+		}
+		else
+			return (_errorPage.at(403));
+	}
+	std::string	completePath = _rootPath + request.getPath();
+	if (access(completePath.c_str(), F_OK) == 0)
+		return (completePath);
+	return (_errorPage.at(404));
 }

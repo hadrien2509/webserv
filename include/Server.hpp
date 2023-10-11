@@ -5,6 +5,8 @@
 
 class Location;
 
+class Request;
+
 class Server
 {
     public:
@@ -17,7 +19,7 @@ class Server
 		void	setHost(std::string host);
 		void	setRoot(DIR * root, std::string rootPath);
 		void	addIndex(std::string index);
-		void	setErrorPage(std::string errorPage);
+		void	setErrorPage(int errorCode, std::string errorPage);
 		void	setCgiPath(std::string cgi_path);
 		void	setCgiExtension(std::string cgi_extension);
 		void	addPort(int port);
@@ -30,7 +32,8 @@ class Server
 		const std::vector<std::string>&	getIndex() const;
 		const std::map<std::string,Location*>&	getLocations() const;
 		
-		void				openRoot();
+		void					openRoot();
+		const std::string		getRessource(Request &request) const;
 
     private:
 		std::vector<int> 					_ports;
@@ -40,7 +43,8 @@ class Server
 		DIR*								_root;
 		std::string							_rootPath;
 		std::vector<std::string>			_index;
-		std::string							_errorPage;
+		bool								_autoIndex;
+		std::map<int, std::string>			_errorPage;
 
         std::string 						_cgi_path;  //needed here?
         std::string 						_cgi_extension;

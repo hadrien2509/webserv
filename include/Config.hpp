@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/11 11:07:56 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/11 18:50:04 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ class Config
 		void		_parseListen(std::istringstream &, Server *);
 		void		_parseRoot(std::istringstream &, Server *);
 		void		_parseIndex(std::istringstream &, Server *);
+		void		_parseErrorPage(std::istringstream &, Server *);
 		
 		void		_parseRoot(std::istringstream &, Location *);
 		void		_parseIndex(std::istringstream &, Location *);
