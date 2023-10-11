@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/11 18:51:54 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/11 20:48:42 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,7 @@ void Config::_parseLocation(std::istringstream &ss, Server *server)
 
 void Config::_openConfig(const std::string &input)
 {
-	_configFile.open(input);
+	_configFile.open(input.c_str());
 	if (!_configFile.is_open())
 		throw std::runtime_error("Failed to open configuration file");
 }
@@ -226,4 +226,6 @@ Config::Config(const std::string &input)
 Config::~Config()
 {
 	_configFile.close();
+	for (std::vector<Server*>::iterator it = _cluster.begin(); it != _cluster.end(); it++)
+		delete (*it);
 }

@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/11 18:50:04 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/11 20:35:53 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <string>
 # include <vector>
 # include <map>
+# include <cstdlib>
 # include <dirent.h>
 # include <sys/socket.h> // For socket functions
 # include <netinet/in.h> // For sockaddr_in

@@ -6,13 +6,13 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/11 19:06:43 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/11 20:57:53 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 
-Server::Server()
+Server::Server() : _autoIndex(false)
 {
 	
 }
@@ -24,7 +24,9 @@ Server::Server(const Server &copy)
 
 Server::~Server()
 {
-	
+	closedir(_root);
+	for (std::map<std::string, Location*>::iterator it = _locations.begin(); it != _locations.end(); it++)
+		delete it->second;
 }
 
 Server &Server::operator=(const Server &copy)
@@ -120,9 +122,9 @@ const std::string Server::getRessource(Request &request) const
 	{
 		for (std::vector<std::string>::const_iterator it = _index.begin(); it != _index.end(); it++)
 		{
-			std::string	completePath = _rootPath + (*it);
+			std::string	completePath = _rootPath + "/" + (*it);
 			if (access(completePath.c_str(), F_OK) == 0)
-				return (*it);
+				return (completePath);
 		}
 		if (_autoIndex)
 		{

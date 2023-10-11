@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:21:31 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/09 18:49:53 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/11 20:45:47 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ Location::Location(const Location &copy)
 
 Location::~Location()
 {
-	
+	closedir(_root);
 }
 
 Location &Location::operator=(const Location &copy)
