@@ -35,6 +35,8 @@ class Server
 		void					openRoot();
 		const std::string		getRessource(Request &request) const;
 
+		const std::string&		cgiHandler();
+
     private:
 		std::vector<int> 					_ports;
 		std::string							_serverName;

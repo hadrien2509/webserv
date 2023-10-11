@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:24:44 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/11 18:03:03 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/11 20:35:37 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class Cgi
 		std::vector<std::string>	_env;
 		
 		std::vector<std::string>	_path;
-		std::vector<std::string>	_param;
+		std::vector<std::string>	_toIn;
 
 	public:
 		Cgi(std::vector<std::string> extension, std::vector<std::string> env, std::vector<std::string> ressourcePath);
