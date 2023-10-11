@@ -45,7 +45,6 @@ int main(int ac, char **av)
 	try
 	{
 		Config conf(configPath);
-		conf.init();
 		conf.run();
 	}
 	catch (std::exception &e)
