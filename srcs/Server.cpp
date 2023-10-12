@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/12 01:05:39 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/12 12:55:41 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,21 +99,22 @@ const std::vector<std::string>&	Server::getIndex() const
 	return (_index);
 }
 
+
+const std::vector<std::string>&	Server::getCgiExtension() const
+{
+	return (_cgiExtension);
+}
+
+const std::vector<std::string>&	Server::getCgiPath() const
+{
+	return (_cgiPath);
+}
+
 void Server::openRoot()
 {
 	_root = opendir(_rootPath.c_str());
 	if (_root == NULL)
 		throw std::runtime_error("Error: Could not open root directory" + _rootPath);
-}
-
-const std::string&	Server::getCgiExtension() const
-{
-	return (_cgi_extension);
-}
-
-const std::string&	Server::getCgiPath() const
-{
-	return (_cgi_path);
 }
 
 const std::map<std::string,Location*>&	Server::getLocations() const
@@ -126,26 +127,31 @@ void Server::setErrorPage(int errorCode, std::string errorPage)
 	_errorPage[errorCode] = errorPage;
 }
 
-const std::string Server::getRessource(Request &request) const
+const std::string&	Server::getRessourcePath() const
+{
+	return (_ressourcePath);
+}
+
+int Server::checkRequest(Request &request) const
 {
 	if (request.getPath() == "/")
 	{
 		for (std::vector<std::string>::const_iterator it = _index.begin(); it != _index.end(); it++)
 		{
-			std::string	completePath = _rootPath + "/" + (*it);
-			if (access(completePath.c_str(), F_OK) == 0)
-				return (completePath);
+			_ressourcePath = _rootPath + "/" + (*it);
+			if (access(_ressourcePath.c_str(), F_OK) == 0)
+				return (200);
 		}
 		if (_autoIndex)
 		{
 			std::cout << "AutoIndex" << std::endl;
-			return (_rootPath + _errorPage.at(403));
+			return (403);
 		}
 		else
-			return (_rootPath + _errorPage.at(403));
+			return (403);
 	}
-	std::string	completePath = _rootPath + request.getPath();
-	if (access(completePath.c_str(), F_OK) == 0)
-		return (completePath);
-	return (_rootPath + _errorPage.at(404));
+	_ressourcePath = _rootPath + request.getPath();
+	if (access(_ressourcePath.c_str(), F_OK) == 0)
+		return (200);
+	return (404);
 }

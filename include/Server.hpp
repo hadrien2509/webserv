@@ -2,7 +2,6 @@
 # define SERVER_HPP
 
 # include "Config.hpp"
-# include "Cgi.hpp"
 
 class Location;
 
@@ -26,17 +25,20 @@ class Server
 		void	addPort(int port);
 		void	addLocation(std::string ressourceType, Location *location);
 
-		const std::string&	getCgiExtension() const;
-		const std::string&	getCgiPath() const;
 		const int&			getPort() const;
 		const std::string&	getServerName() const;
 		DIR*				getRoot() const;
 		std::string			getRootPath() const;
 		const std::vector<std::string>&	getIndex() const;
 		const std::map<std::string,Location*>&	getLocations() const;
+		const std::string&	getRessourcePath() const;
 		
-		void					openRoot();
-		const std::string		getRessource(Request &request) const;
+		const std::vector<std::string>&	getCgiExtension() const;
+		const std::vector<std::string>&	getCgiPath() const;
+		void				openRoot();
+		int					checkRequest(Request &request) const;
+
+		const std::string&		cgiHandler();
 
     private:
 		std::vector<int> 					_ports;
@@ -48,9 +50,11 @@ class Server
 		std::vector<std::string>			_index;
 		bool								_autoIndex;
 		std::map<int, std::string>			_errorPage;
+		std::string							_allowMethods;
+		std::string							_ressourcePath;
 
-        std::string 						_cgi_path;  //needed here?
-        std::string 						_cgi_extension;
+        std::vector<std::string> 			_cgiPath;  //needed here?
+        std::vector<std::string> 			_cgiExtension;
 };
 
 #endif
