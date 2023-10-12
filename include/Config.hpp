@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/12 01:12:04 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/12 15:57:49 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ class Config
 		void		_parseRoot(std::istringstream &, Server *);
 		void		_parseIndex(std::istringstream &, Server *);
 		void		_parseErrorPage(std::istringstream &, Server *);
+		void		_parseCgiPath(std::istringstream &, Server *);
+		void		_parseCgiExt(std::istringstream &, Server *);
 		
 		void		_parseRoot(std::istringstream &, Location *);
 		void		_parseIndex(std::istringstream &, Location *);

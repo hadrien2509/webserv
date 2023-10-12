@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/12 13:34:21 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/12 15:57:41 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,20 @@ std::string Config::_ignoreComments(std::string line) //skip comments and empty 
 	return line;
 }
 
+void Config::_parseCgiExt(std::istringstream &ss, Server *server)
+{
+	std::string extension;
+	while (ss >> extension)	
+		server->addCgiExtension(extension);
+}
+
+void Config::_parseCgiPath(std::istringstream &ss, Server *server)
+{
+	std::string path;
+	while (ss >> path)
+		server->addCgiPath(path);
+}
+
 void Config::_parseServer(std::istringstream &ssold)
 {
 	std::string	brace;
@@ -85,6 +99,10 @@ void Config::_parseServer(std::istringstream &ssold)
 			_parseIndex(ss, server);
 		else if (type == "error_page")
 			_parseErrorPage(ss, server);
+		else if (type == "cgi_path")
+			_parseCgiPath(ss, server);
+		else if (type == "cgi_ext")
+			_parseCgiExt(ss, server);
 		else if (type == "}")
 			return ;
 		else
