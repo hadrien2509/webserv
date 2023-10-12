@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/12 13:37:02 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/12 15:52:44 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,16 @@ void Server::setErrorPage(int errorCode, std::string errorPage)
 const std::string&	Server::getRessourcePath() const
 {
 	return (_ressourcePath);
+}
+
+void Server::addCgiPath(std::string cgiPath)
+{
+	_cgiPath.push_back(cgiPath);
+}
+
+void Server::addCgiExtension(std::string cgiExtension)
+{
+	_cgiExtension.push_back(cgiExtension);
 }
 
 int Server::checkRequest(Request &request)

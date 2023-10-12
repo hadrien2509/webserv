@@ -22,6 +22,9 @@ class Server
 		void	setErrorPage(int errorCode, std::string errorPage);
 		void	setCgiPath(std::vector<std::string> cgi_path);
 		void	setCgiExtension(std::vector<std::string> cgi_extension);
+
+		void	addCgiExtension(std::string extension);
+		void	addCgiPath(std::string path);
 		void	addPort(int port);
 		void	addLocation(std::string ressourceType, Location *location);
 
