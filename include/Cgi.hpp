@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:24:44 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/12 15:45:29 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/12 16:46:36 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,15 @@ class Cgi
 
 		const std::string run();
 		
+		class CgiException: public std::exception
+		{
+			public:
+				const char * what() const throw()
+				{
+					return ("CgiException: unknown error");
+				}
+		};
+
 		class CgiForkException: public std::exception
 		{
 			public:

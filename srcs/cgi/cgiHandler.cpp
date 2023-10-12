@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:24:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/12 15:45:36 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/12 16:55:33 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ const std::string cgiHandler(std::vector<std::string> extension, std::vector<std
 	catch(const std::exception& e)
 	{
 		std::cerr << e.what() << '\n';
+		throw Cgi::CgiException();
 	}
-	return (NULL);
+	return ("ERROR");
 }

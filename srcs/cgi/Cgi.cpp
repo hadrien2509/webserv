@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/12 15:48:49 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/12 18:21:22 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ Cgi::Cgi(std::vector<std::string> & extension, std::vector<std::string> envExecu
 	std::string	param;
 	getline(iss, _path, '?');
 	getline(iss, _toIn);
+	_path = "webmajordome" + _path; // need to change waiting for location block
 	std::cout << "CGI ISS: " << _toIn << std::endl;
 }
 
@@ -87,7 +88,6 @@ const std::string Cgi::run()
 		throw CgiPipeException();
 	}
 
-	write(fdIn[1], _toIn.c_str(), _toIn.size());
 
 	pid = fork();
 
@@ -104,33 +104,40 @@ const std::string Cgi::run()
 		dup2(fdIn[0], STDIN_FILENO);
 		dup2(fdOut[1], STDOUT_FILENO);
 
+		write(fdIn[1], _toIn.c_str(), _toIn.size());
 
 		if (!strchr(_path.c_str(), '.'))
 			throw CgiPathException();
 		std::string varExtention = strchr(_path.c_str(), '.');
-		const char *arg[] = {_path.c_str(), NULL};
+		const char *arg[] = {_envVar[varExtention].c_str(), _path.c_str(), NULL};
+
+		std::cerr << "CGI: " << _envVar[varExtention].c_str() << std::endl;
+		std::cerr << "CGI: " << const_cast<char *const *> (arg)[0] << std::endl;
 
 		execve(_envVar[varExtention].c_str(), const_cast<char *const *> (arg), NULL); // need to add path form interpreter ex: python... and _env
+		std::cerr << "HERE 2" << std::endl;
 		std::cerr << "CGI exception: execve failed" << std::endl;
 		write(fdOut[1], "500 Internal Server Error\n", 26);
 	}
 	else
 	{
 		// here for the waitpid
+		close(fdIn[1]);
+		dup2(fdOut[0], STDOUT_FILENO);
 		close(fdIn[0]);
 		close(fdOut[1]);
-		dup2(fdOut[0], STDOUT_FILENO);
-		dup2(fdIn[1], STDIN_FILENO);
 		waitpid(-1, NULL, 0);
+		std::cerr << "HERE 1" << std::endl;
 
 		while (ret > 0)
 		{
-			ret = read(fdOut[0], buffer, 1024);
+			ret = read(fdOut[0], buffer, 1023);
 			buffer[ret] = '\0';
 			_fromOut += std::string(buffer, ret);
 		}
 		close(fdOut[0]);
 		close(fdIn[1]);
 	}
+	std::cerr << "OUTPUT OF CGI: " << _fromOut << std::endl;
 	return (_fromOut);
 }
