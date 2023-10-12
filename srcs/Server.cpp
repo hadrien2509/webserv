@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/11 23:25:19 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/12 01:05:39 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,16 @@ void Server::openRoot()
 	_root = opendir(_rootPath.c_str());
 	if (_root == NULL)
 		throw std::runtime_error("Error: Could not open root directory" + _rootPath);
+}
+
+const std::string&	Server::getCgiExtension() const
+{
+	return (_cgi_extension);
+}
+
+const std::string&	Server::getCgiPath() const
+{
+	return (_cgi_path);
 }
 
 const std::map<std::string,Location*>&	Server::getLocations() const

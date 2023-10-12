@@ -2,6 +2,7 @@
 # define SERVER_HPP
 
 # include "Config.hpp"
+# include "Cgi.hpp"
 
 class Location;
 
@@ -25,6 +26,8 @@ class Server
 		void	addPort(int port);
 		void	addLocation(std::string ressourceType, Location *location);
 
+		const std::string&	getCgiExtension() const;
+		const std::string&	getCgiPath() const;
 		const int&			getPort() const;
 		const std::string&	getServerName() const;
 		DIR*				getRoot() const;
@@ -34,8 +37,6 @@ class Server
 		
 		void					openRoot();
 		const std::string		getRessource(Request &request) const;
-
-		const std::string&		cgiHandler();
 
     private:
 		std::vector<int> 					_ports;
