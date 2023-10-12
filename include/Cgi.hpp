@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:24:44 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/12 15:05:12 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/12 15:45:29 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ class Cgi
 		std::string					_fromOut;
 
 	public:
-		Cgi(const std::vector<std::string> & extension, std::vector<std::string> envExecutable, const std::string & ressourcePath);
+		Cgi(std::vector<std::string> & extension, std::vector<std::string> envExecutable, const std::string & ressourcePath);
 		~Cgi();
 
 		const std::string run();
@@ -84,6 +84,6 @@ class Cgi
 		};
 };
 
-const std::string		cgiHandler(const std::vector<std::string> & extension, std::vector<std::string> envExecutable, const std::string & ressourcePath);
+const std::string		cgiHandler(std::vector<std::string> extension, std::vector<std::string> envExecutable, const std::string & ressourcePath);
 
 #endif
