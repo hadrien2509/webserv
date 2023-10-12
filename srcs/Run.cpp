@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/12 13:31:57 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/12 13:48:03 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ void Config::run()
 		}
 
 		std::string fileContent;
-		std::string line;
 		std::stringstream ss1, ss2;
 
 		// Insert the length of the HTML content after Content-Length
@@ -88,14 +87,14 @@ void Config::run()
 		
 		// std::cout << file_contents << std::endl;
 		
-		std::string response = fileContent;
+		// std::string response = fileContent;
 		
 		
 		// std::string strFromCgi = cgiHandler(_cluster[0]->getCgiExtension(), _cluster[0]->getCgiPath(), request.getPath());
 		// send(connection, strFromCgi.c_str(), strFromCgi.size(), 0);
 		
 		
-		send(connection, response.c_str(), response.size(), 0);
+		send(connection, httpResponse.c_str(), httpResponse.size(), 0);
 	}
 	close(sockfd);
 }

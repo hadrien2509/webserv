@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/12 13:19:32 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/12 13:37:02 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,13 +145,17 @@ int Server::checkRequest(Request &request)
 		if (_autoIndex)
 		{
 			std::cout << "AutoIndex" << std::endl;
-			return (403);
+			return (200);
 		}
 		else
+		{
+			_ressourcePath = _rootPath + "/" + _errorPage[403];
 			return (403);
+		}
 	}
 	_ressourcePath = _rootPath + request.getPath();
 	if (access(_ressourcePath.c_str(), F_OK) == 0)
 		return (200);
+	_ressourcePath = _rootPath + "/" + _errorPage[404];
 	return (404);
 }
