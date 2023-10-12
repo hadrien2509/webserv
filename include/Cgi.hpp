@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:24:44 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/12 16:46:36 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/13 01:28:46 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include <vector>
 #include <map>
-#include <string>
+#include <cstring>
 #include <iostream>
 #include <istream>
 #include <sstream>
@@ -31,11 +31,9 @@ class Cgi
 		
 		std::string	_ressourcePath;
 		
-		// std::vector<std::string>	_ext; // extension to be handled by cgi
-		// std::vector<std::string>	_envExecutable; // path to the executable ex: /usr/bin/bash /usr/bin/php /usr/bin/python3
-		std::map<std::string, std::string>	_envVar; // personalized env ex: for php norm || can be NULL
+		std::map<std::string, std::string>	_exePath; // personalized env ex: for php norm || can be NULL
 		
-		std::vector<std::string>	_env; // personalized env ex: for php norm || can be NULL
+		std::map<std::string, std::string>	_env; // personalized env ex: for php norm || can be NULL
 		
 		std::string					_path; // path to the cgi file
 		std::string					_toIn;
@@ -89,6 +87,15 @@ class Cgi
 				const char * what() const throw()
 				{
 					return ("CgiException: empty path");
+				}
+		};
+
+		class CgiNotCgiException: public std::exception
+		{
+			public:
+				const char * what() const throw()
+				{
+					return ("CgiException: not a cgi file");
 				}
 		};
 };
