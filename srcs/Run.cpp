@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/12 13:48:03 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/12 14:54:25 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,13 @@ void Config::run()
 	if (sockfd == -1)
 		throw std::runtime_error("Failed to create socket ");
 
+
+	int optval = 1;
+    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) == -1)
+	{
+		throw std::runtime_error("Failed to set socket options");
+	    close(sockfd);
+	}
 	// Listen to port 80 on any address
 	sockaddr_in sockaddr;
 	sockaddr.sin_family = AF_INET;
