@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/12 12:55:41 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/12 13:19:32 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,14 @@ void	Server::addIndex(std::string index)
 	_index.push_back(index);
 }
 
-void	Server::setCgiPath(std::string cgi_path)
+void	Server::setCgiPath(std::vector<std::string> cgiPath)
 {
-	_cgi_path = cgi_path;
+	_cgiPath = cgiPath;
 }
 
-void	Server::setCgiExtension(std::string cgi_extension)
+void	Server::setCgiExtension(std::vector<std::string> cgiExtension)
 {
-	_cgi_extension = cgi_extension;
+	_cgiExtension = cgiExtension;
 }
 
 void	Server::addPort(int port)
@@ -132,7 +132,7 @@ const std::string&	Server::getRessourcePath() const
 	return (_ressourcePath);
 }
 
-int Server::checkRequest(Request &request) const
+int Server::checkRequest(Request &request)
 {
 	if (request.getPath() == "/")
 	{

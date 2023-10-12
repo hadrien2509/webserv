@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/12 02:07:15 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/12 00:24:57 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Config.hpp"
-#include "Cgi.hpp"
 
 void Config::run()
 {
@@ -45,38 +44,46 @@ void Config::run()
 		Request request(connection);
 
 		// Send a message to the connection
-		
-		std::string filePath = _cluster[0]->getRessource(request);
+
+		std::string httpResponse;
+		int code = _cluster[0]->checkRequest(request);
+		if (code == 404)
+		{
+			httpResponse = "HTTP/1.1 404 Not Found\r\n"
+					"Content-Type: text/html; charset=UTF-8\r\n"
+					"Content-Length: ";
+		}
+		if (code == 200)
+		{
+			httpResponse = "HTTP/1.1 200 OK\r\n"
+                           "Content-Type: text/html; charset=UTF-8\r\n"
+                           "Content-Length: ";
+		}
+		std::string filePath = _cluster[0]->getRessourcePath();
 		// std::cout << filePath << std::endl;
 		std::ifstream file(filePath.c_str()); // Open the file for reading
 		if (!file.is_open()) {
 			throw std::runtime_error("Could not open file");
 		}
 
-		std::string file_contents;
+		std::string fileContent;
 		std::string line;
-		while (std::getline(file, line)) {
-			file_contents += line + "\n"; // Append each line to the string
-		}
+		std::stringstream ss1, ss2;
 
+		// Insert the length of the HTML content after Content-Length
+		ss1 << file.rdbuf(); // Read the file
+		fileContent = ss1.str();
+		ss2 << fileContent.length();
+		httpResponse += ss2.str();
+
+		// Finish up the headers and add the HTML content
+		httpResponse += "\r\n\r\n";
+
+		httpResponse += fileContent; // Add the file content to the string
+
+		// std::cout << httpResponse << std::endl;
 		file.close(); // Close the file when done
-
-		// Now, 'file_contents' contains the entire file as a string
-		
-		// std::cout << file_contents << std::endl;
-		
-		std::string response = file_contents;
-		
-		
-		// std::vector<std::string> extCgi;
-		// extCgi.push_back(_cluster[0]->getCgiExtension());		
-		// std::vector<std::string> envExe;
-		// envExe.push_back(_cluster[0]->getCgiPath());
-		// std::string strFromCgi = cgiHandler(extCgi, envExe, request.getPath());
-		// send(connection, strFromCgi.c_str(), strFromCgi.size(), 0);
-		
-		
-		send(connection, response.c_str(), response.size(), 0);
+		send(connection, httpResponse.c_str(), httpResponse.size(), 0);
 	}
 	close(sockfd);
 }
