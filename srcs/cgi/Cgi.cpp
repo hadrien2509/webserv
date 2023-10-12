@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/12 15:04:48 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/12 15:48:49 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ Cgi::Cgi()
 {
 }
 
-Cgi::Cgi(const std::vector<std::string> & extension, std::vector<std::string> envExecutable, const std::string & ressourcePath)
+Cgi::Cgi(std::vector<std::string> & extension, std::vector<std::string> envExecutable, const std::string & ressourcePath)
 {
 	std::istringstream iss(ressourcePath);
 	
@@ -24,7 +24,7 @@ Cgi::Cgi(const std::vector<std::string> & extension, std::vector<std::string> en
 		throw CgiEnvExtException();
 	
 	std::vector<std::string>::iterator itExe = envExecutable.begin();
-	for (std::vector<std::string>::iterator it = const_cast<std::vector<std::string> &> (extension).begin(); it != extension.end(); it++)
+	for (std::vector<std::string>::iterator it = extension.begin(); it != extension.end(); it++)
 	{
 		_envVar.insert(std::pair<std::string, std::string>(*it, *itExe));
 		itExe++;
@@ -52,8 +52,6 @@ Cgi& Cgi::operator=(const Cgi & src)
 {
 	if (this != &src)
 	{
-		// _ext = src._ext;
-		// _envExecutable = src._envExecutable;
 		_env = src._env;
 		_path = src._path;
 		_toIn = src._toIn;
@@ -100,18 +98,18 @@ const std::string Cgi::run()
 	else if (!pid)
 	{
 		// here for the execve
-		
+
 		close(fdIn[1]);
 		close(fdOut[0]);
 		dup2(fdIn[0], STDIN_FILENO);
 		dup2(fdOut[1], STDOUT_FILENO);
 
-		std::cout << "CGI PATH: " << _path << std::endl;
-		std::cout << "CGI PATH: " << _path << std::endl;
+
 		if (!strchr(_path.c_str(), '.'))
 			throw CgiPathException();
 		std::string varExtention = strchr(_path.c_str(), '.');
 		const char *arg[] = {_path.c_str(), NULL};
+
 		execve(_envVar[varExtention].c_str(), const_cast<char *const *> (arg), NULL); // need to add path form interpreter ex: python... and _env
 		std::cerr << "CGI exception: execve failed" << std::endl;
 		write(fdOut[1], "500 Internal Server Error\n", 26);
