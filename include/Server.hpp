@@ -20,8 +20,8 @@ class Server
 		void	setRoot(DIR * root, std::string rootPath);
 		void	addIndex(std::string index);
 		void	setErrorPage(int errorCode, std::string errorPage);
-		void	setCgiPath(std::string cgi_path);
-		void	setCgiExtension(std::string cgi_extension);
+		void	setCgiPath(std::vector<std::string> cgi_path);
+		void	setCgiExtension(std::vector<std::string> cgi_extension);
 		void	addPort(int port);
 		void	addLocation(std::string ressourceType, Location *location);
 
@@ -36,7 +36,7 @@ class Server
 		const std::vector<std::string>&	getCgiExtension() const;
 		const std::vector<std::string>&	getCgiPath() const;
 		void				openRoot();
-		int					checkRequest(Request &request) const;
+		int					checkRequest(Request &request);
 
 		const std::string&		cgiHandler();
 
