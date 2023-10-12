@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/12 02:04:02 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/12 13:21:10 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,21 @@ Cgi::Cgi()
 {
 }
 
-Cgi::Cgi(std::vector<std::string> & extension, std::vector<std::string> envExecutable, const std::string & ressourcePath)
+Cgi::Cgi(const std::vector<std::string> & extension, std::vector<std::string> envExecutable, const std::string & ressourcePath)
 {
 	std::istringstream iss(ressourcePath);
-	_ext = extension;
-	_envExecutable = envExecutable;
+	
+	if (envExecutable.size() != extension.size())
+		throw CgiEnvExtException();
+	
+	std::vector<std::string>::iterator itExe = envExecutable.begin();
+	for (std::vector<std::string>::iterator it = const_cast<std::vector<std::string> &> (extension).begin(); it != extension.end(); it++)
+	{
+		_envVar.insert(std::pair<std::string, std::string>(*it, *itExe));
+		itExe++;
+	}
+	// _ext = extension;
+	// _envExecutable = envExecutable;
 	_ressourcePath = ressourcePath;
 
 	std::string	param;
@@ -42,8 +52,8 @@ Cgi& Cgi::operator=(const Cgi & src)
 {
 	if (this != &src)
 	{
-		_ext = src._ext;
-		_envExecutable = src._envExecutable;
+		// _ext = src._ext;
+		// _envExecutable = src._envExecutable;
 		_env = src._env;
 		_path = src._path;
 		_toIn = src._toIn;
