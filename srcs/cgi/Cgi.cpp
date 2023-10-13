@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/13 15:53:06 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/13 18:54:07 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,11 @@ Cgi::Cgi(std::vector<std::string> & extension, std::vector<std::string> envExecu
 		_exePath.insert(std::pair<std::string, std::string>(*it, *itExe));
 		itExe++;
 	}
-	// _ext = extension;
-	// _envExecutable = envExecutable;
 	_ressourcePath = ressourcePath;
 
-	std::string	param;
 	getline(iss, _path, '?');
 	getline(iss, _toIn);
 	_path = "webmajordome" + _path; // need to change waiting for location block
-	// std::cout << "CGI ISS: " << _toIn << std::endl;
 }
 
 Cgi::Cgi(const Cgi & src)
@@ -61,62 +57,107 @@ Cgi& Cgi::operator=(const Cgi & src)
 	{
 		_env = src._env;
 		_path = src._path;
-		_toIn = src._toIn;
 		_fromOut = src._fromOut;
 	}
 	return (*this);
 }
 
+void Cgi::_initEnv()
+{
+	
+}
+
+char** Cgi::_mapToEnv(std::map<std::string, std::string> & env)
+{
+	char **ret = new char*[env.size() + 1];
+	
+	int i = 0;
+	if (!ret)
+		return (NULL);
+	for (std::map<std::string, std::string>::iterator it = env.begin(); it != env.end(); it++)
+	{
+		std::string tmp = it->first + "=" + it->second;
+		ret[i] = new char[tmp.size() + 1];
+		strcpy(ret[i], tmp.c_str());
+		i++;
+	}
+	ret[i] = NULL;
+	return (ret);
+}
+
+void Cgi::_ressourceToEnv()
+{
+	std::istringstream iss(_toIn);
+	std::string tmp;
+	
+	while (getline(iss, tmp, '&'))
+	{
+		std::istringstream iss2(tmp);
+		std::string key;
+		std::string value;
+		getline(iss2, key, '=');
+		getline(iss2, value);
+		_env[key] = value;
+	}
+}
+
 const std::string Cgi::run()
 {
 	pid_t pid;
-	int oldStdout;
-	(void)oldStdout;
 	int fdOut[2];
 	int ret = 1;
 	char buffer[1024];
 	
-	// oldStdout = dup(STDOUT_FILENO);
-	
 	if (!strchr(_path.c_str(), '.'))
 		throw CgiPathException();
+
 	std::string varExtention = strchr(_path.c_str(), '.');
 	const char *arg[] = {_exePath[varExtention].c_str(), _path.c_str(), NULL};
-	if (!arg[0] || std::string(arg[0]).size() == 0)
-		throw CgiNotCgiException();
+	
+	// char **env process
+	_ressourceToEnv();
+	char **env = _mapToEnv(_env);
+	// =================
 
+
+	if (!arg[0] || std::string(arg[0]).size() == 0)
+	{
+		delete [] env;
+		throw CgiNotCgiException();
+	}
+	if (access(arg[0], F_OK) != 0)
+	{
+		delete [] env;
+		throw CgiFileException();
+	}
 	if (pipe(fdOut) == -1)
 	{
+		delete [] env;
 		throw CgiPipeException();
 	}
-
 
 	pid = fork();
 
 	if (pid == -1)
 	{
+		delete [] env;
 		throw CgiForkException();
 	}
 	else if (!pid)
 	{
-		// here for the execve
-
 		close(fdOut[0]);
 		dup2(fdOut[1], STDOUT_FILENO);
 
-		std::cerr << "CGI: " << _toIn << std::endl;
-		// write(fdIn[1], _toIn.c_str(), _toIn.size());
-
-		execve(_exePath[varExtention].c_str(), const_cast<char *const *> (arg), NULL); // need to add path form interpreter ex: python... and _env
+		execve(_exePath[varExtention].c_str(), const_cast<char *const *> (arg), env);
 		std::cerr << "CGI exception: execve failed" << std::endl;
 		write(fdOut[1], "500 Internal Server Error\n", 26);
 	}
 	else
 	{
-		// here for the waitpid
 		dup2(fdOut[0], STDOUT_FILENO);
 		close(fdOut[1]);
 		waitpid(-1, NULL, 0);
+		delete [] env;
 
 		while (ret > 0)
 		{

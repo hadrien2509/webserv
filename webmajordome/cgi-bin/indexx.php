@@ -86,10 +86,12 @@
     <header>
         <h1>Bienvenue chez les Webmajordomes
             <?php
-            // Récupérer l'heure actuelle au format H:i:s
-            $heure = date("H:i:s");
-            // Afficher l'heure dans une balise avec l'id "time"
-            echo "<div id='time'>$heure</div>";
+                // Récupérer l'heure actuelle au format H:i:s
+                // while (true) {
+                    $heure = date("H:i:s");
+                    echo "<div id='time'>$heure</div>";
+                    // sleep(1);
+                // }
             ?>
         </h1>
     </header>

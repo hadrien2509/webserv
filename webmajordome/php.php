@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="styles.css">
     <title>Bienvenue chez les Webmajordomes</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 
 <style>
@@ -24,12 +25,7 @@
 <body>
     <header>
         <h1>Bienvenue chez les Webmajordomes
-            <?php
-            // Récupérer l'heure actuelle au format H:i:s
-            $heure = date("H:i:s");
-            // Afficher l'heure dans une balise avec l'id "time"
-            echo "<div id='time'>$heure</div>";
-            ?>
+            <script src="script.js"></script>
         </h1>
     </header>
     

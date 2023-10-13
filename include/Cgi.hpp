@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:24:44 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/13 01:28:46 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/13 18:58:29 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,16 @@ class Cgi
 		Cgi(const Cgi & src);
 		Cgi& operator=(const Cgi & src);
 		
+		char**	_mapToEnv(std::map<std::string, std::string> & env);
+		void	_ressourceToEnv();
+		void	_initEnv();
+		
 		std::string	_ressourcePath;
 		
-		std::map<std::string, std::string>	_exePath; // personalized env ex: for php norm || can be NULL
-		
+		std::map<std::string, std::string>	_exePath; // all path to the interpreter ex: php, python, perl, ...
 		std::map<std::string, std::string>	_env; // personalized env ex: for php norm || can be NULL
-		
 		std::string					_path; // path to the cgi file
+
 		std::string					_toIn;
 		std::string					_fromOut;
 
@@ -96,6 +99,15 @@ class Cgi
 				const char * what() const throw()
 				{
 					return ("CgiException: not a cgi file");
+				}
+		};
+
+		class CgiFileException: public std::exception
+		{
+			public:
+				const char * what() const throw()
+				{
+					return ("CgiException: iterpretor not found");
 				}
 		};
 };

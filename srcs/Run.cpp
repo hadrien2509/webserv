@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/13 15:34:15 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/13 16:04:46 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,13 @@ void Config::run()
 					std::string strFromCgi = cgiHandler(_cluster[0]->getCgiExtension(), _cluster[0]->getCgiPath(), request.getPath());
 					send(client_socket, strFromCgi.c_str(), strFromCgi.size(), 0);
 				}
+				catch(const Cgi::CgiNotCgiException& e)
+				{
+					send(client_socket, httpResponse.c_str(), httpResponse.size(), 0);
+				}
 				catch(const std::exception& e)
 				{
 					std::cerr << e.what() << '\n';
-					send(client_socket, httpResponse.c_str(), httpResponse.size(), 0);
 				}
             }
         }

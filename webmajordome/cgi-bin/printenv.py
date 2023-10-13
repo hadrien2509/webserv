@@ -1,0 +1,6 @@
+import os
+
+# Récupère et affiche toutes les variables d'environnement
+print("Variables d'environnement :")
+for cle, valeur in os.environ.items():
+    print(f"{cle} : {valeur}")

@@ -9,6 +9,8 @@ formulaire = cgi.FieldStorage()
 nom = formulaire.getvalue("nom")
 email = formulaire.getvalue("email")
 
+print(f"<h1>Données reçues : {nom} {email}</h1>")
+
 # Vérifie si les données sont présentes
 if nom is not None and email is not None:
     # Écrit les données dans un fichier
