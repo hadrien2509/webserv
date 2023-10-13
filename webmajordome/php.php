@@ -3,84 +3,23 @@
     <html lang="fr">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="styles.css">
     <title>Bienvenue chez les Webmajordomes</title>
-    <style>
-        body {
-            font-family: 'Courier New', monospace;
-            background-image: url('rick-roll.gif');
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-size: 100% 100%;
-            background-color: #000;
-            /* color: #9b0000; */
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            font-weight: bold;
-        }
-        
-        header {
-            color: #ffffff;
-            background-color: #0077d9;
-            text-align: center;
-            padding: 20px;
-        }
+</head>
 
-        h1 {
-            font-size: 36px;
-        }
-
-        p {
-            font-size: 18px;
-            margin: 20px;
-        }
-
-        nav {
-            background-color: #333;
-            text-align: center;
-            padding: 10px;
-        }
-
-        nav ul {
-            list-style-type: none;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-        }
-
-        nav li {
-            margin: 0 20px;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #fff;
-            font-weight: bold;
-        }
-
-        main {
-			padding : 0 1em;
-            flex-grow: 1;
-        }
-
-        footer {
-            background-color: #333;
-            font-weight: normal;
-            color: #ffffff;
-            text-align: center;
-            padding: 10px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-
-        .logo {
-            white-space: pre;
-        }
-
-    </style>
+<style>
+	h1 {
+		color : white;
+	}
+	body {
+		color : black;
+		background-image: url('rick-roll.gif');
+		background-repeat: no-repeat;
+		background-attachment: fixed;
+		background-size: 100% 100%;
+		background-color: #000;
+	}
+</style>
 </head>
 <body>
     <header>
@@ -96,10 +35,10 @@
     
     <nav>
         <ul>
-            <li><a href="#presentation">Présentation</a></li>
-            <li><a href="#services">Nos Services</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li><a href="index.html">Index</a></li>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="form.html">form</a></li>
+            <li><a href="rick.html">Rick</a></li>
+            <li><a href="php.php">php</a></li>
         </ul>
     </nav>
 
