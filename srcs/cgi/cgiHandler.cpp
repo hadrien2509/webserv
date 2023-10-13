@@ -6,16 +6,16 @@
 /*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:24:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/13 22:32:48 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/14 00:27:45 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Cgi.hpp"
 
-// Response& cgiHandler(Request & req)
+// Response cgiHandler(Request & req, Server & server)
 // {
-// 	Cgi cgi();
-// 	Response res("200", "path", "mimeTypes");
+// 	Cgi cgi(server.getCgiExtension(), server.getCgiPath(), req.getPath());
+// 	Response res("200 OK", server.getRootPath() + req.getPath(), server.getMimeTypes());
 	
 // 	return (res);
 // }

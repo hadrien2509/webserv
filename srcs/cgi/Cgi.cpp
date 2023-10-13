@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/13 18:54:07 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/14 00:21:58 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ Cgi::Cgi()
 {
 }
 
-Cgi::Cgi(std::vector<std::string> & extension, std::vector<std::string> envExecutable, const std::string & ressourcePath)
+Cgi::Cgi(const std::vector<std::string> & extension, std::vector<std::string> envExecutable, const std::string & ressourcePath)
 {
 	std::istringstream iss(ressourcePath);
 	
@@ -30,7 +30,7 @@ Cgi::Cgi(std::vector<std::string> & extension, std::vector<std::string> envExecu
 		throw CgiEnvExtException();
 	
 	std::vector<std::string>::iterator itExe = envExecutable.begin();
-	for (std::vector<std::string>::iterator it = extension.begin(); it != extension.end(); it++)
+	for (std::vector<std::string>::iterator it = const_cast<std::vector<std::string> &> (extension).begin(); it != extension.end(); it++)
 	{
 		_exePath.insert(std::pair<std::string, std::string>(*it, *itExe));
 		itExe++;

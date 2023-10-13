@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:24:44 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/13 22:32:53 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/14 00:27:41 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,11 @@
 # include <istream>
 # include <sstream>
 # include <sys/wait.h>
+
 # include "unistd.h"
 # include "Request.hpp"
 # include "Response.hpp"
+# include "Server.hpp"
 
 class Cgi
 {
@@ -45,7 +47,7 @@ class Cgi
 		std::string					_fromOut;
 
 	public:
-		Cgi(std::vector<std::string> & extension, std::vector<std::string> envExecutable, const std::string & ressourcePath);
+		Cgi(const std::vector<std::string> & extension, std::vector<std::string> envExecutable, const std::string & ressourcePath);
 		~Cgi();
 
 		const std::string run();
@@ -115,6 +117,6 @@ class Cgi
 };
 
 const std::string		cgiHandler(std::vector<std::string> extension, std::vector<std::string> envExecutable, const std::string & ressourcePath);
-// Response& cgiHandler(Request & req);
+// Response cgiHandler(Request & req);
 
 #endif
