@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/13 20:00:46 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/14 01:05:33 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,7 @@ void Config::_parseLocation(std::istringstream &ss, Server *server)
 	std::string	ressourceType;
 	ressourceType = _getRessourceType(ss);
 
-	Location *location = new Location;
+	Location *location = new Location(server);
 	server->addLocation(ressourceType, location);
 
 	std::string line, type;
