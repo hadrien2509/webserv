@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link href="styles/style.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="scripts/model/data.js"></script>
+  <script src="scripts/model/player.js"></script>
+  <script src="scripts/model/sprite.js"></script>
+  <script src="scripts/model/paddle.js"></script>
+  <script src="scripts/ctrl/PaddleCtrl.js"></script>
+  <script src="scripts/ctrl/ballCtrl.js"></script>
+  <script src="scripts/ctrl/gameCtrl.js"></script>
+  <script src="scripts/model/ball.js"></script>
+  <script src="scripts/model/Movement.js"></script>
+  <script src="scripts/model/position.js"></script>
+  <script src="scripts/model/dimension.js"></script>
+  <script src="scripts/model/brick.js"></script>
+  <script src="scripts/model/game.js"></script>
+  <script src="scripts/view/View.js"></script>
+  <title>breakout</title>
+</head>
+
+<body>
+  <header>
+    <h1>breakout</h1>
+  </header>
+  <main>
+    <span id="infoBar">
+      <span id="scoreLabel">score : <span id="score">0</span></span>
+      <span id="LvlLabel">level <span id="lvl">1</span></span>
+      <span id="hearts"></span></span>
+    <div id="scene">
+      <span id="startMessage"></span>
+    </div>
+  </main>
+</body>
+<script>
+  $(document).ready(function () {
+    let game = new Game();
+    let view = new View();
+    let gameCtrl = new GameCtrl(game, view);
+    gameCtrl.play();
+  });
+</script>
+
+</html>

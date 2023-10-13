@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@500');
+body {
+    font-family:"Teko";
+    background-color: rgb(24, 24, 24);
+    text-align: center;
+    color: rgb(223, 223, 223);
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-areas: "header"
+                         "main"
+                        "footer";
+}
+
+header {
+    background-color: rgb(32, 32, 32);
+    margin: 0.5em;
+    grid-area: header;
+}
+
+main {
+    grid-area: main;
+}
+
+#scene{
+    position: relative;
+    height: 600px;
+    width: 960px;
+    border: 1px solid white;
+    margin: 3em;
+    margin-left: auto;
+    margin-right: auto;
+}
+#paddle{
+    display: inline-block;
+    height: 20px;
+    width: 100px;
+    background-color: white;
+    position: absolute;
+}
+#ball{
+    height: 24px;
+    width: 24px;
+    background-color:white;
+    border-radius: 50%;
+    position: absolute;
+  }
+.brick{
+    height: 24px;
+    width: 64px;
+    background-color:white;
+    border: 1px solid rgb(32, 32, 32);
+    position: absolute;
+}
+#startMessage{
+    font-size: 5em;
+    position: absolute;
+    left:30%;
+    bottom: 35%;
+}
+#hearts{
+    position: absolute;
+    right: 42px;
+}
+#scoreLabel{
+    font-size: 2em;
+    position: absolute;
+    left: 42px;
+}
+#LvlLabel{
+    font-size: 2em;
+    position: absolute;
+    right: 45%;
+}
+  
