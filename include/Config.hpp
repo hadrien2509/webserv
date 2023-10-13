@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/12 18:31:54 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/13 14:12:25 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <iostream> // For cout
 # include <unistd.h> // For read
 # include <string.h> // For memset
+# include <poll.h> // For poll
 
 # include "Location.hpp"
 # include "Server.hpp"
@@ -58,9 +59,13 @@ class Config
 		// void		_parseAutoIndex(std::istringstream &, Location *);
 		std::string	_getRessourceType(std::istringstream &);
 		
-		std::string				_ignoreComments(std::string line);
-		std::vector<Server*>	_cluster;
-		std::ifstream			_configFile;
+		void		_createPoll();
+		
+		std::string					_ignoreComments(std::string line);
+		std::vector<Server*>		_cluster;
+		std::ifstream				_configFile;
+		size_t						_pollsize;
+		pollfd*						_poll;
 		
 	public :
 	

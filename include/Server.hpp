@@ -30,7 +30,6 @@ class Server
 		void	addPort(int port);
 		void	addLocation(std::string ressourceType, Location *location);
 
-		const int&			getPort() const;
 		const std::string&	getServerName() const;
 		DIR*				getRoot() const;
 		std::string			getRootPath() const;
@@ -42,11 +41,13 @@ class Server
 		const std::vector<std::string>&	getCgiPath() const;
 		void							openRoot();
 		Response*					checkRequest(Request &request);
+		
+		const std::vector<struct pollfd>&	getPollfds() const;
 
 		const std::string&		cgiHandler();
 
     private:
-		std::vector<int> 					_ports;
+		std::vector<struct pollfd>			_pollfds;
 		std::string							_serverName;
 		std::map<std::string,Location*>		_locations;
 		std::string							_host;

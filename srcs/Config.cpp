@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/12 15:57:41 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/13 15:08:52 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,7 +223,7 @@ void Config::_openConfig(const std::string &input)
 		throw std::runtime_error("Failed to open configuration file");
 }
 
-Config::Config(const std::string &input)
+Config::Config(const std::string &input) : _pollsize(0)
 {
 	_openConfig(input);
 	std::string line, type;
@@ -246,4 +246,5 @@ Config::~Config()
 	_configFile.close();
 	for (std::vector<Server*>::iterator it = _cluster.begin(); it != _cluster.end(); it++)
 		delete (*it);
+	delete [] _poll;
 }

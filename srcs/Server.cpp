@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/13 10:34:06 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/13 14:01:49 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,9 +134,43 @@ void	Server::setCgiExtension(std::vector<std::string> cgiExtension)
 	_cgiExtension = cgiExtension;
 }
 
+const std::vector<struct pollfd>&	Server::getPollfds() const
+{
+	return (_pollfds);
+}
+
 void	Server::addPort(int port)
 {
-	_ports.push_back(port);
+	// Create a socket (IPv4, TCP)
+	int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	if (sockfd == -1)
+		throw std::runtime_error("Failed to create socket ");
+
+
+	int optval = 1;
+    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) == -1)
+	{
+		throw std::runtime_error("Failed to set socket options");
+	    close(sockfd);
+	}
+	// Listen to port 80 on any address
+	sockaddr_in sockaddr;
+	sockaddr.sin_family = AF_INET;
+	sockaddr.sin_addr.s_addr = INADDR_ANY;
+	sockaddr.sin_port = htons(port); // htons is necessary to convert a number to
+								   // network byte order
+	if (bind(sockfd, (struct sockaddr *)&sockaddr, sizeof(sockaddr)) < 0)
+		throw std::runtime_error("Failed to bind to port. errno: ");
+
+	// Start listening. Hold at most 10 connections in the queue
+	if (listen(sockfd, 10) < 0)
+		throw std::runtime_error("Failed to listen on socket. errno: ");
+	
+	struct pollfd poll_fd;
+	poll_fd.fd = sockfd;
+	poll_fd.events = POLLIN;
+
+	_pollfds.push_back(poll_fd);
 }
 
 void	Server::addLocation(std::string ressourceType, Location *location)
@@ -218,12 +252,12 @@ Response* Server::checkRequest(Request& request)
 		{
 			ressourcePath = _rootPath + "/" + (*it);
 			if (access(ressourcePath.c_str(), F_OK) == 0)
-				return (new Response("200 Ok", ressourcePath, _mimeTypes));
+				return (new Response("200 OK", ressourcePath, _mimeTypes));
 		}
 		if (_autoIndex)
 		{
 			std::cout << "AutoIndex" << std::endl;
-			return (new Response("200 Ok", ressourcePath, _mimeTypes));
+			return (new Response("200 OK", ressourcePath, _mimeTypes));
 		}
 		else
 		{
@@ -233,7 +267,7 @@ Response* Server::checkRequest(Request& request)
 	}
 	ressourcePath = _rootPath + request.getPath();
 	if (access(ressourcePath.c_str(), F_OK) == 0)
-		return (new Response("200 Ok", ressourcePath, _mimeTypes));
+		return (new Response("200 OK", ressourcePath, _mimeTypes));
 	ressourcePath = _rootPath + "/" + _errorPage[404];
-	return (new Response("404 Not found", ressourcePath, _mimeTypes));
+	return (new Response("404 Not Found", ressourcePath, _mimeTypes));
 }
