@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/13 14:01:49 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/13 20:04:42 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,7 @@ void	Server::addPort(int port)
 	sockaddr_in sockaddr;
 	sockaddr.sin_family = AF_INET;
 	sockaddr.sin_addr.s_addr = INADDR_ANY;
+	std::cout << port << std::endl;
 	sockaddr.sin_port = htons(port); // htons is necessary to convert a number to
 								   // network byte order
 	if (bind(sockfd, (struct sockaddr *)&sockaddr, sizeof(sockaddr)) < 0)
@@ -188,7 +189,7 @@ DIR*			Server::getRoot() const
 	return (_root);
 }
 
-std::string		Server::getRootPath() const
+const std::string&		Server::getRootPath() const
 {
 	return (_rootPath);
 }
@@ -207,6 +208,26 @@ const std::vector<std::string>&	Server::getCgiExtension() const
 const std::vector<std::string>&	Server::getCgiPath() const
 {
 	return (_cgiPath);
+}
+
+const std::string&	Server::getHost() const
+{
+	return (_host);
+}
+
+const std::map<std::string, std::string>&	Server::getMimeTypes() const
+{
+	return (_mimeTypes);
+}
+
+const bool& Server::getAutoIndex() const
+{
+	return (_autoIndex);
+}
+
+const std::vector<std::string>&	Server::getAllowMethods() const
+{
+	return (_allowMethods);
 }
 
 void Server::openRoot()
@@ -231,6 +252,11 @@ const std::string&	Server::getRessourcePath() const
 	return (_ressourcePath);
 }
 
+const std::map<int, std::string>&	Server::getErrorPage() const
+{
+	return (_errorPage);
+}
+
 void Server::addCgiPath(std::string cgiPath)
 {
 	_cgiPath.push_back(cgiPath);
@@ -239,6 +265,21 @@ void Server::addCgiPath(std::string cgiPath)
 void Server::addCgiExtension(std::string cgiExtension)
 {
 	_cgiExtension.push_back(cgiExtension);
+}
+
+Location *Server::checkLocation(Request &request)
+{
+    std::string bestMatch = "";
+	Location *location = NULL;
+	std::map<std::string, Location*>::const_iterator it = _locations.begin();
+    while (it != _locations.end()) {
+        if (request.getPath().find(it->first) == 0 && it->first.length() > bestMatch.length()) {
+			bestMatch = it->first;
+            location = it->second;
+        }
+        ++it;
+    }
+    return (location);
 }
 
 Response* Server::checkRequest(Request& request)

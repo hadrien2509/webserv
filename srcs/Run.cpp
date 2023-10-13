@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/13 16:04:46 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/13 20:39:54 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,10 @@ void Config::_createPoll()
 	{
         std::vector<struct pollfd> temp = _cluster[i]->getPollfds();
         for (size_t j = 0; j < temp.size(); j++)
-            _poll[currentIndex++] = temp[j];
+		{
+			_poll[currentIndex++] = temp[j];
+			_socketToServer[temp[j].fd] = _cluster[i];
+		}
 	}
 }
 
@@ -37,8 +40,8 @@ void Config::run()
 	_createPoll();
 	while (1)
 	{
-		poll(_poll, _pollsize, -1);  // Infinite timeout for simplicity
-		
+		if (poll(_poll, _pollsize, -1) <= 0)  // Infinite timeout for simplicity
+			continue;
 		for (size_t i = 0; i < _pollsize; i++)
 		{
             if (_poll[i].revents & POLLIN) {
@@ -50,30 +53,32 @@ void Config::run()
 				if (client_socket < 0)
 					throw std::runtime_error("Failed to grab connection. errno: ");
 
-				// Read from the connection
 				Request request(client_socket);
-
-				// Send a message to the connection
-				std::string httpResponse;
-				Response* response = _cluster[0]->checkRequest(request);
-				httpResponse = response->get();
+				Server *server = _socketToServer[_poll[i].fd];
+				Location *location = server->checkLocation(request);
+				Response* response;
+				if (location)
+					response = location->checkRequest(request);
+				else
+					response = server->checkRequest(request);
+				std::string httpResponse = response->get();
 				delete response;
-				
 
-				try
-				{
-				/* code */
-					std::string strFromCgi = cgiHandler(_cluster[0]->getCgiExtension(), _cluster[0]->getCgiPath(), request.getPath());
-					send(client_socket, strFromCgi.c_str(), strFromCgi.size(), 0);
-				}
-				catch(const Cgi::CgiNotCgiException& e)
-				{
-					send(client_socket, httpResponse.c_str(), httpResponse.size(), 0);
-				}
-				catch(const std::exception& e)
-				{
-					std::cerr << e.what() << '\n';
-				}
+				send(client_socket, httpResponse.c_str(), httpResponse.size(), 0);
+				// try
+				// {
+				// /* code */
+				// 	std::string strFromCgi = cgiHandler(server->getCgiExtension(), server->getCgiPath(), request.getPath());
+				// 	send(client_socket, strFromCgi.c_str(), strFromCgi.size(), 0);
+				// }
+				// catch(const Cgi::CgiNotCgiException& e)
+				// {
+				// 	send(client_socket, httpResponse.c_str(), httpResponse.size(), 0);
+				// }
+				// catch(const std::exception& e)
+				// {
+				// 	std::cerr << e.what() << '\n';
+				// }
             }
         }
 	}

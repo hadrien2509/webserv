@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/13 14:12:25 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/13 16:24:27 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ class Config
 		std::ifstream				_configFile;
 		size_t						_pollsize;
 		pollfd*						_poll;
+		
+		std::map<int, Server*>		_socketToServer;
 		
 	public :
 	

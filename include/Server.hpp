@@ -30,20 +30,26 @@ class Server
 		void	addPort(int port);
 		void	addLocation(std::string ressourceType, Location *location);
 
-		const std::string&	getServerName() const;
-		DIR*				getRoot() const;
-		std::string			getRootPath() const;
-		const std::vector<std::string>&	getIndex() const;
-		const std::map<std::string,Location*>&	getLocations() const;
-		const std::string&	getRessourcePath() const;
+		const std::string&							getServerName() const;
+		DIR*										getRoot() const;
+		const std::string&							getRootPath() const;
+		const std::vector<std::string>&				getIndex() const;
+		const std::map<std::string,Location*>&		getLocations() const;
+		const std::string&							getRessourcePath() const;
+		const std::map<int, std::string>&			getErrorPage() const;
+		const std::string&							getHost() const;
+		const std::vector<std::string>&				getAllowMethods() const;
+		const bool&									getAutoIndex() const;
+		const std::map<std::string, std::string>&	getMimeTypes() const;
+		const std::vector<struct pollfd>&			getPollfds() const;
 		
-		const std::vector<std::string>&	getCgiExtension() const;
-		const std::vector<std::string>&	getCgiPath() const;
-		void							openRoot();
+		const std::vector<std::string>&				getCgiExtension() const;
+		const std::vector<std::string>&				getCgiPath() const;
+		void						openRoot();
 		Response*					checkRequest(Request &request);
-		
-		const std::vector<struct pollfd>&	getPollfds() const;
 
+		Location*					checkLocation(Request &request);
+		
 		const std::string&		cgiHandler();
 
     private:
@@ -56,7 +62,7 @@ class Server
 		std::vector<std::string>			_index;
 		bool								_autoIndex;
 		std::map<int, std::string>			_errorPage;
-		std::string							_allowMethods;
+		std::vector<std::string>			_allowMethods;
 		std::string							_ressourcePath;
 
 	    std::map<std::string, std::string>	_mimeTypes;

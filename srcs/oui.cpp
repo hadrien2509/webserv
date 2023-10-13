@@ -3,7 +3,8 @@
 #include "Request.hpp"
 #include "Server.hpp"
 
-Location *getLocation(Request *request, Server *serv) {
+Location *getLocation(Request *request, Server *serv)
+{
     std::string bestMatch = "";
 	Location *location = NULL;
 	std::map<std::string, Location*>::const_iterator it = serv->getLocations().begin();

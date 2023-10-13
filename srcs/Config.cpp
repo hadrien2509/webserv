@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/13 15:08:52 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/13 20:00:46 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,13 @@
 void Config::_parseListen(std::istringstream &ss, Server *server)
 {
 	int	port;
-	ss >> port;
-	if (ss.fail())
-		throw std::runtime_error("Invalid port");
-	server->addPort(port);
-	std::cout << "Port : " << port << std::endl;
+	while (ss >> port)
+	{
+		if (ss.fail())
+			throw std::runtime_error("Invalid port");
+		server->addPort(port);
+		std::cout << "Port : " << port << std::endl;
+	}
 }
 
 void Config::_parseServerName(std::istringstream &ss, Server *server)
