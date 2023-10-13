@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/14 00:21:58 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/14 00:41:30 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,17 @@ Cgi& Cgi::operator=(const Cgi & src)
 
 void Cgi::_initEnv()
 {
+	// temporary hardcoded
 	
+	_env["REQUEST_METHOD"] = "GET";
+	_env["QUERY_STRING"] = _toIn;
+	_env["CONTENT_TYPE"] = "text/html";
+	_env["CONTENT_LENGTH"] = "0";
+	_env["SERVER_NAME"] = "localhost";
+	_env["SERVER_PORT"] = "80";
+	_env["SCRIPT_NAME"] = _path;
+	_env["PATH_INFO"] = _path;
+	_env["SERVER_PROTOCOL"] = "HTTP/1.1";
 }
 
 char** Cgi::_mapToEnv(std::map<std::string, std::string> & env)
@@ -87,18 +97,19 @@ char** Cgi::_mapToEnv(std::map<std::string, std::string> & env)
 
 void Cgi::_ressourceToEnv()
 {
-	std::istringstream iss(_toIn);
-	std::string tmp;
+	_initEnv();
+	// std::istringstream iss(_toIn);
+	// std::string tmp;
 	
-	while (getline(iss, tmp, '&'))
-	{
-		std::istringstream iss2(tmp);
-		std::string key;
-		std::string value;
-		getline(iss2, key, '=');
-		getline(iss2, value);
-		_env[key] = value;
-	}
+	// while (getline(iss, tmp, '&'))
+	// {
+	// 	std::istringstream iss2(tmp);
+	// 	std::string key;
+	// 	std::string value;
+	// 	getline(iss2, key, '=');
+	// 	getline(iss2, value);
+	// 	_env[key] = value;
+	// }
 }
 
 const std::string Cgi::run()
