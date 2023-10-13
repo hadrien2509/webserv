@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/12 18:50:33 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/13 10:34:56 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,42 +53,9 @@ void Config::run()
 		// Send a message to the connection
 
 		std::string httpResponse;
-		int code = _cluster[0]->checkRequest(request);
-		if (code == 404)
-		{
-			httpResponse = "HTTP/1.1 404 Not Found\r\n"
-					"Content-Type: text/html; charset=UTF-8\r\n"
-					"Content-Length: ";
-		}
-		if (code == 200)
-		{
-			httpResponse = "HTTP/1.1 200 OK\r\n"
-                           "Content-Type: text/html; charset=UTF-8\r\n"
-                           "Content-Length: ";
-		}
-		std::string filePath = _cluster[0]->getRessourcePath();
-		// std::cout << filePath << std::endl;
-		std::ifstream file(filePath.c_str()); // Open the file for reading
-		if (!file.is_open()) {
-			throw std::runtime_error("Could not open file");
-		}
-
-		std::string fileContent;
-		std::stringstream ss1, ss2;
-
-		// Insert the length of the HTML content after Content-Length
-		ss1 << file.rdbuf(); // Read the file
-		fileContent = ss1.str();
-		ss2 << fileContent.length();
-		httpResponse += ss2.str();
-
-		// Finish up the headers and add the HTML content
-		httpResponse += "\r\n\r\n";
-
-		httpResponse += fileContent; // Add the file content to the string
-
-		// std::cout << httpResponse << std::endl;
-		file.close(); // Close the file when done
+		Response* response = _cluster[0]->checkRequest(request);
+		httpResponse = response->get();
+		delete response;
 
 		// Now, 'file_contents' contains the entire file as a string
 		

@@ -3,7 +3,7 @@ NAME = webserv
 FLAGS = -Wall -Werror -Wextra -std=c++98
 FSANITIZE = -g3 -fsanitize=address
 
-FILES = main.cpp Config.cpp Location.cpp Server.cpp Run.cpp Request.cpp \
+FILES = main.cpp Config.cpp Location.cpp Server.cpp Run.cpp Request.cpp Response.cpp\
 			cgi/Cgi.cpp cgi/cgiHandler.cpp
 # FILES_CGI = Cgi.cpp cgiHandler.cpp
 INCLUDE_DIR = include

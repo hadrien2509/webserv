@@ -7,6 +7,8 @@ class Location;
 
 class Request;
 
+class Response;
+
 class Server
 {
     public:
@@ -38,8 +40,8 @@ class Server
 		
 		const std::vector<std::string>&	getCgiExtension() const;
 		const std::vector<std::string>&	getCgiPath() const;
-		void				openRoot();
-		int					checkRequest(Request &request);
+		void							openRoot();
+		Response*					checkRequest(Request &request);
 
 		const std::string&		cgiHandler();
 
@@ -55,6 +57,8 @@ class Server
 		std::map<int, std::string>			_errorPage;
 		std::string							_allowMethods;
 		std::string							_ressourcePath;
+
+	    std::map<std::string, std::string>	_mimeTypes;
 
         std::vector<std::string> 			_cgiPath;  //needed here?
         std::vector<std::string> 			_cgiExtension;
