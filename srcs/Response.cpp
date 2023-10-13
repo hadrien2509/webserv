@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 16:43:41 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/14 00:45:19 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/14 01:09:37 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,79 @@ Response::~Response()
 const std::string&	Response::get() const
 {
 	return (_response);
+}
+
+const std::string&	Response::getVersion() const
+{
+	return (_version);
+}
+
+const std::string&	Response::getStatus() const
+{
+	return (_status);
+}
+
+const std::string&	Response::getPath() const
+{
+	return (_path);
+}
+
+const std::string&	Response::getContentType() const
+{
+	return (_contentType);
+}
+
+const std::string&	Response::getContentLength() const
+{
+	return (_contentLength);
+}
+
+const std::string&	Response::getHeader() const
+{
+	return (_header);
+}
+
+const std::string&	Response::getContent() const
+{
+	return (_content);
+}
+
+void Response::setResponse(std::string & response)
+{
+	_response = response;
+}
+
+void Response::setVersion(std::string & version)
+{
+	_version = version;
+}
+
+void Response::setStatus(std::string & status)
+{
+	_status = status;
+}
+
+void Response::setPath(std::string & path)
+{
+	_path = path;
+}
+
+void Response::setContentType(std::string & contentType)
+{
+	_contentType = contentType;
+}
+
+void Response::setContentLength(std::string & contentLength)
+{
+	_contentLength = contentLength;
+}
+
+void Response::setHeader(std::string & header)
+{
+	_header = header;
+}
+
+void Response::setContent(std::string & content)
+{
+	_content = content;
 }
