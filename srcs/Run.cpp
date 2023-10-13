@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/13 15:09:40 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/13 15:34:15 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void Config::run()
                 sockaddr_in client_addr;
                 socklen_t client_addr_len = sizeof(client_addr);
                 int client_socket = accept(_poll[i].fd, (struct sockaddr*)&client_addr, &client_addr_len);
-                
+
 				if (client_socket < 0)
 					throw std::runtime_error("Failed to grab connection. errno: ");
 
@@ -59,7 +59,18 @@ void Config::run()
 				httpResponse = response->get();
 				delete response;
 				
-				send(client_socket, httpResponse.c_str(), httpResponse.size(), 0);
+
+				try
+				{
+				/* code */
+					std::string strFromCgi = cgiHandler(_cluster[0]->getCgiExtension(), _cluster[0]->getCgiPath(), request.getPath());
+					send(client_socket, strFromCgi.c_str(), strFromCgi.size(), 0);
+				}
+				catch(const std::exception& e)
+				{
+					std::cerr << e.what() << '\n';
+					send(client_socket, httpResponse.c_str(), httpResponse.size(), 0);
+				}
             }
         }
 	}
