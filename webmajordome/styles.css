@@ -1,0 +1,112 @@
+body {
+	font-family: 'Courier New', monospace;
+	background-color: #000;
+	color: #fff;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+header {
+	background-color: #0077d9;
+	text-align: center;
+	padding: 20px;
+}
+
+h1 {
+	font-size: 36px;
+}
+
+p {
+	font-size: 18px;
+	margin: 20px;
+}
+
+nav {
+	background-color: #333;
+	text-align: center;
+	padding: 10px;
+}
+
+nav ul {
+	list-style-type: none;
+	padding: 0;
+	display: flex;
+	justify-content: center;
+}
+
+nav li {
+	margin: 0 20px;
+}
+
+nav a {
+	text-decoration: none;
+	color: #fff;
+	font-weight: bold;
+}
+
+main {
+	padding : 0 1em;
+	flex-grow: 1;
+}
+
+footer {
+	background-color: #333;
+	text-align: center;
+	padding: 10px;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+}
+
+.logo {
+	white-space: pre;
+}
+.form-container {
+	background-color: #333;
+	text-align: center;
+	padding: 20px;
+	margin: 20px;
+}
+
+.form-container form {
+	display: flex;
+	flex-direction: column;
+}
+
+.form-container label {
+	font-size: 18px;
+	color: #fff; /* Couleur du texte de l'étiquette */
+}
+
+.form-container input {
+	padding: 10px;
+	margin: 10px 0;
+	border: 1px solid #0077d9; /* Bordure autour des champs */
+	background-color: #333; /* Couleur de fond des champs */
+	color: #fff; /* Couleur du texte des champs */
+	border-radius: 5px; /* Coins arrondis des champs */
+}
+
+.form-container input[type="submit"] {
+	background-color: #0077d9;
+	color: #fff;
+	cursor: pointer;
+	padding: 10px;
+	border: none;
+	border-radius: 5px;
+}
+
+.result-container {
+	background-color: #333;
+	text-align: center;
+	padding: 20px;
+	margin: 20px;
+}
+
+.result-container p {
+	font-size: 18px;
+	color: #fff;
+}

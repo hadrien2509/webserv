@@ -1,16 +1,27 @@
 <!DOCTYPE html>
-<html lang="fr">
 <head>
+    <html lang="fr">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="styles.css">
     <title>Bienvenue chez les Webmajordomes</title>
 </head>
+
+<style>
+	body {
+		color : black;
+		background-image: url('rick-roll.gif');
+		background-repeat: no-repeat;
+		background-attachment: fixed;
+		background-size: 100% 100%;
+		background-color: #000;
+	}
+</style>
 <body>
     <nav>
         <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="rick.html">Rick</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="rick.html">rick</a></li>
         </ul>
     </nav>
 
@@ -30,7 +41,7 @@ $$$  / \$$$ |$$ |      $$ |  $$ |$$\   $$ |$$ |      $$ |  $$ |  \$$$  /
 $$  /   \$$ |$$$$$$$$\ $$$$$$$  |\$$$$$$  |$$$$$$$$\ $$ |  $$ |   \$  /   
 \__/     \__|\________|\_______/  \______/ \________|\__|  \__|    \_/    
         </div>
-		<img src="rick-roll.gif" />
+		<!-- <img src="rick-roll.gif" /> -->
         <section id="presentation">
             <h2>Présentation</h2>
             <p>Bienvenue sur notre site Web. Chez les Webmajordomes, nous sommes dédiés à fournir les meilleurs services web.</p>
@@ -44,15 +55,6 @@ $$  /   \$$ |$$$$$$$$\ $$$$$$$  |\$$$$$$  |$$$$$$$$\ $$ |  $$ |   \$  /
                 <li>Optimisation SEO</li>
                 <li>Hébergement Web</li>
             </ul>
-            <form action="/cgi-bin/form.py" method="post">
-                <label for="nom">Nom :</label>
-                <input type="text" id="nom" name="nom" required><br><br>
-
-                <label for="email">Email :</label>
-                <input type="email" id="email" name="email" required><br><br>
-
-                <input type="submit" value="Soumettre">
-            </form>
         </section>
         
         <section id="contact">
