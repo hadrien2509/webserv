@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/13 01:36:59 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/13 15:53:06 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,16 +70,12 @@ Cgi& Cgi::operator=(const Cgi & src)
 const std::string Cgi::run()
 {
 	pid_t pid;
-	int oldStdin;
-	(void)oldStdin;
 	int oldStdout;
 	(void)oldStdout;
-	int fdIn[2];
 	int fdOut[2];
 	int ret = 1;
 	char buffer[1024];
 	
-	// oldStdin = dup(STDIN_FILENO);
 	// oldStdout = dup(STDOUT_FILENO);
 	
 	if (!strchr(_path.c_str(), '.'))
@@ -89,15 +85,8 @@ const std::string Cgi::run()
 	if (!arg[0] || std::string(arg[0]).size() == 0)
 		throw CgiNotCgiException();
 
-	if (pipe(fdIn) == -1)
-	{
-		throw CgiPipeException();
-	}
-
 	if (pipe(fdOut) == -1)
 	{
-		close(fdIn[0]);
-		close(fdIn[1]);
 		throw CgiPipeException();
 	}
 
@@ -112,9 +101,7 @@ const std::string Cgi::run()
 	{
 		// here for the execve
 
-		close(fdIn[1]);
 		close(fdOut[0]);
-		dup2(fdIn[0], STDIN_FILENO);
 		dup2(fdOut[1], STDOUT_FILENO);
 
 		std::cerr << "CGI: " << _toIn << std::endl;
@@ -127,9 +114,7 @@ const std::string Cgi::run()
 	else
 	{
 		// here for the waitpid
-		close(fdIn[1]);
 		dup2(fdOut[0], STDOUT_FILENO);
-		close(fdIn[0]);
 		close(fdOut[1]);
 		waitpid(-1, NULL, 0);
 
@@ -140,7 +125,6 @@ const std::string Cgi::run()
 			_fromOut += std::string(buffer, ret);
 		}
 		close(fdOut[0]);
-		close(fdIn[1]);
 	}
 	return (_fromOut);
 }
