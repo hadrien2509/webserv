@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/14 21:09:38 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/14 21:24:57 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void Config::run()
 				std::string httpResponse = response->get();
 				delete response;
 
+				send(client_socket, httpResponse.c_str(), httpResponse.size(), 0);
 				try
 				{
 				/* code */
@@ -76,11 +77,11 @@ void Config::run()
 				}
 				catch(const Cgi::CgiNotCgiException& e)
 				{
-					send(client_socket, httpResponse.c_str(), httpResponse.size(), 0);
 					std::cerr << e.what() << '\n';
 				}
 				catch(const std::exception& e)
 				{
+					send(client_socket, httpResponse.c_str(), httpResponse.size(), 0);
 					std::cerr << e.what() << '\n';
 				}
             }
