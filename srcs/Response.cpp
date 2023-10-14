@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 16:43:41 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/14 01:19:05 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/14 20:12:45 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,11 @@ Response::Response(std::string code, std::string contentPath, std::map<std::stri
 	ss2 << _content.length(); // Convert the length to a string
 	std::string	contentLength = ss2.str();
 
-	_contentType = mimeTypes[contentPath.substr(contentPath.find_last_of("."))];
+	std::cout << contentPath << std::endl;
+	if (contentPath.find_last_of(".") == std::string::npos)
+		_contentType = "text/html";
+	else
+		_contentType = mimeTypes[contentPath.substr(contentPath.find_last_of("."))];
 	_header = _version + " " + _status + "\r\n";
 	_header += "Content-Type: " + _contentType + "\r\n";
 	_header += "Content-Length: " + contentLength + "\r\n\r\n";
