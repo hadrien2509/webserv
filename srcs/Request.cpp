@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:01 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/11 22:51:12 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/14 23:13:14 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ Request::Request(const Request &src) : _connection(src._connection)
 
 Request::~Request()
 {
-	close(_connection);
 }
 
 Request	&Request::operator=(const Request &rhs)
