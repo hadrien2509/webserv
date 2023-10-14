@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 16:43:41 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/14 20:12:45 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/14 21:21:25 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,15 @@ Response::Response(std::string code, std::string contentPath, std::map<std::stri
 	file.close(); // Close the file
 	_content = ss1.str();
 	ss2 << _content.length(); // Convert the length to a string
-	std::string	contentLength = ss2.str();
+	_contentLength = ss2.str();
 
-	std::cout << contentPath << std::endl;
 	if (contentPath.find_last_of(".") == std::string::npos)
 		_contentType = "text/html";
 	else
 		_contentType = mimeTypes[contentPath.substr(contentPath.find_last_of("."))];
 	_header = _version + " " + _status + "\r\n";
 	_header += "Content-Type: " + _contentType + "\r\n";
-	_header += "Content-Length: " + contentLength + "\r\n\r\n";
+	_header += "Content-Length: " + _contentLength + "\r\n\r\n";
 
 	_response = _header; // Add the header to the response
 	_response += _content; // Add the file content to the response
