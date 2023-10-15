@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 16:12:24 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/13 23:03:31 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/15 09:15:02 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ class Response
 		std::string _content;
 		
 	public :
+		Response();
 		Response(std::string code, std::string contentPath, std::map<std::string, std::string>& mimeTypes);
 		~Response();
 		

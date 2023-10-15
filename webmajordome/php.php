@@ -25,6 +25,7 @@
 <body>
     <header>
         <h1>Bienvenue chez les Webmajordomes
+            <div id="heure"></div>
             <script src="script.js"></script>
         </h1>
     </header>

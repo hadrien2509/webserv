@@ -3,14 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 16:43:41 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/14 21:21:25 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/15 09:15:01 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Response.hpp"
+
+Response::Response()
+{
+}
 
 Response::Response(std::string code, std::string contentPath, std::map<std::string, std::string> &mimeTypes) : _version ("HTTP/1.1"), _status(code)
 {

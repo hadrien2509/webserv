@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/14 00:41:30 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/15 09:06:41 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ const std::string Cgi::run()
 		delete [] env;
 		throw CgiNotCgiException();
 	}
-	if (access(arg[0], F_OK) != 0)
+	if (access(arg[0], F_OK) != 0 || access(arg[1], F_OK) != 0)
 	{
 		delete [] env;
 		throw CgiFileException();
