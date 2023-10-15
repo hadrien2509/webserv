@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 16:12:24 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/15 09:15:02 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/15 14:08:31 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@
 class Response
 {
 	private :
-		std::string	_version;
-		std::string	_status;
-		std::string	_path;
-		std::string _contentType;
-		std::string _contentLength;
-		std::string _response;
+		std::string	_version; // version of http ex: HTTP/1.1
+		std::string	_status; // status of response ex: 200 OK
+		std::string	_path; // ??
+		std::string _contentType; // type of content ex: text/html from _mimeTypes (server || config)
+		std::string _contentLength; // content length ex: 1234
+		std::string _response; // string with all data ex: html content
 
 		std::string _header;
 		std::string _content;
