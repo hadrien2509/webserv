@@ -21,7 +21,7 @@
 
     <main>
         <div class="form-container">
-            <h2>Formulaire GET</h2>
+            <h2>form.py</h2>
             <form action="cgi-bin/form.py" method="get">
                 <label for="get_name">Nom :</label>
                 <input type="text" id="get_name" name="name" placeholder="Votre nom" required>
@@ -30,14 +30,14 @@
                 <input type="submit" value="Soumettre (GET)">
             </form>
         </div>
-        <div class="form-container">
-            <h2>Formulaire POST</h2>
-            <form action="cgi-bin/form.py" method="post">
+		<div class="form-container">
+            <h2>result.html</h2>
+            <form action="result.html" method="get">
                 <label for="get_name">Nom :</label>
                 <input type="text" id="get_name" name="name" placeholder="Votre nom" required>
                 <label for="get_email">Email :</label>
                 <input type="text" id="get_email" name="email" placeholder="Votre email" required>
-                <input type="submit" value="Soumettre (POST)">
+                <input type="submit" value="Soumettre (GET)">
             </form>
         </div>
     </main>

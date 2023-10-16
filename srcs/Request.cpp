@@ -54,8 +54,13 @@ void	Request::_parseRequest(const std::string &request)
 		
 		iss2 >> _method >> _path >> _httpVersion;
 	}
-	// else
-	// 	throw std::runtime_error("Failed to parse request");
+	std::string str;
+	size_t pos = _path.find('?');
+
+    if (pos != std::string::npos) {
+        str = _path.substr(pos + 1);
+        _path = _path.substr(0, pos);
+    }
 }
 
 const std::string&	Request::getMethod() const
