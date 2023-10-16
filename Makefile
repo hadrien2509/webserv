@@ -6,7 +6,7 @@ FSANITIZE = -g3 -fsanitize=address
 FILES = main.cpp Config.cpp Location.cpp Server.cpp Run.cpp Request.cpp Response.cpp\
 			cgi/Cgi.cpp cgi/cgiHandler.cpp
 # FILES_CGI = Cgi.cpp cgiHandler.cpp
-INCLUDE_DIR = include
+INCLUDE_DIR = includes
 
 OBJS_DIR = objs
 SRCS_DIR = srcs
@@ -19,17 +19,17 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@c++ $(FLAGS) -o $(NAME) $(OBJS) $(FSANITIZE)
-	@echo "\n\033[0;32mDone !\n\033[0m"
+	@echo "\n\033[0;32mDone !\033[0m"
 
 ${OBJS_DIR}/%.o: ${SRCS_DIR}/%.cpp
 	@mkdir -p ${@D}
-	@printf "\033[0;33mGenerating webserv objects... %-38.38s\r" $@
+	@printf "\033[0;33mGenerate %-38.38s\r" $@
 	@c++ $(FLAGS) -I $(INCLUDE_DIR) $(FSANITIZE) -c $< -o $@
 
 clean:
 	@${RM} -r ${OBJS_DIR}
-	rm -f $(OBJS)
-
+	@rm -f $(OBJS)
+	@printf "\033[0;31mDelete object\n"
 fclean: clean
 	rm -f $(NAME)
 
