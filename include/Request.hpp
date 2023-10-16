@@ -35,6 +35,7 @@ class Request
 		const std::string&	getMethod() const;
 		const std::string&	getPath() const;
 		const std::string&	getHttpVersion() const;
+		void	setPath(std::string path);
 };
 
 #endif

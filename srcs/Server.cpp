@@ -278,6 +278,9 @@ Location *Server::checkLocation(Request &request)
         }
         ++it;
     }
+	if (location && bestMatch.length() > 1)
+		request.setPath(request.getPath().substr(bestMatch.length()));
+    
     return (location);
 }
 
