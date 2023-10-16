@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pong Game</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: black;
+    }
+    canvas {
+      background-color: black;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="pong" width="800" height="400"></canvas>
+  <script>
+    const canvas = document.getElementById("pong");
+    const ctx = canvas.getContext("2d");
+
+    // Paddles
+    const paddleWidth = 10, paddleHeight = 100;
+    let leftPaddleY = (canvas.height - paddleHeight) / 2;
+    let rightPaddleY = (canvas.height - paddleHeight) / 2;
+    const paddleSpeed = 5;
+
+    // Ball
+    const ballSize = 10;
+    let ballX = canvas.width / 2;
+    let ballY = canvas.height / 2;
+    let ballSpeedX = 7, ballSpeedY = 5;
+
+    // Scores
+    let leftScore = 0, rightScore = 0;
+    const maxScore = 10;
+
+    // Game loop
+    function gameLoop() {
+      moveBall();
+      moveRightPaddle(); // Control the right paddle with a simple bot
+      draw();
+      requestAnimationFrame(gameLoop);
+    }
+
+    // Ball control
+    function moveBall() {
+      ballX += ballSpeedX;
+      ballY += ballSpeedY;
+
+      if (ballY < 0 || ballY > canvas.height) {
+        ballSpeedY = -ballSpeedY;
+      }
+
+      if (ballX < paddleWidth) {
+        if (ballY > leftPaddleY && ballY < leftPaddleY + paddleHeight) {
+          ballSpeedX = -ballSpeedX;
+        } else {
+          rightScore++;
+          resetBall();
+        }
+      }
+
+      if (ballX > canvas.width - paddleWidth) {
+        if (ballY > rightPaddleY && ballY < rightPaddleY + paddleHeight) {
+          ballSpeedX = -ballSpeedX;
+        } else {
+          leftScore++;
+          resetBall();
+        }
+      }
+
+      if (leftScore >= maxScore || rightScore >= maxScore) {
+        // Reset the scores and ball position.
+        leftScore = 0;
+        rightScore = 0;
+        resetGame();
+      }
+    }
+
+    function resetBall() {
+      ballX = canvas.width / 2;
+      ballY = canvas.height / 2;
+      ballSpeedX = 7;
+      ballSpeedY = 5;
+    }
+
+    function resetGame() {
+      leftPaddleY = (canvas.height - paddleHeight) / 2;
+      rightPaddleY = (canvas.height - paddleHeight) / 2;
+      resetBall();
+    }
+
+    // Mouse control for left paddle
+    canvas.addEventListener("mousemove", function (event) {
+      const mouseY = event.clientY - canvas.getBoundingClientRect().top;
+      leftPaddleY = mouseY - paddleHeight / 2;
+    });
+
+    function moveRightPaddle() {
+      // Implement bot logic here
+      // For simplicity, we'll just move the right paddle based on the ball's position
+      if (rightPaddleY + paddleHeight / 2 < ballY) {
+        rightPaddleY += paddleSpeed;
+      } else if (rightPaddleY + paddleHeight / 2 > ballY) {
+        rightPaddleY -= paddleSpeed;
+      }
+    }
+
+    function draw() {
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw paddles
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, leftPaddleY, paddleWidth, paddleHeight);
+      ctx.fillRect(canvas.width - paddleWidth, rightPaddleY, paddleWidth, paddleHeight);
+
+      // Draw ball
+      ctx.beginPath();
+      ctx.arc(ballX, ballY, ballSize, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Display scores
+      ctx.font = "30px Arial";
+      ctx.fillStyle = "white";
+      ctx.fillText(leftScore, canvas.width / 4, 50);
+      ctx.fillText(rightScore, (canvas.width * 3) / 4, 50);
+    }
+
+    // Fullscreen
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      resetGame();
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+
+    gameLoop();
+  </script>
+</body>
+</html>
