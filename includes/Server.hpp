@@ -42,6 +42,9 @@ class Server
 		const bool&									getAutoIndex() const;
 		const std::map<std::string, std::string>&	getMimeTypes() const;
 		const std::vector<struct pollfd>&			getPollfds() const;
+		Response*									getResponse() const;
+		void										deleteResponse();
+		void										addResponse(Response *response);
 		
 		const std::vector<std::string>&				getCgiExtension() const;
 		const std::vector<std::string>&				getCgiPath() const;
@@ -64,6 +67,7 @@ class Server
 		std::map<int, std::string>			_errorPage;
 		std::vector<std::string>			_allowMethods;
 		std::string							_ressourcePath;
+		// std::stack<Response*>				_responses;
 
 	    std::map<std::string, std::string>	_mimeTypes;
 

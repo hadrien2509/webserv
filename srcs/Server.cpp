@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/14 22:58:01 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/17 18:40:19 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,6 +265,22 @@ void Server::addCgiExtension(std::string cgiExtension)
 {
 	_cgiExtension.push_back(cgiExtension);
 }
+
+// Response* Server::getResponse() const
+// {
+// 	return (_responses.top());
+// }
+
+// void Server::addResponse(Response* response)
+// {
+// 	_responses.push(response);
+// }
+
+// void Server::deleteResponse()
+// {
+// 	delete _responses.top();
+// 	_responses.pop();
+// }
 
 Location *Server::checkLocation(Request &request)
 {

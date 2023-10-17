@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/13 16:24:27 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/17 18:38:37 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ class Config
 		std::string	_getRessourceType(std::istringstream &);
 		
 		void		_createPoll();
+		void		_addPollfd(int fd, short events);
 		
 		std::string					_ignoreComments(std::string line);
 		std::vector<Server*>		_cluster;
@@ -67,7 +68,9 @@ class Config
 		size_t						_pollsize;
 		pollfd*						_poll;
 		
-		std::map<int, Server*>		_socketToServer;
+		std::map<int, Server*>		_serverSocketToServer;
+		std::map<int, Server*>		_clientSocketToServer;
+		std::map<int, Response*>	_clientSocketToResponse;
 		
 	public :
 	

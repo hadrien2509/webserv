@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/15 22:29:52 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/17 19:05:23 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,21 @@ void Config::_createPoll()
         for (size_t j = 0; j < temp.size(); j++)
 		{
 			_poll[currentIndex++] = temp[j];
-			_socketToServer[temp[j].fd] = _cluster[i];
+			_serverSocketToServer[temp[j].fd] = _cluster[i];
 		}
 	}
+}
+
+void Config::_addPollfd(int fd, short events)
+{
+	struct pollfd *newPoll = new struct pollfd[_pollsize + 1];
+	for (size_t i = 0; i < _pollsize; i++)
+		newPoll[i] = _poll[i];
+	newPoll[_pollsize].fd = fd;
+	newPoll[_pollsize].events = events;
+	delete[] _poll;
+	_poll = newPoll;
+	_pollsize++;
 }
 
 void Config::run()
@@ -45,33 +57,30 @@ void Config::run()
 			continue;
 		for (size_t i = 0; i < _pollsize; i++)
 		{
-            if (_poll[i].revents & POLLIN) {
-                // The listen socket is ready, indicating an incoming connection.
-                sockaddr_in client_addr;
-                socklen_t client_addr_len = sizeof(client_addr);
-                int client_socket = accept(_poll[i].fd, (struct sockaddr*)&client_addr, &client_addr_len);
-
-				if (client_socket < 0)
-					throw std::runtime_error("Failed to grab connection. errno: ");
-
-				std::cout << "New connection from " << client_socket << std::endl; 
-				struct pollfd connection;
-				connection.fd = client_socket;
-				connection.events = POLLIN;
-				while (poll(&connection, 1, 100) > 0)
+            if (_poll[i].revents & POLLIN)
+			{
+				Server *server = _serverSocketToServer[_poll[i].fd];
+				if (server)
 				{
-					Request request(client_socket);
-					Server *server = _socketToServer[_poll[i].fd];
-					Location *location = server->checkLocation(request);
-					Response* response;
-					if (location)
-						response = location->checkRequest(request);
-					else
-						response = server->checkRequest(request);
-					std::string httpResponse = response->get();
-					// delete response;
+					sockaddr_in client_addr;
+                	socklen_t client_addr_len = sizeof(client_addr);
+               		int client_socket = accept(_poll[i].fd, (struct sockaddr*)&client_addr, &client_addr_len);
 
-					// send(client_socket, httpResponse.c_str(), httpResponse.size(), 0);
+					if (client_socket < 0)
+						throw std::runtime_error("Failed to grab connection. errno: ");
+
+					std::cout << "New connection from " << client_socket << std::endl;
+					_clientSocketToServer[client_socket] = server;
+					_addPollfd(client_socket, POLLIN);
+				}
+				else
+				{
+					server = _clientSocketToServer[_poll[i].fd];
+					if (!server)
+						throw std::runtime_error("Server not found");
+					Request request(_poll[i].fd);
+					Location *location = server->checkLocation(request);
+					Response* response = NULL;
 					try
 					{
 					/* code */
@@ -80,28 +89,39 @@ void Config::run()
 							strFromCgi = cgiHandler(location->getCgiExtension(), location->getCgiPath(), request.getPath());
 						else
 							strFromCgi = cgiHandler(server->getCgiExtension(), server->getCgiPath(), request.getPath());
-						send(client_socket, strFromCgi.c_str(), strFromCgi.size(), 0);
-					// std::cerr << "RUN: " << response->getHeader() << "|" << std::endl;
 					}
 					catch(const Cgi::CgiNotCgiException& e)
 					{
-						send(client_socket, httpResponse.c_str(), httpResponse.size(), 0);
+						if (location)
+							response = location->checkRequest(request);
+						else
+							response = server->checkRequest(request);
 					}
 					catch(const Cgi::CgiFileException& e)
 					{
 						// 404 --> will be modified with next version of cgi handler
 						std::cerr << e.what() << '\n';
-						send(client_socket, e.what(), std::string (e.what()).size(), 0);
 					}
 					catch(const std::exception& e)
 					{
 						std::cerr << e.what() << '\n';
-						send(client_socket, e.what(), std::string (e.what()).size(), 0);
 					}
-					delete response;
+					_clientSocketToResponse[_poll[i].fd] = response;
+					_poll[i].events = POLLOUT;
 				}
-				close(client_socket);
-            }
+			}
+			else if (_poll[i].revents & POLLOUT)
+			{
+				Response* response = _clientSocketToResponse[_poll[i].fd];
+				if (response == NULL)
+					continue;
+				std::string httpResponse = response->get();
+				delete response;
+				_clientSocketToResponse.erase(_poll[i].fd);
+
+				send(_poll[i].fd, httpResponse.c_str(), httpResponse.size(), 0);
+				_poll[i].events = POLLIN;
+			}
         }
 	}
 }
