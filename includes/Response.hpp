@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 16:12:24 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/15 14:08:31 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/17 19:10:22 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ class Response
 	private :
 		std::string	_version; // version of http ex: HTTP/1.1
 		std::string	_status; // status of response ex: 200 OK
-		std::string	_path; // ??
+		std::string	_path; // path of content ex: /index.html that gets read for content (unless cgi)
 		std::string _contentType; // type of content ex: text/html from _mimeTypes (server || config)
 		std::string _contentLength; // content length ex: 1234
 		std::string _response; // string with all data ex: html content
 
-		std::string _header;
-		std::string _content;
+		std::string _header;	// header of response ex: HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 1234\r\n\r\n
+		std::string _content;	// content of response ex: <html><body><h1>Hello World!</h1></body></html>
 		
 	public :
 		Response();
