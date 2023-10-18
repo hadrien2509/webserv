@@ -67,7 +67,7 @@ class Server
 		std::map<int, std::string>			_errorPage;
 		std::vector<std::string>			_allowMethods;
 		std::string							_ressourcePath;
-		// std::stack<Response*>				_responses;
+		std::stack<Response*>				_responses;
 
 	    std::map<std::string, std::string>	_mimeTypes;
 

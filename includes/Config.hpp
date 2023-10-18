@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/17 18:38:37 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/17 19:47:47 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <sstream>
 # include <string>
 # include <vector>
+# include <algorithm>
+# include <stack>
 # include <map>
 # include <cstdlib>
 # include <dirent.h>

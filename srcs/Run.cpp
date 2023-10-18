@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/17 19:05:23 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/17 20:14:37 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void Config::run()
 	_createPoll();
 	while (1)
 	{
-		std::cout << "Waiting for connections..." << std::endl;
+		// std::cout << "Waiting for connections..." << std::endl;
 		if (poll(_poll, _pollsize, -1) <= 0)  // Infinite timeout for simplicity
 			continue;
 		for (size_t i = 0; i < _pollsize; i++)
@@ -71,7 +71,7 @@ void Config::run()
 
 					std::cout << "New connection from " << client_socket << std::endl;
 					_clientSocketToServer[client_socket] = server;
-					_addPollfd(client_socket, POLLIN);
+					_addPollfd(client_socket, POLLIN | POLLOUT);
 				}
 				else
 				{
@@ -106,21 +106,19 @@ void Config::run()
 					{
 						std::cerr << e.what() << '\n';
 					}
-					_clientSocketToResponse[_poll[i].fd] = response;
-					_poll[i].events = POLLOUT;
+					server->addResponse(response);
 				}
 			}
 			else if (_poll[i].revents & POLLOUT)
 			{
-				Response* response = _clientSocketToResponse[_poll[i].fd];
+				Server*	server = _clientSocketToServer[_poll[i].fd];
+				Response* response = server->getResponse();
 				if (response == NULL)
 					continue;
 				std::string httpResponse = response->get();
-				delete response;
-				_clientSocketToResponse.erase(_poll[i].fd);
+				server->deleteResponse();
 
 				send(_poll[i].fd, httpResponse.c_str(), httpResponse.size(), 0);
-				_poll[i].events = POLLIN;
 			}
         }
 	}
