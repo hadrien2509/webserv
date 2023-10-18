@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/18 18:48:56 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/18 20:25:44 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,31 +79,11 @@ void Config::run()
 					Request request(_poll[i].fd);
 					std::cout << request.getPath() << std::endl;
 					Location *location = server->checkLocation(request);
-					Response* response = NULL;
-					try
-					{
-						if (location)
-							response = cgiHandler(request, location);
-						else
-							response = cgiHandler(request, server);
-					}
-					catch(const Cgi::CgiNotCgiException& e)
-					{
-						if (location)
-							response = location->checkRequest(request);
-						else
-							response = server->checkRequest(request);
-					}
-					catch(const Cgi::CgiFileException& e)
-					{
-						// 404 --> will be modified with next version of cgi handler
-						std::cerr << e.what() << '\n';
-					}
-					catch(const std::exception& e)
-					{
-						// std::cerr << "HERE\n";
-						std::cerr << e.what() << '\n';
-					}
+					Response *response;
+					if (location)
+						response = location->checkRequest(request);
+					else
+						response = server->checkRequest(request);
 					server->addResponse(response);
 				}
 			}
