@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:21:31 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/18 15:26:22 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/18 19:39:54 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,31 +101,51 @@ void			Location::addIndex(std::string index)
 
 Response* Location::checkRequest(Request& request)
 {
-	std::string ressourcePath;
-	std::string ressourceType;
-
 	if (request.getPath() == "/")
 	{
 		for (std::vector<std::string>::const_iterator it = _index.begin(); it != _index.end(); it++)
 		{
-			ressourcePath = _rootPath + "/" + (*it);
-			if (access(ressourcePath.c_str(), F_OK) == 0)
-				return (new Response("200 OK", ressourcePath, _mimeTypes));
+			request.setPath(_rootPath + "/" + (*it));
+			
+			if (access(request.getPath().c_str(), F_OK) == 0)
+			{
+				try
+				{
+					Response *response = cgiHandler(request, this);
+					return (response);
+				}
+				catch(const std::exception& e)
+				{
+					return (new Response("200 OK", request.getPath(), _mimeTypes));
+					std::cerr << e.what() << '\n';
+				}
+			}
 		}
 		if (_autoIndex)
 		{
 			std::cout << "AutoIndex" << std::endl;
-			return (new Response("200 OK", ressourcePath, _mimeTypes));
+			return (new Response("200 OK", request.getPath(), _mimeTypes));
 		}
 		else
 		{
-			ressourcePath = _rootPath + "/" + _errorPage[403];
-			return (new Response("403 Forbidden", ressourcePath, _mimeTypes));
+			request.setPath(_rootPath + "/" + _errorPage[403]);
+			return (new Response("403 Forbidden", request.getPath(), _mimeTypes));
 		}
 	}
-	ressourcePath = _rootPath + request.getPath();
-	if (access(ressourcePath.c_str(), F_OK) == 0)
-		return (new Response("200 OK", ressourcePath, _mimeTypes));
-	ressourcePath = _rootPath + "/" + _errorPage[404];
-	return (new Response("404 Not Found", ressourcePath, _mimeTypes));
+	request.setPath(_rootPath + request.getPath());
+	if (access(request.getPath().c_str(), F_OK) == 0)
+	{
+		try
+		{
+			Response *response = cgiHandler(request, this);
+			return (response);
+		}
+		catch (const std::exception &e)
+		{
+			return (new Response("200 OK", request.getPath(), _mimeTypes));
+			std::cerr << e.what() << '\n';
+		}
+	}
+	request.setPath(_rootPath + "/" + _errorPage[404]);
+	return (new Response("404 Not Found", request.getPath(), _mimeTypes));
 }

@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/18 16:29:24 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/18 19:37:05 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,13 +125,14 @@ const std::string& Cgi::run()
 	char buffer[1024];
 	
 	std::string totalPath = _path;
-	// std::cerr << "CGI: " << totalPath << std::endl;
+	std::cerr << "CGI: " << totalPath << std::endl;
+	// std::cerr << "HERE" << '\n';
 	if (!strchr(totalPath.c_str(), '.'))
 		throw CgiPathException();
 
 	_varExtension = strchr(totalPath.c_str(), '.');
 	const char *arg[] = {_exePath[_varExtension].c_str(), totalPath.c_str(), NULL};
-	
+		
 	// char **env process
 	_ressourceToEnv();
 	char **env = _mapToEnv(_env);

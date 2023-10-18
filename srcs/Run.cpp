@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/18 17:20:30 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/18 18:48:56 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,16 +77,15 @@ void Config::run()
 				{
 					Server* server = _clientSocketToServer[_poll[i].fd];
 					Request request(_poll[i].fd);
+					std::cout << request.getPath() << std::endl;
 					Location *location = server->checkLocation(request);
 					Response* response = NULL;
 					try
 					{
-						std::string strFromCgi;
 						if (location)
 							response = cgiHandler(request, location);
 						else
 							response = cgiHandler(request, server);
-							// strFromCgi = cgiHandler(server->getCgiExtension(), server->getCgiPath(), request.getPath());
 					}
 					catch(const Cgi::CgiNotCgiException& e)
 					{
@@ -102,6 +101,7 @@ void Config::run()
 					}
 					catch(const std::exception& e)
 					{
+						// std::cerr << "HERE\n";
 						std::cerr << e.what() << '\n';
 					}
 					server->addResponse(response);

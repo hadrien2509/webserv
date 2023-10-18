@@ -14,6 +14,7 @@
 # include "Request.hpp"
 # include "Response.hpp"
 # include "Location.hpp"
+# include "Config.hpp"
 
 class Server
 {
@@ -59,7 +60,6 @@ class Server
 
 		Location*					checkLocation(Request &request);
 		
-		const std::string&		cgiHandler();
 
     private:
 		std::vector<struct pollfd>			_pollfds;

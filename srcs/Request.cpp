@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:01 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/14 23:13:14 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/18 18:21:29 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,16 @@
 Request::Request(const int& connection) : _connection(connection)
 {
 	ssize_t bytesRead;
-	char buffer[1000];
+	char buffer[1024];
 	std::string request;
 
-	bytesRead = recv(_connection, buffer, 1000, 0);
+	bytesRead = recv(_connection, buffer, 1023, 0);
+	if (bytesRead > 0)
+		buffer[bytesRead] = '\0';
 	request += buffer;
-	if (bytesRead == -1)
-		throw std::runtime_error("Failed to read request");
-	std::cout << request << std::endl;
+	// if (bytesRead == -1)
+		// throw std::runtime_error("Failed to read request");
+	// std::cout << request << std::endl;
 	_parseRequest(request);
 }
 
