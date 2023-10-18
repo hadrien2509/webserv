@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 16:12:24 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/17 19:10:22 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/18 12:11:20 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ class Response
 		const std::string&	getHeader() const;
 		const std::string&	getContent() const;
 		
-		void setResponse(std::string & response);
+		void setResponse(const std::string & response);
 		void setVersion(std::string & version);
-		void setStatus(std::string & status);
+		void setStatus(const std::string & status);
 		void setPath(std::string & path);
 		void setContentType(std::string & contentType);
-		void setContentLength(std::string & contentLength);
+		void setContentLength(const std::string & contentLength);
 		void setHeader(std::string & header);
 		void setContent(std::string & content);
 };

@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 16:43:41 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/15 09:15:01 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/18 12:16:45 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ const std::string&	Response::getContent() const
 	return (_content);
 }
 
-void Response::setResponse(std::string & response)
+void Response::setResponse(const std::string & response)
 {
 	_response = response;
 }
@@ -95,7 +95,7 @@ void Response::setVersion(std::string & version)
 	_version = version;
 }
 
-void Response::setStatus(std::string & status)
+void Response::setStatus(const std::string & status)
 {
 	_status = status;
 }
@@ -110,9 +110,9 @@ void Response::setContentType(std::string & contentType)
 	_contentType = contentType;
 }
 
-void Response::setContentLength(std::string & contentLength)
+void Response::setContentLength(const std::string & contentLength)
 {
-	_contentLength = contentLength;
+	_contentLength = contentLength.length();
 }
 
 void Response::setHeader(std::string & header)
