@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/18 14:09:04 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/18 17:20:30 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ void Config::run()
 		{
             if (_poll[i].revents & POLLIN)
 			{
-				Server *server = _serverSocketToServer[_poll[i].fd];
-				if (server)
+				if (_serverSocketToServer.find(_poll[i].fd) != _serverSocketToServer.end())
 				{
+					Server *server = _serverSocketToServer[_poll[i].fd];
 					sockaddr_in client_addr;
                 	socklen_t client_addr_len = sizeof(client_addr);
                		int client_socket = accept(_poll[i].fd, (struct sockaddr*)&client_addr, &client_addr_len);
@@ -69,15 +69,13 @@ void Config::run()
 					if (client_socket < 0)
 						throw std::runtime_error("Failed to grab connection. errno: ");
 
-					std::cout << "New connection from " << client_socket << std::endl;
+					std::cout << "New connection in " << _poll[i].fd << std::endl;
 					_clientSocketToServer[client_socket] = server;
 					_addPollfd(client_socket, POLLIN | POLLOUT);
 				}
 				else
 				{
-					server = _clientSocketToServer[_poll[i].fd];
-					if (!server)
-						throw std::runtime_error("Server not found");
+					Server* server = _clientSocketToServer[_poll[i].fd];
 					Request request(_poll[i].fd);
 					Location *location = server->checkLocation(request);
 					Response* response = NULL;
@@ -111,6 +109,8 @@ void Config::run()
 			}
 			else if (_poll[i].revents & POLLOUT)
 			{
+				if (_clientSocketToServer.find(_poll[i].fd) == _clientSocketToServer.end())
+					continue;
 				Server*	server = _clientSocketToServer[_poll[i].fd];
 				Response* response = server->getResponse();
 				if (response == NULL)
