@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 16:43:41 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/18 12:16:45 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/18 13:51:47 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 
 Response::Response()
 {
+}
+
+Response::Response(std::string code, std::string httpVersion, std::string path) : _version (httpVersion), _status(code), _path(path)
+{
+	_header = _version + " " + _status + "\r\n";
+	_response = _header;
 }
 
 Response::Response(std::string code, std::string contentPath, std::map<std::string, std::string> &mimeTypes) : _version ("HTTP/1.1"), _status(code)
@@ -105,7 +111,7 @@ void Response::setPath(std::string & path)
 	_path = path;
 }
 
-void Response::setContentType(std::string & contentType)
+void Response::setContentType(const std::string & contentType)
 {
 	_contentType = contentType;
 }
@@ -120,7 +126,8 @@ void Response::setHeader(std::string & header)
 	_header = header;
 }
 
-void Response::setContent(std::string & content)
+void Response::setContent(const std::string & content)
 {
 	_content = content;
+	_contentLength = content.length();
 }

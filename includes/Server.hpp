@@ -1,13 +1,19 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
-# include "Config.hpp"
+# include <iostream>
+# include <string>
+# include <vector>
+# include <map>
+# include <dirent.h>
+# include <stack>
+# include <sys/socket.h>
+# include <netinet/in.h>
+# include <poll.h>
 
-class Location;
-
-class Request;
-
-class Response;
+# include "Request.hpp"
+# include "Response.hpp"
+# include "Location.hpp"
 
 class Server
 {

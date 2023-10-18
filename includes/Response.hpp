@@ -6,14 +6,18 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 16:12:24 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/18 12:11:20 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/18 15:38:53 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RESPONSE_HPP
 # define RESPONSE_HPP
 
-# include "Config.hpp"
+# include <iostream>
+# include <string>
+# include <map>
+# include <sstream>
+# include <fstream>
 
 class Response
 {
@@ -30,6 +34,7 @@ class Response
 		
 	public :
 		Response();
+		Response(std::string code, std::string httpVersion, std::string path);
 		Response(std::string code, std::string contentPath, std::map<std::string, std::string>& mimeTypes);
 		~Response();
 		
@@ -46,10 +51,10 @@ class Response
 		void setVersion(std::string & version);
 		void setStatus(const std::string & status);
 		void setPath(std::string & path);
-		void setContentType(std::string & contentType);
+		void setContentType(const std::string & contentType);
 		void setContentLength(const std::string & contentLength);
 		void setHeader(std::string & header);
-		void setContent(std::string & content);
+		void setContent(const std::string & content);
 };
 
 #endif

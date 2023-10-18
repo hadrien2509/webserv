@@ -3,18 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:25 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/17 19:07:30 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/18 15:32:42 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef REQUEST_HPP
 # define REQUEST_HPP
 
-# include "Config.hpp"
-# include "Cgi.hpp"
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <sys/socket.h>
 
 class Request
 {

@@ -3,23 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   Location.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:20:40 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/13 19:14:23 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/18 15:43:56 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LOCATION_HPP
 # define LOCATION_HPP
 
-# include "Config.hpp"
+# include <iostream>
+# include <string>
+# include <vector>
+# include <map>
+# include <dirent.h>
+# include <unistd.h>
 
-class Response;
+# include "Request.hpp"
+# include "Response.hpp"
 
 class Server;
-
-class Request;
 
 class Location
 {
@@ -48,10 +52,13 @@ class Location
 		const std::vector<std::string>&	getAllowMethods() const;
 		const std::vector<std::string>&	getCgiExtension() const;
 		const std::vector<std::string>&	getCgiPath() const;
+		const std::map<std::string, std::string> getMimeTypes() const;
 
 		void			setRoot(DIR*, std::string);
 		void			addIndex(std::string);
 		Response*		checkRequest(Request& request);
 };
+
+# include "Server.hpp"
 
 #endif

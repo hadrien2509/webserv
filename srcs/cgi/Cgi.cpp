@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/15 09:06:41 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/18 16:29:24 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,18 +112,25 @@ void Cgi::_ressourceToEnv()
 	// }
 }
 
-const std::string Cgi::run()
+std::string Cgi::getExtension() const
+{
+	return (_varExtension);
+}
+
+const std::string& Cgi::run()
 {
 	pid_t pid;
 	int fdOut[2];
 	int ret = 1;
 	char buffer[1024];
 	
-	if (!strchr(_path.c_str(), '.'))
+	std::string totalPath = _path;
+	// std::cerr << "CGI: " << totalPath << std::endl;
+	if (!strchr(totalPath.c_str(), '.'))
 		throw CgiPathException();
 
-	std::string varExtention = strchr(_path.c_str(), '.');
-	const char *arg[] = {_exePath[varExtention].c_str(), _path.c_str(), NULL};
+	_varExtension = strchr(totalPath.c_str(), '.');
+	const char *arg[] = {_exePath[_varExtension].c_str(), totalPath.c_str(), NULL};
 	
 	// char **env process
 	_ressourceToEnv();
@@ -159,7 +166,7 @@ const std::string Cgi::run()
 		close(fdOut[0]);
 		dup2(fdOut[1], STDOUT_FILENO);
 
-		execve(_exePath[varExtention].c_str(), const_cast<char *const *> (arg), env);
+		execve(_exePath[_varExtension].c_str(), const_cast<char *const *> (arg), env);
 		std::cerr << "CGI exception: execve failed" << std::endl;
 		write(fdOut[1], "500 Internal Server Error\n", 26);
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:21:31 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/17 11:51:10 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/18 15:26:22 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,11 @@ const std::vector<std::string>&	Location::getCgiExtension() const
 const std::vector<std::string>&	Location::getCgiPath() const
 {
 	return (this->_cgiPath);
+}
+
+const std::map<std::string, std::string> Location::getMimeTypes() const
+{
+	return (this->_mimeTypes);
 }
 
 void Location::setRoot(DIR *dir, std::string rootPath)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/17 20:14:37 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/18 14:09:04 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,12 +83,12 @@ void Config::run()
 					Response* response = NULL;
 					try
 					{
-					/* code */
 						std::string strFromCgi;
 						if (location)
-							strFromCgi = cgiHandler(location->getCgiExtension(), location->getCgiPath(), request.getPath());
+							response = cgiHandler(request, location);
 						else
-							strFromCgi = cgiHandler(server->getCgiExtension(), server->getCgiPath(), request.getPath());
+							response = cgiHandler(request, server);
+							// strFromCgi = cgiHandler(server->getCgiExtension(), server->getCgiPath(), request.getPath());
 					}
 					catch(const Cgi::CgiNotCgiException& e)
 					{
