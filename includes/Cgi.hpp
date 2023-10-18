@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:24:44 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/18 15:57:28 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/18 22:48:28 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,43 +113,5 @@ class Cgi
 				}
 		};
 };
-
-// const std::string		cgiHandler(std::vector<std::string> extension, std::vector<std::string> envExecutable, const std::string & ressourcePath);
-// Response *cgiHandler(Request & req, Server & serv);
-// Response *cgiHandler(Request & req, Location & serv);
-
-// template<typename T> Response *cgiHandler(Request & req, T & serv)
-// {
-// 	Cgi cgi(serv.getCgiExtension(), serv.getCgiPath(), req.getPath());
-// 	Response *res = new Response("200 OK", req.getHttpVersion(), req.getPath());
-
-// 	try
-// 	{
-// 		res->setContent(cgi.run());
-// 		// res->setContentLength(res->getContent().length());
-// 		res->setContentType(serv.getMimeTypes().at(res->getPath()));
-		
-// 		// res->setHeader();
-// 		res->setResponse(res->getHeader() + res->getContent());
-// 		res->setVersion(const_cast<std::string &> (req.getHttpVersion()));		
-// 	}
-// 	catch(const Cgi::CgiFileException& e)
-// 	{
-// 		res->setStatus("404 Not Found");
-// 		// throw Cgi::CgiFileException();
-// 	}
-// 	catch(const Cgi::CgiNotCgiException& e)
-// 	{
-// 		delete res;
-// 		throw Cgi::CgiNotCgiException();
-// 	}
-// 	catch(const std::exception& e)
-// 	{
-// 		std::cerr << e.what() << '\n';
-// 		delete res;
-// 		throw Cgi::CgiException();
-// 	}
-// 	return (res);
-// }
 
 #endif

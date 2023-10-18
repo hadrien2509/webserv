@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/18 19:37:05 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/18 23:18:21 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,11 @@ Cgi::Cgi(const std::vector<std::string> & extension, std::vector<std::string> en
 	}
 	_ressourcePath = ressourcePath;
 
+	// std::cerr << "CGI ressourcePath: " << _ressourcePath << std::endl;
 	getline(iss, _path, '?');
 	getline(iss, _toIn);
-	_path = "webmajordome" + _path; // need to change waiting for location block
+	// _path = "webmajordome" + _path; // need to change waiting for location block
+	// std::cerr << "CGI Path: " << _path << std::endl;
 }
 
 Cgi::Cgi(const Cgi & src)

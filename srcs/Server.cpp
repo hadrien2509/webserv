@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/18 19:39:49 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/18 22:51:06 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -313,6 +313,7 @@ Response* Server::checkRequest(Request& request)
 			{
 				try
 				{
+					std::cerr << "[SERVER] Request path: " << request.getPath() << std::endl;
 					Response *response = cgiHandler(request, this);
 					return (response);
 				}
@@ -339,6 +340,7 @@ Response* Server::checkRequest(Request& request)
 	{
 		try
 		{
+			std::cerr << "[SERVER] Request path: " << request.getPath() << std::endl;
 			Response *response = cgiHandler(request, this);
 			return (response);
 		}

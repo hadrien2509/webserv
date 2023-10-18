@@ -1,11 +1,11 @@
 NAME = webserv
 
 FLAGS = -Wall -Werror -Wextra -std=c++98
-FSANITIZE = -g3 -fsanitize=address
+FSANITIZE = -g3 #-fsanitize=address
 
 FILES = main.cpp Config.cpp Location.cpp Server.cpp Run.cpp Request.cpp Response.cpp\
 			cgi/Cgi.cpp
-# FILES_CGI = Cgi.cpp cgiHandler.cpp
+# FILES_CGI = Cgi.cpp
 INCLUDE_DIR = includes
 
 OBJS_DIR = objs
