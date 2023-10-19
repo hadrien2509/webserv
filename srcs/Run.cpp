@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/18 23:44:36 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/19 10:52:04 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ void Config::run()
 				{
 					Server* server = _clientSocketToServer[_poll[i].fd];
 					Request request(_poll[i].fd);
-					std::cout << request.getPath() << std::endl;
+					if (request.getPath() == "")
+						continue;
 					Location *location = server->checkLocation(request);
 					Response *response;
 					if (location)
