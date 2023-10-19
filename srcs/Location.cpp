@@ -39,11 +39,40 @@ Location::~Location()
 	closedir(_root);
 }
 
+Location::Location(const Location &path, const Location &extension)
+{
+	*this = extension;
+	if (!path._rootPath.empty())
+        _rootPath = path._rootPath;
+    if (!path._index.empty())
+        _index = path._index;
+    if (!path._allowMethods.empty())
+        _allowMethods = path._allowMethods;
+    if (!path._cgiExtension.empty())
+        _cgiExtension = path._cgiExtension;
+    if (!path._cgiPath.empty())
+        _cgiPath = path._cgiPath;
+    if (!path._mimeTypes.empty())
+        _mimeTypes = path._mimeTypes;
+    if (!path._errorPage.empty())
+        _errorPage = path._errorPage;
+    if (!path._uri.empty())
+        _uri = path._uri;
+}
+
 Location &Location::operator=(const Location &copy)
 {
 	if (this != &copy)
 	{
-		
+		_root = copy._root;
+		_rootPath = copy._rootPath;
+		_autoIndex = copy._autoIndex;
+		_allowMethods = copy._allowMethods;
+		_cgiExtension = copy._cgiExtension;
+		_cgiPath = copy._cgiPath;
+		_mimeTypes = copy._mimeTypes;
+		_errorPage = copy._errorPage;
+		_uri = copy._uri;
 	}
 	return (*this);
 }
@@ -92,6 +121,19 @@ void Location::setRoot(DIR *dir, std::string rootPath)
 {
 	this->_root = dir;
 	this->_rootPath = rootPath;
+}
+
+const std::string&	Location::getUri() const
+{
+	return (this->_uri);
+}
+
+void Location::setUri(std::string uri)
+{
+	if (uri[0] == '*')
+		this->_uri = uri.substr(1);
+	else
+		this->_uri = uri;
 }
 
 void			Location::addIndex(std::string index)

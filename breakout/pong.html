@@ -42,6 +42,7 @@
     // Game loop
     function gameLoop() {
       moveBall();
+      moveLeftPaddle(); 
       moveRightPaddle(); // Control the right paddle with a simple bot
       draw();
       requestAnimationFrame(gameLoop);
@@ -97,11 +98,11 @@
 
     // Mouse control for left paddle
 	/*
-	*/
     canvas.addEventListener("mousemove", function (event) {
 		const mouseY = event.clientY - canvas.getBoundingClientRect().top;
 		leftPaddleY = mouseY - paddleHeight / 2;
     });
+	*/
 
     function moveRightPaddle() {
       // Implement bot logic here
@@ -110,6 +111,16 @@
         rightPaddleY += paddleSpeed + 2;
       } else if (rightPaddleY + paddleHeight / 2 > ballY) {
         rightPaddleY -= paddleSpeed + 2;
+      }
+    }
+	
+	function moveLeftPaddle() {
+      // Implement bot logic here
+      // For simplicity, we'll just move the right paddle based on the ball's position
+      if (leftPaddleY + paddleHeight / 2 < ballY) {
+        leftPaddleY += paddleSpeed;
+      } else if (leftPaddleY + paddleHeight / 2 > ballY) {
+        leftPaddleY -= paddleSpeed;
       }
     }
 

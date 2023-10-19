@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: samy <samy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:20:40 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/18 15:43:56 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/18 17:42:06 by samy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,24 +37,28 @@ class Location
 		std::vector<std::string>			_cgiPath;
 		std::map<std::string, std::string>	_mimeTypes;
 		std::map<int, std::string>			_errorPage;
+		std::string							_uri;
 		
 	public :
 		Location();
 		Location(Server*);
 		Location(const Location &);
+		Location(const Location &, const Location &);
 		~Location();
 		Location &operator=(const Location &);
 		
-		const DIR*						getRoot() const;
-		std::string						getRootPath() const;
-		const std::vector<std::string>&	getIndex() const;
-		const bool&						getAutoIndex() const;
-		const std::vector<std::string>&	getAllowMethods() const;
-		const std::vector<std::string>&	getCgiExtension() const;
-		const std::vector<std::string>&	getCgiPath() const;
-		const std::map<std::string, std::string> getMimeTypes() const;
+		const DIR*									getRoot() const;
+		std::string									getRootPath() const;
+		const std::vector<std::string>&				getIndex() const;
+		const bool&									getAutoIndex() const;
+		const std::vector<std::string>&				getAllowMethods() const;
+		const std::vector<std::string>&				getCgiExtension() const;
+		const std::vector<std::string>&				getCgiPath() const;
+		const std::map<std::string, std::string> 	getMimeTypes() const;
+		const std::string&							getUri() const;
 
 		void			setRoot(DIR*, std::string);
+		void			setUri(std::string);
 		void			addIndex(std::string);
 		Response*		checkRequest(Request& request);
 };

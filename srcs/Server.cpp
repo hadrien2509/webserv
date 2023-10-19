@@ -90,8 +90,8 @@ Server::Server(const Server &copy)
 Server::~Server()
 {
 	closedir(_root);
-	for (std::map<std::string, Location*>::iterator it = _locations.begin(); it != _locations.end(); it++)
-		delete it->second;
+	for (std::vector<Location*>::iterator it = _locations.begin(); it != _locations.end(); it++)
+		delete (*it);
 }
 
 Server &Server::operator=(const Server &copy)
@@ -173,10 +173,11 @@ void	Server::addPort(int port)
 	_pollfds.push_back(poll_fd);
 }
 
-void	Server::addLocation(std::string ressourceType, Location *location)
+void Server::addLocation(Location *location)
 {
-	_locations[ressourceType] = location;
-}
+	_locations.push_back(location);
+} 
+
 
 const std::string&	Server::getServerName() const
 {
@@ -236,7 +237,7 @@ void Server::openRoot()
 		throw std::runtime_error("Error: Could not open root directory" + _rootPath);
 }
 
-const std::map<std::string,Location*>&	Server::getLocations() const
+const std::vector<Location*>	Server::getLocations() const
 {
 	return (_locations);
 }
@@ -284,22 +285,66 @@ void Server::deleteResponse()
 	_responses.pop();
 }
 
-Location *Server::checkLocation(Request &request)
+Location* Server::checkPathLocation(Request& request)
 {
     std::string bestMatch = "";
-	Location *location = NULL;
-	std::map<std::string, Location*>::const_iterator it = _locations.begin();
-    while (it != _locations.end()) {
-        if (request.getPath().find(it->first) == 0 && it->first.length() > bestMatch.length()) {
-			bestMatch = it->first;
-            location = it->second;
-        }
-        ++it;
+    Location* location = 0;
+    const std::vector<Location*>& locations = _locations;
+	for (std::vector<Location*>::const_iterator it = locations.begin(); it != locations.end(); ++it) {
+	if ((*it)->getUri().find("/") == 0)
+		{
+			Location* loc = *it;
+			const std::string& locationUri = loc->getUri();
+			if (request.getPath().find(locationUri) != std::string::npos && locationUri.length() > bestMatch.length()) {
+				bestMatch = locationUri;
+				location = loc;
+			}
+		}
     }
-	if (location && bestMatch.length() > 1)
-		request.setPath(request.getPath().substr(bestMatch.length()));
-    
-    return (location);
+
+    if (location && bestMatch.length() > 1)
+        request.setPath(request.getPath().substr(bestMatch.length()));
+    return location;
+}
+
+Location* Server::checkExtensionLocation(Request& request)
+{
+    std::string bestMatch = "";
+    Location* location = 0;
+    const std::vector<Location*>& locations = _locations;
+	for (std::vector<Location*>::const_iterator it = locations.begin(); it != locations.end(); ++it) {
+		if ((*it)->getUri().find("/") == std::string::npos)
+		{
+			Location* loc = *it;
+			const std::string& locationUri = loc->getUri();
+			if (request.getPath().find(locationUri) != std::string::npos && locationUri.length() > bestMatch.length()) {
+				bestMatch = locationUri;
+				location = loc;
+			}
+		}
+    if (location)
+        request.setPath("/pong.html");
+    }
+    return location;
+}
+
+Location* Server::checkLocation(Request& request)
+{
+	Location *pathLoc = checkPathLocation(request);
+	Location *extensionLoc = checkExtensionLocation(request);
+	if (pathLoc)
+		std::cout << "LOCATION ===> " << pathLoc->getUri() << std::endl;
+	if (extensionLoc)
+		std::cout << "LOCATION ===> " << extensionLoc->getUri() << std::endl;
+	std::cout << "PATH ===> " << request.getPath() << std::endl;
+	if (pathLoc && extensionLoc)
+		return (new Location(*pathLoc, *extensionLoc));
+	else if (pathLoc)
+		return (new Location(*pathLoc));
+	else if (extensionLoc)
+		return (new Location(*extensionLoc));
+	else
+		return (0);
 }
 
 Response* Server::checkRequest(Request& request)

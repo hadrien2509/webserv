@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: samy <samy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/14 01:05:33 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/18 12:24:45 by samy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,8 +185,9 @@ void Config::_parseLocation(std::istringstream &ss, Server *server)
 	ressourceType = _getRessourceType(ss);
 
 	Location *location = new Location(server);
-	server->addLocation(ressourceType, location);
-
+	//server->addLocation(ressourceType, location);
+	server->addLocation(location);
+	location->setUri(ressourceType);
 	std::string line, type;
 	while (std::getline(_configFile, line))
 	{

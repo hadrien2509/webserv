@@ -35,13 +35,15 @@ class Server
 		void	addCgiExtension(std::string extension);
 		void	addCgiPath(std::string path);
 		void	addPort(int port);
-		void	addLocation(std::string ressourceType, Location *location);
+//		void	addLocation(std::string ressourceType, Location *location);
+		void	addLocation(Location *location);
 
 		const std::string&							getServerName() const;
 		DIR*										getRoot() const;
 		const std::string&							getRootPath() const;
 		const std::vector<std::string>&				getIndex() const;
-		const std::map<std::string,Location*>&		getLocations() const;
+		//const std::map<std::string,Location*>&		getLocations() const;
+		const std::vector<Location*>				getLocations() const;
 		const std::string&							getRessourcePath() const;
 		const std::map<int, std::string>&			getErrorPage() const;
 		const std::string&							getHost() const;
@@ -64,7 +66,8 @@ class Server
     private:
 		std::vector<struct pollfd>			_pollfds;
 		std::string							_serverName;
-		std::map<std::string,Location*>		_locations;
+		//std::map<std::string,Location*>	_locations;
+		std::vector<Location*>				_locations;
 		std::string							_host;
 		DIR*								_root;
 		std::string							_rootPath;
@@ -79,6 +82,8 @@ class Server
 
         std::vector<std::string> 			_cgiPath;  //needed here?
         std::vector<std::string> 			_cgiExtension;
+		Location* checkPathLocation(Request& request);
+		Location* checkExtensionLocation(Request& request);
 };
 
 #endif
