@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/19 10:52:04 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/19 17:28:58 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ void Config::_createPoll()
 	}
 }
 
-void Config::removePollfd(int fd) {
+void Config::removePollfd(int fd)
+{
     for (size_t i = 0; i < _pollsize; i++) {
         if (_poll[i].fd == fd) {
             // Supprimez ce descripteur de fichier du tableau _poll
@@ -86,11 +87,11 @@ void Config::run()
 		for (size_t i = 0; i < _pollsize; i++)
 		{
 			if (_poll[i].revents & POLLHUP) {
-				std::cout << "IL EST DECO" << std::endl;
+				std::cerr << "IL EST DECO" << std::endl;
 				removePollfd(_poll[i].fd);
 			}
 			if (_poll[i].revents & POLLERR) {
-				std::cout << "IL A CRASH" << std::endl;
+				std::cerr << "IL A CRASH" << std::endl;
 				removePollfd(_poll[i].fd);
 			}
           	else if (_poll[i].revents & POLLIN)
@@ -120,6 +121,7 @@ void Config::run()
 						response = location->checkRequest(request);
 					else
 						response = server->checkRequest(request);
+					std::cerr << "Response: " << response->getStatus() << std::endl;
 					server->addResponse(response);
 				}
 			}

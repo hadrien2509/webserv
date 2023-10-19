@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/19 11:11:06 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/19 15:31:11 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -354,7 +354,7 @@ Response* Server::checkRequest(Request& request)
 			{
 				try
 				{
-					std::cerr << "[SERVER] Request path: " << request.getPath() << std::endl;
+					// std::cerr << "[SERVER] Request path: " << request.getPath() << std::endl;
 					Response *response = cgiHandler(request, this);
 					return (response);
 				}
@@ -381,7 +381,7 @@ Response* Server::checkRequest(Request& request)
 	{
 		try
 		{
-			std::cerr << "[SERVER] Request path: " << request.getPath() << std::endl;
+			// std::cerr << "[SERVER] Request path: " << request.getPath() << std::endl;
 			Response *response = cgiHandler(request, this);
 			return (response);
 		}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:21:31 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/19 09:55:59 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/19 15:26:16 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,11 +158,12 @@ Response* Location::checkRequest(Request& request)
 				}
 				catch(const std::exception& e)
 				{
-					return (new Response("200 OK", request.getPath(), _mimeTypes));
 					std::cerr << e.what() << '\n';
+					return (new Response("200 OK", request.getPath(), _mimeTypes));
 				}
 			}
 		}
+		// ======================= Auto-index =======================
 		if (_autoIndex)
 		{
 			std::cout << "AutoIndex" << std::endl;
@@ -173,6 +174,7 @@ Response* Location::checkRequest(Request& request)
 			request.setPath(_rootPath + "/" + _errorPage[403]);
 			return (new Response("403 Forbidden", request.getPath(), _mimeTypes));
 		}
+		// ==========================================================
 	}
 	request.setPath(_rootPath + request.getPath());
 	if (access(request.getPath().c_str(), F_OK) == 0)
@@ -182,9 +184,12 @@ Response* Location::checkRequest(Request& request)
 			Response *response = cgiHandler(request, this);
 			return (response);
 		}
-		catch (const std::exception &e)
+		catch (const Cgi::CgiNotCgiException &e)
 		{
 			return (new Response("200 OK", request.getPath(), _mimeTypes));
+		}
+		catch (const std::exception &e)
+		{
 			std::cerr << e.what() << '\n';
 		}
 	}
