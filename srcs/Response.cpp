@@ -22,29 +22,43 @@ Response::Response(std::string code, std::string httpVersion, std::string path) 
 	_response = _header;
 }
 
-Response::Response(std::string code, std::string contentPath, std::map<std::string, std::string> &mimeTypes) : _version ("HTTP/1.1"), _status(code)
+Response::Response(std::string code, std::string contentPath, std::map<std::string, std::string>& mimeTypes) : _version("HTTP/1.1"), _status(code)
 {
-	std::ifstream file(contentPath.c_str()); // Open the file for reading
-	if (!file.is_open()) {
-		throw std::runtime_error("Could not open file");
-	}
-	std::stringstream ss1, ss2;
-	ss1 << file.rdbuf(); // Read the file
-	file.close(); // Close the file
-	_content = ss1.str();
-	ss2 << _content.length(); // Convert the length to a string
-	_contentLength = ss2.str();
+    // Open the file for reading
+    std::ifstream file(contentPath.c_str(), std::ios::binary);
+    if (!file.is_open()) {
+        throw std::runtime_error("Could not open file");
+    }
 
-	if (contentPath.find_last_of(".") == std::string::npos)
-		_contentType = "text/html";
-	else
-		_contentType = mimeTypes[contentPath.substr(contentPath.find_last_of("."))];
-	_header = _version + " " + _status + "\r\n";
-	_header += "Content-Type: " + _contentType + "\r\n";
-	_header += "Content-Length: " + _contentLength + "\r\n\r\n";
+    // Create a buffer for reading the file in chunks
+    const int bufferSize = 4096;  // You can adjust the buffer size as needed
+    char buffer[bufferSize];
+    std::ostringstream fileContent;
 
-	_response = _header; // Add the header to the response
-	_response += _content; // Add the file content to the response
+    while (!file.eof()) {
+        file.read(buffer, bufferSize);
+        fileContent.write(buffer, file.gcount());
+    }
+
+    file.close();
+
+    // Get the content length
+    _content = fileContent.str();
+    _contentLength = std::to_string(_content.length());
+
+    // Determine the content type based on the file extension
+    if (contentPath.find_last_of(".") == std::string::npos)
+        _contentType = "text/html";
+    else
+        _contentType = mimeTypes[contentPath.substr(contentPath.find_last_of("."))];
+
+    // Create the response header
+    _header = _version + " " + _status + "\r\n";
+    _header += "Content-Type: " + _contentType + "\r\n";
+    _header += "Content-Length: " + _contentLength + "\r\n\r\n";
+
+    // Combine header and content to form the response
+    _response = _header + _content;
 }
 
 Response::~Response()
