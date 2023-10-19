@@ -14,17 +14,23 @@
 
 Request::Request(const int& connection) : _connection(connection)
 {
-	ssize_t bytesRead;
-	char buffer[1024];
 	std::string request;
 
-	bytesRead = recv(_connection, buffer, 1023, 0);
-	if (bytesRead > 0)
-		buffer[bytesRead] = '\0';
+	char	buffer[1024] = {0};
+	int		ret;
+
+	ret = recv(_connection, buffer, 1023, 0);
+
+	if (ret == 0 || ret == -1)
+	{
+		if (!ret)
+			std::cout << "\rConnection was closed by client.\n" << std::endl;
+		else
+			std::cout << "\rRead error, closing connection.\n" << std::endl;
+	}
+	else
+		buffer[ret] = '\0';
 	request += buffer;
-	// if (bytesRead == -1)
-		// throw std::runtime_error("Failed to read request");
-	// std::cout << request << std::endl;
 	_parseRequest(request);
 }
 
@@ -53,7 +59,7 @@ void	Request::_parseRequest(const std::string &request)
 	if (std::getline(iss, line))
 	{
 		std::istringstream iss2(line);
-		
+		std::cout << line << std::endl;
 		iss2 >> _method >> _path >> _httpVersion;
 	}
 	std::string str;
