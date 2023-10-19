@@ -33,36 +33,8 @@ void Config::_createPoll()
 	}
 }
 
-void Config::removePollfd(int fd) {
-    for (size_t i = 0; i < _pollsize; i++) {
-        if (_poll[i].fd == fd) {
-            // Supprimez ce descripteur de fichier du tableau _poll
-            for (size_t j = i; j < _pollsize - 1; j++) {
-                _poll[j] = _poll[j + 1];
-            }
-            _pollsize--;
-
-            // Réallouez le tableau _poll avec la nouvelle taille
-            struct pollfd* newPoll = new struct pollfd[_pollsize];
-            for (size_t j = 0; j < _pollsize; j++) {
-                newPoll[j] = _poll[j];
-            }
-            delete[] _poll;
-            _poll = newPoll;
-            break;
-        }
-    }
-}
-
-
 void Config::_addPollfd(int fd, short events)
 {
-	for (size_t i = 0; i < _pollsize; i++)
-	{
-		if (_poll[i].fd == fd)
-			return; // Pollfd already exists
-	}
-
 	struct pollfd *newPoll = new struct pollfd[_pollsize + 1];
 	for (size_t i = 0; i < _pollsize; i++)
 		newPoll[i] = _poll[i];
@@ -76,24 +48,16 @@ void Config::_addPollfd(int fd, short events)
 void Config::run()
 {
 	// Create a socket (IPv4, TCP)
-	int IDK;
+
 	_createPoll();
 	while (1)
 	{
 		// std::cout << "Waiting for connections..." << std::endl;
-		if ((IDK = poll(_poll, _pollsize, -1)) <= 0)  // Infinite timeout for simplicity
+		if (poll(_poll, _pollsize, -1) <= 0)  // Infinite timeout for simplicity
 			continue;
 		for (size_t i = 0; i < _pollsize; i++)
 		{
-			if (_poll[i].revents & POLLHUP) {
-				std::cout << "IL EST DECO" << std::endl;
-				removePollfd(_poll[i].fd);
-			}
-			if (_poll[i].revents & POLLERR) {
-				std::cout << "IL A CRASH" << std::endl;
-				removePollfd(_poll[i].fd);
-			}
-          	else if (_poll[i].revents & POLLIN)
+            if (_poll[i].revents & POLLIN)
 			{
 				if (_serverSocketToServer.find(_poll[i].fd) != _serverSocketToServer.end())
 				{
@@ -101,8 +65,10 @@ void Config::run()
 					sockaddr_in client_addr;
                 	socklen_t client_addr_len = sizeof(client_addr);
                		int client_socket = accept(_poll[i].fd, (struct sockaddr*)&client_addr, &client_addr_len);
+
 					if (client_socket < 0)
 						throw std::runtime_error("Failed to grab connection. errno: ");
+
 					std::cout << "New connection in " << _poll[i].fd << std::endl;
 					_clientSocketToServer[client_socket] = server;
 					_addPollfd(client_socket, POLLIN | POLLOUT);
@@ -110,7 +76,6 @@ void Config::run()
 				else
 				{
 					Server* server = _clientSocketToServer[_poll[i].fd];
-					std::cout<< "------------------- REQUEST RECIEVE ---------------" << std::endl;
 					Request request(_poll[i].fd);
 					if (request.getPath() == "")
 						continue;
@@ -133,7 +98,7 @@ void Config::run()
 					continue;
 				std::string httpResponse = response->get();
 				server->deleteResponse();
-				std::cout << "               RESPONSE SEND            " << std::endl;
+
 				send(_poll[i].fd, httpResponse.c_str(), httpResponse.size(), 0);
 			}
         }
