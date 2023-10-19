@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/19 15:13:26 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/19 17:42:03 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ class Config
 		
 		void		_createPoll();
 		void		_addPollfd(int fd, short events);
-		void		removePollfd(int fd);
+		void		_removePollfd(int fd);
 		
 		std::string					_ignoreComments(std::string line);
 		std::vector<Server*>		_cluster;

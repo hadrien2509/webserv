@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/19 17:28:58 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/19 18:06:42 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void Config::_createPoll()
 	}
 }
 
-void Config::removePollfd(int fd)
+void Config::_removePollfd(int fd)
 {
     for (size_t i = 0; i < _pollsize; i++) {
         if (_poll[i].fd == fd) {
@@ -44,6 +44,7 @@ void Config::removePollfd(int fd)
             _pollsize--;
 
             // Réallouez le tableau _poll avec la nouvelle taille
+			std::cout << "Pollsize: " << _pollsize << std::endl;
             struct pollfd* newPoll = new struct pollfd[_pollsize];
             for (size_t j = 0; j < _pollsize; j++) {
                 newPoll[j] = _poll[j];
@@ -88,11 +89,11 @@ void Config::run()
 		{
 			if (_poll[i].revents & POLLHUP) {
 				std::cerr << "IL EST DECO" << std::endl;
-				removePollfd(_poll[i].fd);
+				_removePollfd(_poll[i].fd);
 			}
-			if (_poll[i].revents & POLLERR) {
+			else if (_poll[i].revents & POLLERR) {
 				std::cerr << "IL A CRASH" << std::endl;
-				removePollfd(_poll[i].fd);
+				_removePollfd(_poll[i].fd);
 			}
           	else if (_poll[i].revents & POLLIN)
 			{

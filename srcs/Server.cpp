@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/19 15:31:11 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/19 17:44:43 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,18 +271,18 @@ Response* Server::getResponse() const
 {
 	if (_responses.empty())
 		return (NULL);
-	return (_responses.top());
+	return (_responses.front());
 }
 
 void Server::addResponse(Response* response)
 {
-	_responses.push(response);
+	_responses.push_back(response);
 }
 
 void Server::deleteResponse()
 {
-	delete _responses.top();
-	_responses.pop();
+	delete _responses.front();
+	_responses.pop_front();
 }
 
 Location* Server::checkPathLocation(Request& request)
