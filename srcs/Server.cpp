@@ -332,10 +332,6 @@ Location* Server::checkLocation(Request& request)
 {
 	Location *pathLoc = checkPathLocation(request);
 	Location *extensionLoc = checkExtensionLocation(request);
-	if (pathLoc)
-		std::cout << "LOCATION ===> " << pathLoc->getUri() << std::endl;
-	if (extensionLoc)
-		std::cout << "LOCATION ===> " << extensionLoc->getUri() << std::endl;
 	std::cout << "PATH ===> " << request.getPath() << std::endl;
 	if (pathLoc && extensionLoc)
 		return (new Location(*pathLoc, *extensionLoc));
