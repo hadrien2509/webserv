@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/18 22:51:06 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/19 11:11:06 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -319,8 +319,8 @@ Response* Server::checkRequest(Request& request)
 				}
 				catch(const std::exception& e)
 				{
-					return (new Response("200 OK", request.getPath(), _mimeTypes));
 					std::cerr << e.what() << '\n';
+					return (new Response("200 OK", request.getPath(), _mimeTypes));
 				}
 			}
 		}
