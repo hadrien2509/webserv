@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:01 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/18 23:33:04 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/19 13:56:55 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,13 @@ Request::Request(const int& connection) : _connection(connection)
 
 	ret = recv(_connection, buffer, 1023, 0);
 
-	if (ret == 0 || ret == -1)
-	{
-		if (!ret)
-			std::cout << "\rConnection was closed by client.\n" << std::endl;
-		else
-			std::cout << "\rRead error, closing connection.\n" << std::endl;
-	}
-	else
+	if (ret != -1)
 		buffer[ret] = '\0';
+	if (!ret)
+		std::cout << "\rConnection was closed by client.\n" << std::endl;
+	else if (ret == -1)
+		std::cout << "\rRead error, closing connection.\n" << std::endl;
+
 	request += buffer;
 	_parseRequest(request);
 }
