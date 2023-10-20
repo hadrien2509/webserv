@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/18 23:18:21 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/20 15:27:16 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ Cgi::Cgi()
 {
 }
 
-Cgi::Cgi(const std::vector<std::string> & extension, std::vector<std::string> envExecutable, const std::string & ressourcePath)
+Cgi::Cgi(const std::vector<std::string> & extension, std::vector<std::string> envExecutable, const std::string & ressourcePath, std::string & querryString)
 {
 	std::istringstream iss(ressourcePath);
 	
@@ -35,11 +35,13 @@ Cgi::Cgi(const std::vector<std::string> & extension, std::vector<std::string> en
 		_exePath.insert(std::pair<std::string, std::string>(*it, *itExe));
 		itExe++;
 	}
-	_ressourcePath = ressourcePath;
+	_ressourcePath = ressourcePath + "?" + querryString;
 
 	// std::cerr << "CGI ressourcePath: " << _ressourcePath << std::endl;
-	getline(iss, _path, '?');
-	getline(iss, _toIn);
+	_path = ressourcePath;
+	_toIn = querryString;
+	// getline(iss, _path, '?');
+	// getline(iss, _toIn);
 	// _path = "webmajordome" + _path; // need to change waiting for location block
 	// std::cerr << "CGI Path: " << _path << std::endl;
 }
@@ -99,6 +101,7 @@ char** Cgi::_mapToEnv(std::map<std::string, std::string> & env)
 
 void Cgi::_ressourceToEnv()
 {
+	std::cerr << "CGI: " << _ressourcePath << std::endl;
 	_initEnv();
 	// std::istringstream iss(_toIn);
 	// std::string tmp;

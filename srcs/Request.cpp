@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:01 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/19 14:17:17 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/20 15:31:19 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,10 @@ void	Request::_parseRequest(const std::string &request)
 		std::cout << "request : " << line << std::endl;
 		iss2 >> _method >> _path >> _httpVersion;
 	}
-	std::string str;
 	size_t pos = _path.find('?');
 
     if (pos != std::string::npos) {
-        str = _path.substr(pos + 1);
+        _querryString = _path.substr(pos + 1);
         _path = _path.substr(0, pos);
     }
 }
@@ -86,4 +85,9 @@ void	Request::setPath(std::string path){
 const std::string&	Request::getHttpVersion() const
 {
 	return (_httpVersion);
+}
+
+std::string&	Request::getQuerryString()
+{
+	return (_querryString);
 }

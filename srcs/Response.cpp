@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 16:43:41 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/19 16:17:32 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/20 15:14:59 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,16 @@ Response::Response()
 {
 }
 
-Response::Response(std::string code, std::string httpVersion, std::string path) : _version (httpVersion), _status(code), _path(path)
+Response::Response(std::string code, std::string content, std::string version) : _version (version), _status(code), _contentType("text/html"), _content(content)
 {
+	std::stringstream ss;
+
+	ss << _content.length(); // Convert the length to a string
+	_contentLength = ss.str();
 	_header = _version + " " + _status + "\r\n";
-	_response = _header;
+	_header += "Content-Type: " + _contentType + "\r\n";
+	_header += "Content-Length: " + _contentLength + "\r\n\r\n";
+	_response = _header + _content;
 }
 
 Response::Response(std::string code, std::string contentPath, std::map<std::string, std::string> &mimeTypes) : _version ("HTTP/1.1"), _status(code)

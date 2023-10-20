@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/19 18:06:42 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/20 15:20:29 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,11 @@ void Config::run()
 			continue;
 		for (size_t i = 0; i < _pollsize; i++)
 		{
-			if (_poll[i].revents & POLLHUP) {
-				std::cerr << "IL EST DECO" << std::endl;
-				_removePollfd(_poll[i].fd);
-			}
-			else if (_poll[i].revents & POLLERR) {
+			// if (_poll[i].revents & POLLHUP) {
+				// std::cerr << "IL EST DECO" << std::endl;
+			// 	_removePollfd(_poll[i].fd);
+			// }
+			if (_poll[i].revents & POLLERR) {
 				std::cerr << "IL A CRASH" << std::endl;
 				_removePollfd(_poll[i].fd);
 			}
@@ -124,21 +124,27 @@ void Config::run()
 					}
 					else
 						response = server->checkRequest(request);
-				//	std::cerr << "Response: " << response->getStatus() << std::endl;
+					// std::cerr << "Response: " << response->getStatus() << std::endl;
 					server->addResponse(_poll[i].fd, response);
 				}
 			}
-			else if (_poll[i].revents & POLLOUT)
+			else if (_poll[i].revents & POLLOUT || _poll[i].revents & POLLHUP)
 			{
 				if (_clientSocketToServer.find(_poll[i].fd) == _clientSocketToServer.end())
 					continue;
 				Server*	server = _clientSocketToServer[_poll[i].fd];
 				Response* response = server->getResponse(_poll[i].fd);
+				if (_poll[i].revents & POLLHUP)
+				{
+					std::cerr << "IL EST DECO" << std::endl;
+					_removePollfd(_poll[i].fd);
+				}
 				if (response == NULL)
 					continue;
 				std::string httpResponse = response->get();
 				server->deleteResponse(_poll[i].fd);
-				std::cout << "RESPONSE SEND [" << _poll[i].fd << "]" << std::endl;
+				// std::cout << "RESPONSE SEND [" << _poll[i].fd << "]" << std::endl;
+				// std::cerr << "POLLOUT: " << httpResponse << std::endl;
 				send(_poll[i].fd, httpResponse.c_str(), httpResponse.size(), 0);
 			}
         }

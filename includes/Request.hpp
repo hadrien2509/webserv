@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:25 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/18 15:32:42 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/20 15:31:28 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ class Request
 		std::string		_method;
 		std::string		_path;
 		std::string		_httpVersion;
+		std::string		_querryString;
 		
 		void _parseRequest(const std::string &);
 
@@ -37,6 +38,7 @@ class Request
 		const std::string&	getMethod() const;
 		const std::string&	getPath() const;
 		const std::string&	getHttpVersion() const;
+		std::string&	getQuerryString();
 		void	setPath(std::string path);
 };
 

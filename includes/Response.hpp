@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 16:12:24 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/18 15:38:53 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/20 15:15:18 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ class Response
 		
 	public :
 		Response();
-		Response(std::string code, std::string httpVersion, std::string path);
+		Response(std::string code, std::string content, std::string version);
 		Response(std::string code, std::string contentPath, std::map<std::string, std::string>& mimeTypes);
 		~Response();
 		
