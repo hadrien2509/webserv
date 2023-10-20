@@ -127,7 +127,7 @@ const std::string& Cgi::run()
 	char buffer[1024];
 	
 	std::string totalPath = _path;
-	std::cerr << "CGI: " << totalPath << std::endl;
+	//std::cerr << "CGI: " << totalPath << std::endl;
 	// std::cerr << "HERE" << '\n';
 	if (!strchr(totalPath.c_str(), '.'))
 		throw CgiPathException();

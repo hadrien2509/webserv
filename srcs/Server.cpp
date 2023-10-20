@@ -267,80 +267,41 @@ void Server::addCgiExtension(std::string cgiExtension)
 	_cgiExtension.push_back(cgiExtension);
 }
 
-Response* Server::getResponse() const
+Response* Server::getResponse(int fd)
 {
-	if (_responses.empty())
-		return (NULL);
-	return (_responses.front());
-}
-
-void Server::addResponse(Response* response)
-{
-	_responses.push_back(response);
-}
-
-void Server::deleteResponse()
-{
-	delete _responses.front();
-	_responses.pop_front();
-}
-
-Location* Server::checkPathLocation(Request& request)
-{
-    std::string bestMatch = "";
-    Location* location = 0;
-    const std::vector<Location*>& locations = _locations;
-	for (std::vector<Location*>::const_iterator it = locations.begin(); it != locations.end(); ++it) {
-	if ((*it)->getUri().find("/") == 0)
-		{
-			Location* loc = *it;
-			const std::string& locationUri = loc->getUri();
-			if (request.getPath().find(locationUri) != std::string::npos && locationUri.length() > bestMatch.length()) {
-				bestMatch = locationUri;
-				location = loc;
-			}
-		}
+	 if (_responses.find(fd) != _responses.end())
+    {
+        return _responses[fd].front();
     }
-
-    if (location && bestMatch.length() > 1)
-        request.setPath(request.getPath().substr(bestMatch.length()));
-    return location;
+    return nullptr;
 }
 
-Location* Server::checkExtensionLocation(Request& request)
+void Server::addResponse(int fd, Response* response)
 {
-    std::string bestMatch = "";
-    Location* location = 0;
-    const std::vector<Location*>& locations = _locations;
-	for (std::vector<Location*>::const_iterator it = locations.begin(); it != locations.end(); ++it) {
-		if ((*it)->getUri().find("/") == std::string::npos)
-		{
-			Location* loc = *it;
-			const std::string& locationUri = loc->getUri();
-			if (request.getPath().find(locationUri) != std::string::npos && locationUri.length() > bestMatch.length()) {
-				bestMatch = locationUri;
-				location = loc;
-			}
-		}
-    if (location)
-        request.setPath("/pong.html");
-    }
-    return location;
+    _responses[fd].push_back(response);
+}
+
+void Server::deleteResponse(int fd)
+{
+	_responses.erase(fd);
 }
 
 Location* Server::checkLocation(Request& request)
 {
-	Location *pathLoc = checkPathLocation(request);
-	Location *extensionLoc = checkExtensionLocation(request);
-	std::cout << "PATH ===> " << request.getPath() << std::endl;
-	if (pathLoc && extensionLoc)
-		return (new Location(*pathLoc, *extensionLoc));
-	else if (pathLoc)
-		return (new Location(*pathLoc));
-	else if (extensionLoc)
-		return (new Location(*extensionLoc));
-	else
-		return (0);
+    std::string bestMatch = "";
+    Location* location = 0;
+    const std::vector<Location*>& locations = _locations;
+	for (std::vector<Location*>::const_iterator it = locations.begin(); it != locations.end(); ++it) {
+		Location* loc = *it;
+		const std::string& locationUri = loc->getUri();
+		if (request.getPath().find(locationUri) != std::string::npos && locationUri.length() > bestMatch.length()) {
+			bestMatch = locationUri;
+			location = loc;
+		}
+    }
+    if (location && bestMatch.length() > 1)
+        request.setPath(request.getPath().substr(bestMatch.length()));
+    return location;
 }
 
 Response* Server::checkRequest(Request& request)

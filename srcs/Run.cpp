@@ -112,18 +112,20 @@ void Config::run()
 				else
 				{
 					Server* server = _clientSocketToServer[_poll[i].fd];
-					std::cout<< "------------------- REQUEST RECIEVE ---------------" << std::endl;
+					std::cout<< "REQUEST RECIEVE [" << _poll[i].fd << "]" << std::endl;
 					Request request(_poll[i].fd);
 					if (request.getPath() == "")
 						continue;
 					Location *location = server->checkLocation(request);
 					Response *response;
 					if (location)
-						response = location->checkRequest(request);
+					{
+						response = location->checkRequest(request); 
+					}
 					else
 						response = server->checkRequest(request);
-					std::cerr << "Response: " << response->getStatus() << std::endl;
-					server->addResponse(response);
+				//	std::cerr << "Response: " << response->getStatus() << std::endl;
+					server->addResponse(_poll[i].fd, response);
 				}
 			}
 			else if (_poll[i].revents & POLLOUT)
@@ -131,12 +133,12 @@ void Config::run()
 				if (_clientSocketToServer.find(_poll[i].fd) == _clientSocketToServer.end())
 					continue;
 				Server*	server = _clientSocketToServer[_poll[i].fd];
-				Response* response = server->getResponse();
+				Response* response = server->getResponse(_poll[i].fd);
 				if (response == NULL)
 					continue;
 				std::string httpResponse = response->get();
-				server->deleteResponse();
-				std::cout << "               RESPONSE SEND            " << std::endl;
+				server->deleteResponse(_poll[i].fd);
+				std::cout << "RESPONSE SEND [" << _poll[i].fd << "]" << std::endl;
 				send(_poll[i].fd, httpResponse.c_str(), httpResponse.size(), 0);
 			}
         }

@@ -57,7 +57,7 @@ void	Request::_parseRequest(const std::string &request)
 	if (std::getline(iss, line))
 	{
 		std::istringstream iss2(line);
-		std::cout << line << std::endl;
+		std::cout << "request : " << line << std::endl;
 		iss2 >> _method >> _path >> _httpVersion;
 	}
 	std::string str;
