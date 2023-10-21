@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:01 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/20 15:31:19 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/22 01:32:41 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ Request::Request(const int& connection) : _connection(connection)
 
 	if (ret != -1)
 		buffer[ret] = '\0';
+	std::cerr << "BUFFER: " << buffer << std::endl;
 	// if (!ret)
 	// 	std::cout << "\rConnection was closed by client.\n" << std::endl;
 	// else if (ret == -1)
@@ -57,7 +58,7 @@ void	Request::_parseRequest(const std::string &request)
 	if (std::getline(iss, line))
 	{
 		std::istringstream iss2(line);
-		std::cout << "request : " << line << std::endl;
+		// std::cout << "REQUEST: " << line << std::endl;
 		iss2 >> _method >> _path >> _httpVersion;
 	}
 	size_t pos = _path.find('?');

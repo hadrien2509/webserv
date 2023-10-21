@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/19 17:44:43 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/21 22:54:14 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,7 +273,8 @@ Response* Server::getResponse(int fd)
     {
         return _responses[fd].front();
     }
-    return nullptr;
+    // return nullptr; // error: identifier ‘nullptr’ is a keyword in C++11
+    return NULL;
 }
 
 void Server::addResponse(int fd, Response* response)

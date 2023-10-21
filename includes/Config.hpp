@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/20 15:28:29 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/21 22:57:32 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ class Config
 
 template<typename T> Response *cgiHandler(Request & req, T *serv)
 {
-	Cgi cgi(serv->getCgiExtension(), serv->getCgiPath(), req.getPath(), req.getQuerryString());
+	Cgi cgi(serv->getCgiExtension(), serv->getCgiPath(), req.getPath(), req.getQuerryString(), req.getMethod());
 
 	try
 	{

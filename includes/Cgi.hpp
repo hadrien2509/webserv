@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:24:44 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/20 15:25:44 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/21 22:47:14 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ class Cgi
 		
 		char**	_mapToEnv(std::map<std::string, std::string> & env);
 		void	_ressourceToEnv();
-		void	_initEnv();
 		
+		std::string	_method;
 		std::string	_ressourcePath;
 		std::string _varExtension;
 		
@@ -44,7 +44,7 @@ class Cgi
 		std::string					_fromOut;
 
 	public:
-		Cgi(const std::vector<std::string> & extension, std::vector<std::string> envExecutable, const std::string & ressourcePath, std::string & querryString);
+		Cgi(const std::vector<std::string> & extension, std::vector<std::string> envExecutable, const std::string & ressourcePath, std::string & querryString, const std::string & method);
 		~Cgi();
 
 		const std::string& run();

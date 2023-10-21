@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/20 15:20:29 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/22 01:35:41 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,11 +111,13 @@ void Config::run()
 				}
 				else
 				{
+					std::cerr << "Required to read: parse request to get the payload to include in cgi->POST" << std::endl;
 					Server* server = _clientSocketToServer[_poll[i].fd];
-					std::cout<< "REQUEST RECIEVE [" << _poll[i].fd << "]" << std::endl;
+					// std::cout<< "REQUEST RECIEVE [" << _poll[i].fd << "]" << std::endl;
 					Request request(_poll[i].fd);
 					if (request.getPath() == "")
 						continue;
+					// std::cerr << "Response: " << request.getMethod() << std::endl;
 					Location *location = server->checkLocation(request);
 					Response *response;
 					if (location)
@@ -124,7 +126,6 @@ void Config::run()
 					}
 					else
 						response = server->checkRequest(request);
-					// std::cerr << "Response: " << response->getStatus() << std::endl;
 					server->addResponse(_poll[i].fd, response);
 				}
 			}
