@@ -3,26 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/21 12:05:15 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/21 23:29:36 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Cgi.hpp"
 
-/*
-	"body" has to be sent to the cgi by using the pipe stdin
-	and ...?name=yolo&email=kappa... has to be sent to the cgi by using the env -> _toIn split by & and =
-	need to define the "header" in the env
-*/
-
 Cgi::Cgi()
 {
 }
 
-Cgi::Cgi(const std::vector<std::string> & extension, std::vector<std::string> envExecutable, const std::string & ressourcePath, std::string & querryString)
+Cgi::Cgi(const std::vector<std::string> & extension, std::vector<std::string> envExecutable, const std::string & ressourcePath, std::string & querryString, const std::string & method)
 {
 	std::istringstream iss(ressourcePath);
 	
@@ -37,13 +31,9 @@ Cgi::Cgi(const std::vector<std::string> & extension, std::vector<std::string> en
 	}
 	_ressourcePath = ressourcePath + "?" + querryString;
 
-	// std::cerr << "CGI ressourcePath: " << _ressourcePath << std::endl;
 	_path = ressourcePath;
 	_toIn = querryString;
-	// getline(iss, _path, '?');
-	// getline(iss, _toIn);
-	// _path = "webmajordome" + _path; // need to change waiting for location block
-	// std::cerr << "CGI Path: " << _path << std::endl;
+	_method = method;
 }
 
 Cgi::Cgi(const Cgi & src)
@@ -66,21 +56,6 @@ Cgi& Cgi::operator=(const Cgi & src)
 	return (*this);
 }
 
-void Cgi::_initEnv()
-{
-	// temporary hardcoded
-	
-	_env["REQUEST_METHOD"] = "GET";
-	_env["QUERY_STRING"] = _toIn;
-	_env["CONTENT_TYPE"] = "text/html";
-	_env["CONTENT_LENGTH"] = "0";
-	_env["SERVER_NAME"] = "localhost";
-	_env["SERVER_PORT"] = "80";
-	_env["SCRIPT_NAME"] = _path;
-	_env["PATH_INFO"] = _path;
-	_env["SERVER_PROTOCOL"] = "HTTP/1.1";
-}
-
 char** Cgi::_mapToEnv(std::map<std::string, std::string> & env)
 {
 	char **ret = new char*[env.size() + 1];
@@ -101,20 +76,19 @@ char** Cgi::_mapToEnv(std::map<std::string, std::string> & env)
 
 void Cgi::_ressourceToEnv()
 {
-	std::cerr << "CGI: " << _ressourcePath << std::endl;
-	_initEnv();
-	// std::istringstream iss(_toIn);
-	// std::string tmp;
-	
-	// while (getline(iss, tmp, '&'))
-	// {
-	// 	std::istringstream iss2(tmp);
-	// 	std::string key;
-	// 	std::string value;
-	// 	getline(iss2, key, '=');
-	// 	getline(iss2, value);
-	// 	_env[key] = value;
-	// }
+	std::stringstream ss;
+	ss << _toIn.size();
+	_env["REQUEST_METHOD"] = _method;
+	if (_method == "POST")
+		_env["QUERY_STRING"] = _toIn;
+	_env["CONTENT_LENGTH"] = ss.str();
+	_env["CONTENT_TYPE"] = "text/html";
+	_env["CONTENT_LENGTH"] = ss.str();
+	_env["SERVER_NAME"] = "localhost"; // temporary hardcoded
+	_env["SERVER_PORT"] = "80"; // temporary hardcoded
+	_env["SCRIPT_NAME"] = _path;
+	_env["PATH_INFO"] = _path;
+	_env["SERVER_PROTOCOL"] = "HTTP/1.1"; // temporary hardcoded
 }
 
 std::string Cgi::getExtension() const
@@ -125,6 +99,7 @@ std::string Cgi::getExtension() const
 const std::string& Cgi::run()
 {
 	pid_t pid;
+	int fdIn[2];
 	int fdOut[2];
 	int ret = 1;
 	char buffer[1024];
@@ -154,22 +129,46 @@ const std::string& Cgi::run()
 		delete [] env;
 		throw CgiFileException();
 	}
+	if (pipe(fdIn) == -1)
+	{
+		throw CgiPipeException();
+	}
 	if (pipe(fdOut) == -1)
 	{
+		close(fdIn[0]);
+		close(fdIn[1]);
 		delete [] env;
 		throw CgiPipeException();
+	}
+
+	if (_method == "POST")
+	{
+		std::stringstream ss;
+		ss << _toIn.size();
+		_env["CONTENT_LENGTH"] = std::string(ss.str());
+		write(fdIn[1], _toIn.c_str(), _toIn.size());
+	}
+	else
+	{
+		// build querry string 
 	}
 
 	pid = fork();
 
 	if (pid == -1)
 	{
+		close(fdIn[0]);
+		close(fdIn[1]);
+		close(fdOut[0]);
+		close(fdOut[1]);
 		delete [] env;
 		throw CgiForkException();
 	}
 	else if (!pid)
 	{
+		close(fdIn[1]);
 		close(fdOut[0]);
+		dup2(fdIn[0], STDIN_FILENO);
 		dup2(fdOut[1], STDOUT_FILENO);
 
 		execve(_exePath[_varExtension].c_str(), const_cast<char *const *> (arg), env);
@@ -178,8 +177,10 @@ const std::string& Cgi::run()
 	}
 	else
 	{
-		dup2(fdOut[0], STDOUT_FILENO);
+		close(fdIn[0]);
 		close(fdOut[1]);
+		dup2(fdIn[1], STDIN_FILENO);
+		dup2(fdOut[0], STDOUT_FILENO);
 		waitpid(-1, NULL, 0);
 		delete [] env;
 
@@ -201,7 +202,6 @@ const std::string& Cgi::run()
 // 	(void)oldStdin;
 // 	int oldStdout;
 // 	(void)oldStdout;
-// 	int fdIn[2];
 // 	int fdOut[2];
 // 	int ret = 1;
 // 	char buffer[1024];
@@ -209,10 +209,6 @@ const std::string& Cgi::run()
 // 	// oldStdin = dup(STDIN_FILENO);
 // 	// oldStdout = dup(STDOUT_FILENO);
 
-// 	if (pipe(fdIn) == -1)
-// 	{
-// 		throw CgiPipeException();
-// 	}
 
 // 	if (pipe(fdOut) == -1)
 // 	{

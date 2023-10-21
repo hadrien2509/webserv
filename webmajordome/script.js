@@ -1,7 +1,7 @@
 // Fonction pour récupérer l'heure en PHP via AJAX
 function getHeure() {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'heure.php', true);
+    xhr.open('POST', 'heure.php', true);
 
     xhr.onload = function() {
 		if (xhr.status == 200) {
