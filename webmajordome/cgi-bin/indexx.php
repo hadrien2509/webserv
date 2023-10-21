@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: 'Courier New', monospace;
-            background-image: url('../rick-roll.gif');
+            background-image: url('..//img/rick-roll.gif');
             background-repeat: no-repeat;
             background-attachment: fixed;
             background-size: 100% 100%;
@@ -121,7 +121,7 @@ $$$  / \$$$ |$$ |      $$ |  $$ |$$\   $$ |$$ |      $$ |  $$ |  \$$$  /
 $$  /   \$$ |$$$$$$$$\ $$$$$$$  |\$$$$$$  |$$$$$$$$\ $$ |  $$ |   \$  /   
 \__/     \__|\________|\_______/  \______/ \________|\__|  \__|    \_/    
         </div>
-		<!-- <img src="rick-roll.gif" /> -->
+		<!-- <img src="/img/rick-roll.gif" /> -->
         <section id="presentation">
             <h2>Présentation</h2>
             <p>Bienvenue sur notre site Web. Chez les Webmajordomes, nous sommes dédiés à fournir les meilleurs services web.</p>

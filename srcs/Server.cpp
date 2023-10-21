@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: samy <samy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/19 17:44:43 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/21 13:28:36 by samy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,25 +265,6 @@ void Server::addCgiPath(std::string cgiPath)
 void Server::addCgiExtension(std::string cgiExtension)
 {
 	_cgiExtension.push_back(cgiExtension);
-}
-
-Response* Server::getResponse(int fd)
-{
-	 if (_responses.find(fd) != _responses.end())
-    {
-        return _responses[fd].front();
-    }
-    return nullptr;
-}
-
-void Server::addResponse(int fd, Response* response)
-{
-    _responses[fd].push_back(response);
-}
-
-void Server::deleteResponse(int fd)
-{
-	_responses.erase(fd);
 }
 
 Location* Server::checkLocation(Request& request)

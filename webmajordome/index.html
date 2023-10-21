@@ -10,19 +10,23 @@
 	<header>
         <h1>Bienvenue chez les Webmajordomes</h1>
 	</header>
-    <nav>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="form.html">form</a></li>
-            <li><a href="rick.html">Rick</a></li>
-            <li><a href="php.php">php</a></li>
-            <li><a href="breakout/index.html">breakout</a></li>
-            <li><a href="breakout/pong.42">Not_a_pong</a></li>
-            <li><a href="/pong.42">pong</a></li>
-        </ul>
-    </nav>
-
     <main>
+		<div class="hamburger-menu">
+			<input id="menu__toggle" type="checkbox" />
+			<label class="menu__btn" for="menu__toggle">
+			  <span></span>
+			</label>
+		
+			<ul class="menu__box">
+				<li><a class="menu__item" href="index.html">Home</a></li>
+				<li><a class="menu__item" href="/404">error 404</a></li>
+				<li><a class="menu__item" href="form.html">form</a></li>
+				<li><a class="menu__item" href="rick.html">Rick</a></li>
+				<li><a class="menu__item" href="php.php">php</a></li>
+				<li><a class="menu__item" href="breakout/index.html">breakout</a></li>
+				<li><a class="menu__item" href="/breakout/pong.html">pong</a></li>
+			</ul>
+		</div>
 		<audio loop autoplay>
             <source src="rickrollsound.mp3" type="audio/mpeg">
             Your browser does not support the audio element.
@@ -38,7 +42,7 @@ $$$  / \$$$ |$$ |      $$ |  $$ |$$\   $$ |$$ |      $$ |  $$ |  \$$$  /
 $$  /   \$$ |$$$$$$$$\ $$$$$$$  |\$$$$$$  |$$$$$$$$\ $$ |  $$ |   \$  /   
 \__/     \__|\________|\_______/  \______/ \________|\__|  \__|    \_/    
         </div>
-		<img src="rick-roll.gif" />
+		<img src="/img/rick-roll.gif" />
         <section id="presentation">
             <h2>Présentation</h2>
             <p>Bienvenue sur notre site Web. Chez les Webmajordomes, nous sommes dédiés à fournir les meilleurs services web.</p>
@@ -74,3 +78,4 @@ $$  /   \$$ |$$$$$$$$\ $$$$$$$  |\$$$$$$  |$$$$$$$$\ $$ |  $$ |   \$  /
     </footer>
 </body>
 </html>
+

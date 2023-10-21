@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 print("Content-type: text/html\n")
+print("<head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><link rel='stylesheet' href='../styles.css'><title>Bienvenue chez les Webmajordomes</title></head>\n")
 
 # Récupère les données du formulaire
 import cgi

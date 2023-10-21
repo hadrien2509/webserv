@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: samy <samy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:01 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/20 15:31:19 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/21 18:34:27 by samy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,12 @@ Request	&Request::operator=(const Request &rhs)
 void	Request::_parseRequest(const std::string &request)
 {
 	std::istringstream iss(request);
-	
+	//std::cout << "\n\n\n" << request << std::endl;
 	std::string line;
 	if (std::getline(iss, line))
 	{
 		std::istringstream iss2(line);
-		std::cout << "request : " << line << std::endl;
+		//std::cout << line << std::endl;
 		iss2 >> _method >> _path >> _httpVersion;
 	}
 	size_t pos = _path.find('?');
@@ -66,6 +66,7 @@ void	Request::_parseRequest(const std::string &request)
         _querryString = _path.substr(pos + 1);
         _path = _path.substr(0, pos);
     }
+		//std::cout << _querryString << std::endl;
 }
 
 const std::string&	Request::getMethod() const

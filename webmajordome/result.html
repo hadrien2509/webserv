@@ -3,98 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Résultat</title>
-    <style>
-        body {
-            font-family: 'Courier New', monospace;
-            background-color: #000;
-            color: #fff;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        header {
-            background-color: #0077d9;
-            text-align: center;
-            padding: 20px;
-        }
-
-        h1 {
-            font-size: 36px;
-        }
-
-        p {
-            font-size: 18px;
-            margin: 20px;
-        }
-
-        nav {
-            background-color: #333;
-            text-align: center;
-            padding: 10px;
-        }
-
-        nav ul {
-            list-style-type: none;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-        }
-
-        nav li {
-            margin: 0 20px;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #fff;
-            font-weight: bold;
-        }
-
-        main {
-            padding: 0 1em;
-            flex-grow: 1;
-        }
-
-        footer {
-            background-color: #333;
-            text-align: center;
-            padding: 10px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-
+    
+	<link rel="stylesheet" href="styles.css">
+	<title>Résultat</title>
+	<style>
         .result-container {
             background-color: #333;
             text-align: center;
-            padding: 20px;
-            margin: 20px;
+			padding: 1em;
+			margin: 2em;
+			width: 100%;
         }
 
         .result-container p {
             font-size: 18px;
             color: #fff;
         }
-    </style>
+	</style>
 </head>
 <body>
 	<header>
         <h1>Bienvenue chez les Webmajordomes</h1>
 	</header>
-    <nav>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="form.html">form</a></li>
-            <li><a href="rick.html">Rick</a></li>
-            <li><a href="php.php">php</a></li>
-        </ul>
-    </nav>
-
     <main>
+		<div class="hamburger-menu">
+			<input id="menu__toggle" type="checkbox" />
+			<label class="menu__btn" for="menu__toggle">
+			  <span></span>
+			</label>
+		
+			<ul class="menu__box">
+				<li><a class="menu__item" href="index.html">Home</a></li>
+				<li><a class="menu__item" href="form.html">form</a></li>
+				<li><a class="menu__item" href="rick.html">Rick</a></li>
+				<li><a class="menu__item" href="php.php">php</a></li>
+				<li><a class="menu__item" href="breakout/index.html">breakout</a></li>
+				<li><a class="menu__item" href="breakout/pong.42">Not_a_pong</a></li>
+				<li><a class="menu__item" href="/pong.42">pong</a></li>
+				<li><a class="menu__item" href="/test/index.html">TEST</a></li>
+			</ul>
+		  </div>
         <div class="result-container">
             <h2>Résultat GET</h2>
             <div id="getResults"></div>
