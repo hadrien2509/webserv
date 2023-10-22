@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:01 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/22 01:32:41 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/22 01:53:49 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ Request::Request(const int& connection) : _connection(connection)
 
 	if (ret != -1)
 		buffer[ret] = '\0';
-	std::cerr << "BUFFER: " << buffer << std::endl;
+	// std::cerr << "BUFFER: " << buffer << std::endl;
 	// if (!ret)
 	// 	std::cout << "\rConnection was closed by client.\n" << std::endl;
 	// else if (ret == -1)
@@ -53,12 +53,12 @@ Request	&Request::operator=(const Request &rhs)
 void	Request::_parseRequest(const std::string &request)
 {
 	std::istringstream iss(request);
-	
+	//std::cout << "\n\n\n" << request << std::endl;
 	std::string line;
 	if (std::getline(iss, line))
 	{
 		std::istringstream iss2(line);
-		// std::cout << "REQUEST: " << line << std::endl;
+		// std::cout << "request : " << line << std::endl;
 		iss2 >> _method >> _path >> _httpVersion;
 	}
 	size_t pos = _path.find('?');
@@ -67,6 +67,7 @@ void	Request::_parseRequest(const std::string &request)
         _querryString = _path.substr(pos + 1);
         _path = _path.substr(0, pos);
     }
+		//std::cout << _querryString << std::endl;
 }
 
 const std::string&	Request::getMethod() const

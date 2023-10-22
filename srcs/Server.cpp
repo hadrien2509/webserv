@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/21 22:54:14 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/22 01:58:46 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,26 +265,6 @@ void Server::addCgiPath(std::string cgiPath)
 void Server::addCgiExtension(std::string cgiExtension)
 {
 	_cgiExtension.push_back(cgiExtension);
-}
-
-Response* Server::getResponse(int fd)
-{
-	 if (_responses.find(fd) != _responses.end())
-    {
-        return _responses[fd].front();
-    }
-    // return nullptr; // error: identifier ‘nullptr’ is a keyword in C++11
-    return NULL;
-}
-
-void Server::addResponse(int fd, Response* response)
-{
-    _responses[fd].push_back(response);
-}
-
-void Server::deleteResponse(int fd)
-{
-	_responses.erase(fd);
 }
 
 Location* Server::checkLocation(Request& request)

@@ -6,7 +6,7 @@
 /*   By: samy <samy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/18 12:24:45 by samy             ###   ########.fr       */
+/*   Updated: 2023/10/21 14:29:28 by samy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,8 +208,8 @@ void Config::_parseLocation(std::istringstream &ss, Server *server)
 		// 	_parseErrorPage(ss, location);
 		// else if (type == "client_max_body_size")
 		// 	_parseClientMaxBodySize(ss, location);
-		// else if (type == "allow_methods")
-		// 	_parseAllowMethods(ss, location);
+		else if (type == "allow_methods")
+			_parseAllowMethods(ss, location);
 		// else if (type == "cgi")
 		// 	_parseCgi(ss, location);
 		else if (type == "}")
@@ -217,6 +217,35 @@ void Config::_parseLocation(std::istringstream &ss, Server *server)
 		else
 			throw std::runtime_error("Unknown type in configuration file");
 	}
+}
+
+void Config::_parseAllowMethods(std::istringstream &ss, Location *location)
+{
+	std::string method;
+	while (ss >> method)
+	{
+		if (ss.fail())
+			throw std::runtime_error("Invalid method");
+		location->addAllowMethods(method);
+		std::cout << "Method : " << method << std::endl;
+	}
+}
+
+Response* Config::getResponse(int fd)
+{
+	if (_responses.find(fd) != _responses.end())
+        return _responses[fd].front();
+    return nullptr;
+}
+
+void Config::addResponse(int fd, Response* response)
+{
+    _responses[fd].push_back(response);
+}
+
+void Config::deleteResponse(int fd)
+{
+	_responses.erase(fd);
 }
 
 void Config::_openConfig(const std::string &input)

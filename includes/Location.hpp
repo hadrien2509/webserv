@@ -6,7 +6,7 @@
 /*   By: samy <samy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:20:40 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/18 17:42:06 by samy             ###   ########.fr       */
+/*   Updated: 2023/10/21 14:35:04 by samy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,9 @@ class Location
 		void			setUri(std::string);
 		void			addIndex(std::string);
 		Response*		checkRequest(Request& request);
+		void		printAllowMethods();
+		void		addAllowMethods(std::string);
+		bool 		checkMethod(std::string method);
 };
 
 # include "Server.hpp"

@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/21 22:57:32 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/22 01:53:01 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ class Config
 		std::ifstream				_configFile;
 		size_t						_pollsize;
 		pollfd*						_poll;
+		std::map<int, std::deque<Response*> >			_responses;
 		
 		std::map<int, Server*>		_serverSocketToServer;
 		std::map<int, Server*>		_clientSocketToServer;
@@ -75,6 +76,9 @@ class Config
 		
 	public :
 	
+		Response*									getResponse(int fd);
+		void										deleteResponse(int fd);
+		void										addResponse(int fd, Response *response);
 		void run();
 		
 		Config();
@@ -82,6 +86,10 @@ class Config
 		~Config();
     	Config(const Config &copy);
 		Config &operator=(const Config &copy);
+		void send_response(int fd);
+
+	void _parseAllowMethods(std::istringstream &ss, Location *location);
+		
 };
 
 template<typename T> Response *cgiHandler(Request & req, T *serv)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: samy <samy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:21:31 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/19 15:26:16 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/21 20:30:35 by samy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,8 +120,27 @@ void			Location::addIndex(std::string index)
 	this->_index.push_back(index);
 }
 
+//addAllowMethods
+void Location::addAllowMethods(std::string method)
+{
+	this->_allowMethods.push_back(method);
+}
+
+//check if the method is allowed
+bool Location::checkMethod(std::string method)
+{
+	for (std::vector<std::string>::iterator it = _allowMethods.begin(); it != _allowMethods.end(); it++)
+	{
+		if (*it == method)
+			return (true);
+	}
+	return (false);
+}
+
 Response* Location::checkRequest(Request& request)
 {
+	if (!checkMethod(request.getMethod()))
+		return (new Response("405 Method Not Allowed", _rootPath + "/" + _errorPage[405], _mimeTypes));
 	if (request.getPath() == "/")
 	{
 		for (std::vector<std::string>::const_iterator it = _index.begin(); it != _index.end(); it++)

@@ -6,11 +6,21 @@
 /*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/22 01:35:41 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/22 01:56:51 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Config.hpp"
+
+void Config::send_response(int fd)
+{
+	Response* response = this->getResponse(fd);
+	if (response == NULL)
+		return;
+	this->deleteResponse(fd);
+	//std::cout << "\n\n" << response->getHeader() << "\n\n\n\n" << std::endl;
+	send(fd, response->get().c_str(), response->get().size(), 0);
+}
 
 void Config::_createPoll()
 {
@@ -44,7 +54,7 @@ void Config::_removePollfd(int fd)
             _pollsize--;
 
             // Réallouez le tableau _poll avec la nouvelle taille
-			std::cout << "Pollsize: " << _pollsize << std::endl;
+			//std::cout << "Pollsize: " << _pollsize << std::endl;
             struct pollfd* newPoll = new struct pollfd[_pollsize];
             for (size_t j = 0; j < _pollsize; j++) {
                 newPoll[j] = _poll[j];
@@ -82,17 +92,18 @@ void Config::run()
 	_createPoll();
 	while (1)
 	{
-		// std::cout << "Waiting for connections..." << std::endl;
 		if ((IDK = poll(_poll, _pollsize, -1)) <= 0)  // Infinite timeout for simplicity
 			continue;
 		for (size_t i = 0; i < _pollsize; i++)
 		{
-			// if (_poll[i].revents & POLLHUP) {
-				// std::cerr << "IL EST DECO" << std::endl;
-			// 	_removePollfd(_poll[i].fd);
-			// }
 			if (_poll[i].revents & POLLERR) {
-				std::cerr << "IL A CRASH" << std::endl;
+				std::cerr << "POLL QUIT" << std::endl;
+				send_response(_poll[i].fd);
+				_removePollfd(_poll[i].fd);
+			}
+			else if (_poll[i].revents & POLLHUP) {
+				std::cerr << "POLLHUP" << std::endl;
+				send_response(_poll[i].fd);
 				_removePollfd(_poll[i].fd);
 			}
           	else if (_poll[i].revents & POLLIN)
@@ -108,12 +119,10 @@ void Config::run()
 					std::cout << "New connection in " << _poll[i].fd << std::endl;
 					_clientSocketToServer[client_socket] = server;
 					_addPollfd(client_socket, POLLIN | POLLOUT);
-				}
-				else
+				} else
 				{
 					std::cerr << "Required to read: parse request to get the payload to include in cgi->POST" << std::endl;
 					Server* server = _clientSocketToServer[_poll[i].fd];
-					// std::cout<< "REQUEST RECIEVE [" << _poll[i].fd << "]" << std::endl;
 					Request request(_poll[i].fd);
 					if (request.getPath() == "")
 						continue;
@@ -121,33 +130,14 @@ void Config::run()
 					Location *location = server->checkLocation(request);
 					Response *response;
 					if (location)
-					{
 						response = location->checkRequest(request); 
-					}
 					else
 						response = server->checkRequest(request);
-					server->addResponse(_poll[i].fd, response);
+					this->addResponse(_poll[i].fd, response);
 				}
 			}
-			else if (_poll[i].revents & POLLOUT || _poll[i].revents & POLLHUP)
-			{
-				if (_clientSocketToServer.find(_poll[i].fd) == _clientSocketToServer.end())
-					continue;
-				Server*	server = _clientSocketToServer[_poll[i].fd];
-				Response* response = server->getResponse(_poll[i].fd);
-				if (_poll[i].revents & POLLHUP)
-				{
-					std::cerr << "IL EST DECO" << std::endl;
-					_removePollfd(_poll[i].fd);
-				}
-				if (response == NULL)
-					continue;
-				std::string httpResponse = response->get();
-				server->deleteResponse(_poll[i].fd);
-				// std::cout << "RESPONSE SEND [" << _poll[i].fd << "]" << std::endl;
-				// std::cerr << "POLLOUT: " << httpResponse << std::endl;
-				send(_poll[i].fd, httpResponse.c_str(), httpResponse.size(), 0);
-			}
+			if (_poll[i].revents & POLLOUT)
+				send_response(_poll[i].fd);
         }
 	}
 }

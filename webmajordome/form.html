@@ -5,39 +5,119 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="styles.css">
     <title>Formulaire</title>
+	<style>
+		.form-container {
+			text-align: center;
+			padding: 1em;
+			margin: 2em;
+			width: 100%;
+		}
+
+		.form-container form {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.form-container label {
+			font-size: 18px;
+			color: #fff;
+			/* Couleur du texte de l'étiquette */
+		}
+
+		.form-container input {
+			padding: 10px;
+			margin: 10px 0;
+			border: 1px solid #0077d9;
+			/* Bordure autour des champs */
+			background-color: #333;
+			/* Couleur de fond des champs */
+			color: #fff;
+			/* Couleur du texte des champs */
+			border-radius: 5px;
+			/* Coins arrondis des champs */
+		}
+
+		.form-container input[type="submit"] {
+			background-color: #0077d9;
+			color: #fff;
+			cursor: pointer;
+			padding: 10px;
+			border: none;
+			border-radius: 5px;
+		}
+	</style>
 </head>
 <body>
 	<header>
         <h1>Bienvenue chez les Webmajordomes</h1>
 	</header>
-    <nav>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="form.html">form</a></li>
-            <li><a href="rick.html">Rick</a></li>
-            <li><a href="php.php">php</a></li>
-        </ul>
-    </nav>
-
     <main>
+
+		<div class="hamburger-menu">
+			<input id="menu__toggle" type="checkbox" />
+			<label class="menu__btn" for="menu__toggle">
+			  <span></span>
+			</label>
+		
+			<ul class="menu__box">
+				<li><a class="menu__item" href="index.html">Home</a></li>
+				<li><a class="menu__item" href="form.html">form</a></li>
+				<li><a class="menu__item" href="rick.html">Rick</a></li>
+				<li><a class="menu__item" href="php.php">php</a></li>
+				<li><a class="menu__item" href="breakout/index.html">breakout</a></li>
+				<li><a class="menu__item" href="breakout/pong.42">Not_a_pong</a></li>
+				<li><a class="menu__item" href="/pong.42">pong</a></li>
+				<li><a class="menu__item" href="/test/index.html">TEST</a></li>
+			</ul>
+		  </div>
         <div class="form-container">
             <h2>form.py</h2>
             <form action="cgi-bin/form.py" method="post">
                 <label for="get_name">Nom :</label>
-                <input type="text" id="name" name="name" placeholder="Votre nom" required>
+                <input type="text" id="name" name="name" value="jack sparrow" placeholder="Votre nom" required>
                 <label for="get_email">Email :</label>
-                <input type="text" id="email" name="email" placeholder="Votre email" required>
+                <input type="text" id="email" name="email" value="jack.sparrow@gmail.com" placeholder="Votre email" required>
                 <input type="submit" value="Soumettre (POST)">
             </form>
         </div>
 		<div class="form-container">
-            <h2>result.html</h2>
-            <form action="result.html" method="get">
+            <h2>GET</h2>
+            <form action="result.php" method="get">
                 <label for="get_name">Nom :</label>
-                <input type="text" id="get_name" name="name" placeholder="Votre nom" required>
+                <input type="text" id="get_name" name="name" value="jack sparrow" placeholder="Votre nom" required>
                 <label for="get_email">Email :</label>
-                <input type="text" id="get_email" name="email" placeholder="Votre email" required>
+                <input type="text" id="get_email" name="email" value="jack.sparrow@gmail.com" placeholder="Votre email" required>
                 <input type="submit" value="Soumettre (GET)">
+            </form>
+        </div>
+		<div class="form-container">
+            <h2>POST</h2>
+            <form action="result.php" method="post">
+                <label for="post_name">Nom :</label>
+                <input type="text" id="post_name" name="name" value="jack sparrow" placeholder="Votre nom" required>
+                <label for="post_email">Email :</label>
+                <input type="text" id="post_email" name="email" value="jack.sparrow@gmail.com" placeholder="Votre email" required>
+                <input type="submit" value="Soumettre (POST)">
+            </form>
+        </div>
+		<div class="form-container">
+            <h2>PUT</h2>
+            <form action="result.php" method="put">
+                <label for="put_name">Nom :</label>
+                <input type="text" id="put_name" name="name" value="jack sparrow" placeholder="Votre nom" required>
+                <label for="put_email">Email :</label>
+                <input type="text" id="put_email" name="email" value="jack.sparrow@gmail.com" placeholder="Votre email" required>
+                <input type="submit" value="Soumettre (PUT)">
+            </form>
+        </div>
+		<div class="form-container">
+            <h2>DELETE</h2>
+            <form action="result.php" method="delete">
+                <label for="delete_name">Nom :</label>
+                <input type="text" id="delete_name" name="name" value="jack sparrow" placeholder="Votre nom" required>
+                <label for="delete_email">Email :</label>
+                <input type="text" id="delete_email" name="email" value="jack.sparrow@gmail.com" placeholder="Votre email" required>
+                <input type="submit" value="Soumettre (DELETE)">
             </form>
         </div>
     </main>
