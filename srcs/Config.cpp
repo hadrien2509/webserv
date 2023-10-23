@@ -245,7 +245,13 @@ void Config::addResponse(int fd, Response* response)
 
 void Config::deleteResponse(int fd)
 {
-	_responses.erase(fd);
+	if (_responses.find(fd) != _responses.end())
+	{
+		delete _responses[fd].front();
+		_responses[fd].pop_front();
+		if (_responses[fd].empty())
+			_responses.erase(fd);
+	}
 }
 
 void Config::_openConfig(const std::string &input)
