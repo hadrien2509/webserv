@@ -121,12 +121,18 @@ const std::string& Cgi::run()
 
 	if (!arg[0] || std::string(arg[0]).size() == 0)
 	{
-		delete [] env;
+		for (int i = 0; env[i] != NULL; i++) {
+        	delete[] env[i];
+		}
+		delete[] env;
 		throw CgiNotCgiException();
 	}
 	if (access(arg[0], F_OK) != 0 || access(arg[1], F_OK) != 0)
 	{
-		delete [] env;
+		for (int i = 0; env[i] != NULL; i++) {
+        	delete[] env[i];
+		}
+		delete[] env;
 		throw CgiFileException();
 	}
 	if (pipe(fdIn) == -1)
@@ -137,7 +143,10 @@ const std::string& Cgi::run()
 	{
 		close(fdIn[0]);
 		close(fdIn[1]);
-		delete [] env;
+		for (int i = 0; env[i] != NULL; i++) {
+        	delete[] env[i];
+		}
+		delete[] env;
 		throw CgiPipeException();
 	}
 
@@ -161,7 +170,10 @@ const std::string& Cgi::run()
 		close(fdIn[1]);
 		close(fdOut[0]);
 		close(fdOut[1]);
-		delete [] env;
+		for (int i = 0; env[i] != NULL; i++) {
+        	delete[] env[i];
+		}
+		delete[] env;
 		throw CgiForkException();
 	}
 	else if (!pid)
@@ -174,6 +186,10 @@ const std::string& Cgi::run()
 		execve(_exePath[_varExtension].c_str(), const_cast<char *const *> (arg), env);
 		std::cerr << "CGI exception: execve failed" << std::endl;
 		write(fdOut[1], "500 Internal Server Error\n", 26);
+		for (int i = 0; env[i] != NULL; i++) {
+        	delete[] env[i];
+		}
+		delete[] env;
 	}
 	else
 	{
@@ -182,7 +198,6 @@ const std::string& Cgi::run()
 		dup2(fdIn[1], STDIN_FILENO);
 		dup2(fdOut[0], STDOUT_FILENO);
 		waitpid(-1, NULL, 0);
-		delete [] env;
 
 		while (ret > 0)
 		{
@@ -192,6 +207,10 @@ const std::string& Cgi::run()
 		}
 		close(fdOut[0]);
 	}
+	for (int i = 0; env[i] != NULL; i++) {
+        delete[] env[i];
+    }
+    delete[] env;
 	return (_fromOut);
 }
 
