@@ -79,8 +79,6 @@ void	Request::_parseRequest(const std::string &request)
     }
 	if (_method != "GET")
 		getBody(request);
-	
-		std::cout << "querrySrtring [" << _querryString << "]\n\n" << std::endl;
 }
 
 const std::string&	Request::getMethod() const

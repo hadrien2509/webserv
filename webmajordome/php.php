@@ -35,21 +35,21 @@
     </header>
     
     <div class="hamburger-menu">
-			<input id="menu__toggle" type="checkbox" />
-			<label class="menu__btn" for="menu__toggle">
-			  <span></span>
-			</label>
-		
-			<ul class="menu__box">
-				<li><a class="menu__item" href="index.html">Home</a></li>
-				<li><a class="menu__item" href="/404">error 404</a></li>
-				<li><a class="menu__item" href="form.html">form</a></li>
-				<li><a class="menu__item" href="rick.html">Rick</a></li>
-				<li><a class="menu__item" href="php.php">php</a></li>
-				<li><a class="menu__item" href="breakout/index.html">breakout</a></li>
-				<li><a class="menu__item" href="/breakout/pong.html">pong</a></li>
-			</ul>
-		</div>
+		<input id="menu__toggle" type="checkbox" />
+		<label class="menu__btn" for="menu__toggle">
+			<span></span>
+		</label>
+	
+		<ul class="menu__box">
+			<li><a class="menu__item" href="index.html">Home</a></li>
+			<li><a class="menu__item" href="/404">error 404</a></li>
+			<li><a class="menu__item" href="form.html">form</a></li>
+			<li><a class="menu__item" href="rick.html">Rick</a></li>
+			<li><a class="menu__item" href="php.php">php</a></li>
+			<li><a class="menu__item" href="breakout/index.html">breakout</a></li>
+			<li><a class="menu__item" href="/breakout/pong.html">pong</a></li>
+		</ul>
+	</div>
 
     <main>
 		<audio loop autoplay>
