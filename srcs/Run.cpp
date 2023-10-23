@@ -121,7 +121,7 @@ void Config::run()
 					_addPollfd(client_socket, POLLIN | POLLOUT);
 				} else
 				{
-					std::cerr << "Required to read: parse request to get the payload to include in cgi->POST" << std::endl;
+					//std::cerr << "Required to read: parse request to get the payload to include in cgi->POST" << std::endl;
 					Server* server = _clientSocketToServer[_poll[i].fd];
 					Request request(_poll[i].fd);
 					if (request.getPath() == "")

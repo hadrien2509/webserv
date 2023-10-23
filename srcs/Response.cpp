@@ -31,9 +31,8 @@ Response::Response(std::string code, std::string content, std::string version) :
 Response::Response(std::string code, std::string contentPath, std::map<std::string, std::string> &mimeTypes) : _version ("HTTP/1.1"), _status(code)
 {
 	std::ifstream file(contentPath.c_str()); // Open the file for reading
-	if (!file.is_open()) {
-		throw std::runtime_error("Could not open file");
-	}
+	if (!file.is_open())
+		std::cerr << "can't open file : " << contentPath << std::endl;//throw std::runtime_error("Could not open file");
 	std::stringstream ss1, ss2;
 	ss1 << file.rdbuf(); // Read the file
 	file.close(); // Close the file

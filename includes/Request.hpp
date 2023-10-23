@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: samy <samy@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:25 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/20 15:31:28 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/22 11:03:14 by samy             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ class Request
 		const std::string&	getHttpVersion() const;
 		std::string&	getQuerryString();
 		void	setPath(std::string path);
+		void getBody(std::string request);
 };
 
 #endif

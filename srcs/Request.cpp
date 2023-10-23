@@ -50,10 +50,19 @@ Request	&Request::operator=(const Request &rhs)
 	return (*this);
 }
 
+void Request::getBody(std::string request)
+{
+    std::string body;
+    const unsigned long pos = request.find("\r\n\r\n");
+
+    if (pos != std::string::npos) {
+        _querryString = request.substr(pos + 4);
+    }
+}
+
 void	Request::_parseRequest(const std::string &request)
 {
 	std::istringstream iss(request);
-	//std::cout << "\n\n\n" << request << std::endl;
 	std::string line;
 	if (std::getline(iss, line))
 	{
@@ -64,10 +73,14 @@ void	Request::_parseRequest(const std::string &request)
 	size_t pos = _path.find('?');
 
     if (pos != std::string::npos) {
-        _querryString = _path.substr(pos + 1);
+        if (_method == "GET")
+			_querryString = _path.substr(pos + 1);
         _path = _path.substr(0, pos);
     }
-		//std::cout << _querryString << std::endl;
+	if (_method != "GET")
+		getBody(request);
+	
+		std::cout << "querrySrtring [" << _querryString << "]\n\n" << std::endl;
 }
 
 const std::string&	Request::getMethod() const

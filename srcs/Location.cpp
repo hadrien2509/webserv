@@ -139,6 +139,7 @@ bool Location::checkMethod(std::string method)
 
 Response* Location::checkRequest(Request& request)
 {
+	std::cerr << request.getQuerryString() << std::endl;
 	if (!checkMethod(request.getMethod()))
 		return (new Response("405 Method Not Allowed", _rootPath + "/" + _errorPage[405], _mimeTypes));
 	if (request.getPath() == "/")
