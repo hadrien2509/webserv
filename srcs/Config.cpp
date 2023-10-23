@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: samy <samy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/21 14:29:28 by samy             ###   ########.fr       */
+/*   Updated: 2023/10/23 15:58:52 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,19 +231,7 @@ void Config::_parseAllowMethods(std::istringstream &ss, Location *location)
 	}
 }
 
-Response* Config::getResponse(int fd)
-{
-	if (_responses.find(fd) != _responses.end())
-        return _responses[fd].front();
-    return nullptr;
-}
-
-void Config::addResponse(int fd, Response* response)
-{
-    _responses[fd].push_back(response);
-}
-
-void Config::deleteResponse(int fd)
+void Config::_deleteResponse(int fd)
 {
 	if (_responses.find(fd) != _responses.end())
 	{

@@ -10,6 +10,10 @@
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include <poll.h>
+# include <unistd.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <errno.h>
 
 # include "Request.hpp"
 # include "Response.hpp"
@@ -61,6 +65,9 @@ class Server
 		
 
     private:
+		void _initMimeTypes();
+		void _initErrorPages();
+
 		std::vector<struct pollfd>			_pollfds;
 		std::string							_serverName;
 		//std::map<std::string,Location*>	_locations;

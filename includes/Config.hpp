@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/22 01:53:01 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/23 15:58:22 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ class Config
 		void		_addPollfd(int fd, short events);
 		void		_removePollfd(int fd);
 		
+		void										_deleteResponse(int fd);
+		
 		std::string					_ignoreComments(std::string line);
 		std::vector<Server*>		_cluster;
 		std::ifstream				_configFile;
@@ -75,9 +77,7 @@ class Config
 		std::map<int, Response*>	_clientSocketToResponse;
 		
 	public :
-	
-		Response*									getResponse(int fd);
-		void										deleteResponse(int fd);
+
 		void										addResponse(int fd, Response *response);
 		void run();
 		
@@ -86,7 +86,7 @@ class Config
 		~Config();
     	Config(const Config &copy);
 		Config &operator=(const Config &copy);
-		void send_response(int fd);
+		void _sendResponse(int fd);
 
 	void _parseAllowMethods(std::istringstream &ss, Location *location);
 		

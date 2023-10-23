@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 16:43:41 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/20 15:14:59 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/23 15:22:49 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,48 @@
 
 Response::Response()
 {
+}
+
+Response::Response(std::string code, Request& req) : _version(req.getHttpVersion()), _status(code)
+{
+	_header = _version + " " + _status + "\r\n";
+	_header += "Content-Type: text/html\r\n";
+
+	if (code == "400 Bad Request")
+	{
+		_content = "<html><body><h1>400 Bad Request</h1></body></html>";
+	}
+	else if (code == "401 Unauthorized")
+	{
+		_content = "<html><body><h1>401 Unauthorized</h1></body></html>";
+	}
+	else if (code == "403 Forbidden")
+	{
+		_content = "<html><body><h1>403 Forbidden</h1></body></html>";
+	}
+	else if (code == "404 File Not Found")
+	{
+		_content = "<html><body><h1>404 File Not Found</h1></body></html>";
+	}
+	else if (code == "405 Method Not Allowed")
+	{
+		_content = "<html><body><h1>405 Method Not Allowed</h1></body></html>";
+	}
+	else if (code == "500 Internal Server Error")
+	{
+		_content = "<html><body><h1>500 Internal Server Error</h1></body></html>";
+	}
+	else if (code == "500 Internal Server Error")
+	{
+		_content = "<html><body><h1>500 Internal Server Error</h1></body></html>";
+	}
+	
+	std::stringstream ss;	
+	ss << _content.length();
+	_contentLength = ss.str();
+	_header += "Content-Length: " + _contentLength + "\r\n\r\n";
+	
+	_response = _header + _content;
 }
 
 Response::Response(std::string code, std::string content, std::string version) : _version (version), _status(code), _contentType("text/html"), _content(content)
@@ -28,11 +70,11 @@ Response::Response(std::string code, std::string content, std::string version) :
 	_response = _header + _content;
 }
 
-Response::Response(std::string code, std::string contentPath, std::map<std::string, std::string> &mimeTypes) : _version ("HTTP/1.1"), _status(code)
-{
-	std::ifstream file(contentPath.c_str()); // Open the file for reading
+Response::Response(std::string code, Request& req, std::map<std::string, std::string> &mimeTypes) : _version (req.getHttpVersion()), _status(code)
+{	
+	std::ifstream file(req.getPath().c_str()); // Open the file for reading
 	if (!file.is_open())
-		std::cerr << "can't open file : " << contentPath << std::endl;//throw std::runtime_error("Could not open file");
+		std::cerr << "can't open file : " << req.getPath() << std::endl;//throw std::runtime_error("Could not open file");
 	std::stringstream ss1, ss2;
 	ss1 << file.rdbuf(); // Read the file
 	file.close(); // Close the file
@@ -40,10 +82,10 @@ Response::Response(std::string code, std::string contentPath, std::map<std::stri
 	ss2 << _content.length(); // Convert the length to a string
 	_contentLength = ss2.str();
 
-	if (contentPath.find_last_of(".") == std::string::npos)
+	if (req.getPath().find_last_of(".") == std::string::npos)
 		_contentType = "text/html";
 	else
-		_contentType = mimeTypes[contentPath.substr(contentPath.find_last_of("."))];
+		_contentType = mimeTypes[req.getPath().substr(req.getPath().find_last_of("."))];
 	_header = _version + " " + _status + "\r\n";
 	_header += "Content-Type: " + _contentType + "\r\n";
 	_header += "Content-Length: " + _contentLength + "\r\n\r\n";

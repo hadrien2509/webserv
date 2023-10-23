@@ -6,13 +6,13 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/23 12:19:53 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/23 16:14:05 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 
-Server::Server() : _autoIndex(false)
+void Server::_initMimeTypes()
 {
 	_mimeTypes[".aac"] = "audio/aac";
 	_mimeTypes[".abw"] = "application/x-abiword";
@@ -80,6 +80,17 @@ Server::Server() : _autoIndex(false)
 	_mimeTypes[".3gp"] = "video/3gpp";
 	_mimeTypes[".3g2"] = "video/3gpp2";
 	_mimeTypes[".7z"] = "application/x-7z-compressed";
+}
+
+void Server::_initErrorPages()
+{
+
+}
+
+Server::Server() : _autoIndex(false)
+{
+	_initMimeTypes();
+	_initErrorPages();
 }
 
 Server::Server(const Server &copy)
@@ -163,7 +174,7 @@ void	Server::addPort(int port)
 		throw std::runtime_error("Failed to bind to port. errno: ");
 
 	// Start listening. Hold at most 10 connections in the queue
-	if (listen(sockfd, 10) < 0)
+	if (listen(sockfd, 50) < 0)
 		throw std::runtime_error("Failed to listen on socket. errno: ");
 	
 	struct pollfd poll_fd;
@@ -287,11 +298,16 @@ Location* Server::checkLocation(Request& request)
 
 Response* Server::checkRequest(Request& request)
 {
-	if (request.getPath() == "/")
+	std::string	fullPath = _rootPath + "/" + request.getPath();
+    struct stat statbuf;
+
+	stat(fullPath.c_str(), &statbuf);
+	if (statbuf.st_mode & S_IFDIR)
 	{
+		// std::cout << "Directory" << std::endl;
 		for (std::vector<std::string>::const_iterator it = _index.begin(); it != _index.end(); it++)
 		{
-			request.setPath(_rootPath + "/" + (*it));
+			request.setPath(_rootPath + "/" + request.getPath() + (*it));
 			if (access(request.getPath().c_str(), F_OK) == 0)
 			{
 				try
@@ -303,36 +319,74 @@ Response* Server::checkRequest(Request& request)
 				catch(const std::exception& e)
 				{
 					std::cerr << e.what() << '\n';
-					return (new Response("200 OK", request.getPath(), _mimeTypes));
+					return (new Response("200 OK", request, _mimeTypes));
 				}
+			}
+			else if (errno == EACCES)
+			{
+				if (_errorPage.find(403) != _errorPage.end())
+				{
+					request.setPath(_rootPath + "/" + _errorPage[403]);
+					return (new Response("403 Forbidden", request, _mimeTypes));
+				}
+				else
+					return (new Response("403 Forbidden", request));
 			}
 		}
 		if (_autoIndex)
 		{
 			std::cout << "AutoIndex" << std::endl;
-			return (new Response("200 OK", request.getPath(), _mimeTypes));
+			return (new Response("200 OK", request, _mimeTypes));
 		}
 		else
 		{
-			request.setPath(_rootPath + "/" + _errorPage[403]);
-			return (new Response("403 Forbidden", request.getPath(), _mimeTypes));
+			if (_errorPage.find(403) != _errorPage.end())
+			{
+				request.setPath(_rootPath + "/" + _errorPage[403]);
+				return (new Response("403 Forbidden", request, _mimeTypes));
+			}
+			else
+				return (new Response("403 Forbidden", request));
 		}
 	}
-	request.setPath(_rootPath + request.getPath());
-	if (access(request.getPath().c_str(), F_OK) == 0)
+	else if (statbuf.st_mode & S_IFREG)
 	{
-		try
+		// std::cout << "File" << std::endl;
+		request.setPath(_rootPath + request.getPath());
+		if (access(request.getPath().c_str(), F_OK) == 0)
 		{
-			// std::cerr << "[SERVER] Request path: " << request.getPath() << std::endl;
-			Response *response = cgiHandler(request, this);
-			return (response);
+			try
+			{
+				// std::cerr << "[SERVER] Request path: " << request.getPath() << std::endl;
+				Response *response = cgiHandler(request, this);
+				return (response);
+			}
+			catch (const std::exception &e)
+			{
+				return (new Response("200 OK", request, _mimeTypes));
+				std::cerr << e.what() << '\n';
+			}
 		}
-		catch (const std::exception &e)
+		else
 		{
-			return (new Response("200 OK", request.getPath(), _mimeTypes));
-			std::cerr << e.what() << '\n';
+			if (_errorPage.find(403) != _errorPage.end())
+			{
+				request.setPath(_rootPath + "/" + _errorPage[403]);
+				return (new Response("403 Forbidden", request, _mimeTypes));
+			}
+			else
+				return (new Response("403 Forbidden", request));
 		}
 	}
-	request.setPath(_rootPath + "/" + _errorPage[404]);
-	return (new Response("404 Not Found", request.getPath(), _mimeTypes));
+	else
+	{
+		// std::cout << "Not found" << std::endl;
+		if (_errorPage.find(404) != _errorPage.end() && (access((_rootPath + "/" + _errorPage[404]).c_str(), F_OK) == 0))
+		{
+			request.setPath(_rootPath + "/" + _errorPage[404]);
+			return (new Response("404 File Not Found", request, _mimeTypes));
+		}
+		else
+			return (new Response("404 File Not Found", request));
+	}
 }
