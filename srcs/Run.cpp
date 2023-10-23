@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/22 01:56:51 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/23 12:14:36 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void Config::_createPoll()
 
 void Config::_removePollfd(int fd)
 {
+	close(fd);
     for (size_t i = 0; i < _pollsize; i++) {
         if (_poll[i].fd == fd) {
             // Supprimez ce descripteur de fichier du tableau _poll
@@ -96,12 +97,14 @@ void Config::run()
 			continue;
 		for (size_t i = 0; i < _pollsize; i++)
 		{
-			if (_poll[i].revents & POLLERR) {
+			if (_poll[i].revents & POLLERR)
+			{
 				std::cerr << "POLL QUIT" << std::endl;
 				send_response(_poll[i].fd);
 				_removePollfd(_poll[i].fd);
 			}
-			else if (_poll[i].revents & POLLHUP) {
+			else if (_poll[i].revents & POLLHUP)
+			{
 				std::cerr << "POLLHUP" << std::endl;
 				send_response(_poll[i].fd);
 				_removePollfd(_poll[i].fd);
@@ -119,7 +122,8 @@ void Config::run()
 					std::cout << "New connection in " << _poll[i].fd << std::endl;
 					_clientSocketToServer[client_socket] = server;
 					_addPollfd(client_socket, POLLIN | POLLOUT);
-				} else
+				}
+				else
 				{
 					//std::cerr << "Required to read: parse request to get the payload to include in cgi->POST" << std::endl;
 					Server* server = _clientSocketToServer[_poll[i].fd];
