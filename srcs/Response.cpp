@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 16:43:41 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/23 15:22:49 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/25 19:44:15 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,6 @@ Response::Response(std::string code, Request& req) : _version(req.getHttpVersion
 	else if (code == "405 Method Not Allowed")
 	{
 		_content = "<html><body><h1>405 Method Not Allowed</h1></body></html>";
-	}
-	else if (code == "500 Internal Server Error")
-	{
-		_content = "<html><body><h1>500 Internal Server Error</h1></body></html>";
 	}
 	else if (code == "500 Internal Server Error")
 	{
