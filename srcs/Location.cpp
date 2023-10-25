@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:21:31 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/23 16:14:55 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/25 15:52:06 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,11 @@ void Location::addAllowMethods(std::string method)
 	this->_allowMethods.push_back(method);
 }
 
+void Location::setAutoIndex(bool autoIndex)
+{
+	this->_autoIndex = autoIndex;
+}
+
 //check if the method is allowed
 bool Location::checkMethod(std::string method)
 {
@@ -139,16 +144,15 @@ bool Location::checkMethod(std::string method)
 
 Response* Location::checkRequest(Request& request)
 {
-	std::string	fullPath = _rootPath + "/" + request.getPath();
+	std::string	fullPath = _rootPath + request.getPath();
     struct stat statbuf;
 
 	stat(fullPath.c_str(), &statbuf);
-	if (statbuf.st_mode & S_IFDIR)
+	if (statbuf.st_mode & S_IFDIR && access(fullPath.c_str(),F_OK) == 0)
 	{
-		// std::cout << "Directory" << std::endl;
 		for (std::vector<std::string>::const_iterator it = _index.begin(); it != _index.end(); it++)
 		{
-			request.setPath(_rootPath + "/" + request.getPath() + (*it));
+			request.setPath(_rootPath + request.getPath() + (*it));
 			if (access(request.getPath().c_str(), F_OK) == 0)
 			{
 				try
@@ -177,7 +181,8 @@ Response* Location::checkRequest(Request& request)
 		if (_autoIndex)
 		{
 			std::cout << "AutoIndex" << std::endl;
-			return (new Response("200 OK", request, _mimeTypes));
+			std::string autoIndex = autoIndexGenerator(fullPath);
+			return (new Response("200 OK", autoIndex, request.getHttpVersion()));
 		}
 		else
 		{

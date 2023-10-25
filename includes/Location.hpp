@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: samy <samy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:20:40 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/21 14:35:04 by samy             ###   ########.fr       */
+/*   Updated: 2023/10/25 15:30:53 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ class Location
 		void		printAllowMethods();
 		void		addAllowMethods(std::string);
 		bool 		checkMethod(std::string method);
+		void		setAutoIndex(bool);
 };
 
 # include "Server.hpp"

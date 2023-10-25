@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/23 16:14:05 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/25 15:58:54 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,8 +173,8 @@ void	Server::addPort(int port)
 	if (bind(sockfd, (struct sockaddr *)&sockaddr, sizeof(sockaddr)) < 0)
 		throw std::runtime_error("Failed to bind to port. errno: ");
 
-	// Start listening. Hold at most 10 connections in the queue
-	if (listen(sockfd, 50) < 0)
+	// Start listening. Hold at most 50 connections in the queue
+	if (listen(sockfd, 100) < 0)
 		throw std::runtime_error("Failed to listen on socket. errno: ");
 	
 	struct pollfd poll_fd;
@@ -278,6 +278,11 @@ void Server::addCgiExtension(std::string cgiExtension)
 	_cgiExtension.push_back(cgiExtension);
 }
 
+void Server::setAutoIndex(bool autoIndex)
+{
+	_autoIndex = autoIndex;
+}
+
 Location* Server::checkLocation(Request& request)
 {
     std::string bestMatch = "";
@@ -296,18 +301,35 @@ Location* Server::checkLocation(Request& request)
     return location;
 }
 
+std::string autoIndexGenerator(const std::string& path)
+{
+	std::string html = "<html><head><title>Index of " + path + "</title></head><body><h1>Index of " + path + "</h1><hr><pre>";
+	struct dirent *dir;
+	DIR *d = opendir(path.c_str());
+	if (d)
+	{
+		while ((dir = readdir(d)) != NULL)
+		{
+			std::string name = dir->d_name;
+			html += "<a href=\"" + name + "\">" + name + "</a><br>";
+		}
+		closedir(d);
+	}
+	html += "</pre><hr></body></html>";
+	return (html);
+}
+
 Response* Server::checkRequest(Request& request)
 {
-	std::string	fullPath = _rootPath + "/" + request.getPath();
+	std::string	fullPath = _rootPath + request.getPath();
     struct stat statbuf;
 
 	stat(fullPath.c_str(), &statbuf);
-	if (statbuf.st_mode & S_IFDIR)
+	if (statbuf.st_mode & S_IFDIR && access(fullPath.c_str(),F_OK) == 0)
 	{
-		// std::cout << "Directory" << std::endl;
 		for (std::vector<std::string>::const_iterator it = _index.begin(); it != _index.end(); it++)
 		{
-			request.setPath(_rootPath + "/" + request.getPath() + (*it));
+			request.setPath(_rootPath + request.getPath() + (*it));
 			if (access(request.getPath().c_str(), F_OK) == 0)
 			{
 				try
@@ -336,7 +358,8 @@ Response* Server::checkRequest(Request& request)
 		if (_autoIndex)
 		{
 			std::cout << "AutoIndex" << std::endl;
-			return (new Response("200 OK", request, _mimeTypes));
+			std::string autoIndex = autoIndexGenerator(fullPath);
+			return (new Response("200 OK", autoIndex, request.getHttpVersion()));
 		}
 		else
 		{
@@ -380,7 +403,6 @@ Response* Server::checkRequest(Request& request)
 	}
 	else
 	{
-		// std::cout << "Not found" << std::endl;
 		if (_errorPage.find(404) != _errorPage.end() && (access((_rootPath + "/" + _errorPage[404]).c_str(), F_OK) == 0))
 		{
 			request.setPath(_rootPath + "/" + _errorPage[404]);

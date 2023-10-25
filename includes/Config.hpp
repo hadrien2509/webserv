@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/23 15:58:22 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/25 15:34:53 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,15 @@ class Config
 		void		_parseLocation(std::istringstream &, Server *);
 		void		_parseServerName(std::istringstream &, Server *);
 		void		_parseListen(std::istringstream &, Server *);
-		void		_parseRoot(std::istringstream &, Server *);
-		void		_parseIndex(std::istringstream &, Server *);
+		// void		_parseRoot(std::istringstream &, Server *);
+		// void		_parseIndex(std::istringstream &, Server *);
 		void		_parseErrorPage(std::istringstream &, Server *);
 		void		_parseCgiPath(std::istringstream &, Server *);
 		void		_parseCgiExt(std::istringstream &, Server *);
+		void		_parseAllowMethods(std::istringstream &ss, Location *location);
 		
-		void		_parseRoot(std::istringstream &, Location *);
-		void		_parseIndex(std::istringstream &, Location *);
+		// void		_parseRoot(std::istringstream &, Location *);
+		// void		_parseIndex(std::istringstream &, Location *);
 		
 		// void		_parseErrorPage(std::istringstream &, Server *);
 		// void		_parseAutoIndex(std::istringstream &, Location *);
@@ -88,9 +89,51 @@ class Config
 		Config &operator=(const Config &copy);
 		void _sendResponse(int fd);
 
-	void _parseAllowMethods(std::istringstream &ss, Location *location);
 		
 };
+
+template<typename T>
+void _parseAutoIndex(std::istringstream &ss, T* location)
+{
+	std::string		tmp;
+	
+	ss >> tmp;
+	if (tmp == "on")
+		location->setAutoIndex(true);
+	else if (tmp == "off")
+		location->setAutoIndex(false);
+}
+
+template<typename T>
+void _parseRoot(std::istringstream &ss, T* location)
+{
+	std::string _root;
+	DIR *dir;
+	
+	ss >> _root;
+
+	if (ss.fail())
+		throw std::runtime_error("Invalid root");
+	dir = opendir(_root.c_str());
+	if (!dir)
+		throw std::runtime_error("Invalid root file path");
+	location->setRoot(dir, _root);
+	std::cout << "Root : " << _root << std::endl;
+}
+
+template<typename T>
+void _parseIndex(std::istringstream &ss, T*	location)
+{
+	std::string _index;
+
+	while (ss >> _index)
+	{
+		if (ss.fail())
+			throw std::runtime_error("Invalid index");
+		location->addIndex(_index);
+		std::cout << "Index : " << _index << std::endl;
+	}
+}
 
 template<typename T> Response *cgiHandler(Request & req, T *serv)
 {

@@ -35,6 +35,7 @@ class Server
 		void	setErrorPage(int errorCode, std::string errorPage);
 		void	setCgiPath(std::vector<std::string> cgi_path);
 		void	setCgiExtension(std::vector<std::string> cgi_extension);
+		void	setAutoIndex(bool autoIndex);
 
 		void	addCgiExtension(std::string extension);
 		void	addCgiPath(std::string path);
@@ -86,5 +87,7 @@ class Server
         std::vector<std::string> 			_cgiPath;  //needed here?
         std::vector<std::string> 			_cgiExtension;
 };
+
+std::string autoIndexGenerator(const std::string& path);
 
 #endif
