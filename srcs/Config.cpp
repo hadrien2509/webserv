@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/25 19:16:10 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/25 19:54:01 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,64 +108,6 @@ void Config::_parseServer(std::istringstream &ssold)
 			throw std::runtime_error("Unknown type in configuration file");
 	}
 }
-
-// void Config::_parseIndex(std::istringstream &ss, Location *location)
-// {
-// 	std::string _index;
-
-// 	while (ss >> _index)
-// 	{
-// 		if (ss.fail())
-// 			throw std::runtime_error("Invalid index");
-// 		location->addIndex(_index);
-// 		std::cout << "Index : " << _index << std::endl;
-// 	}
-// }
-
-// void Config::_parseIndex(std::istringstream &ss, Server *server)
-// {
-// 	std::string _index;
-
-// 	while (ss >> _index)
-// 	{
-// 		if (ss.fail())
-// 			throw std::runtime_error("Invalid index");
-// 		server->addIndex(_index);
-// 		std::cout << "Index : " << _index << std::endl;
-// 	}
-// }
-
-// void Config::_parseRoot(std::istringstream &ss, Location *location)
-// {
-// 	std::string _root;
-// 	DIR *dir;
-	
-// 	ss >> _root;
-
-// 	if (ss.fail())
-// 		throw std::runtime_error("Invalid root");
-// 	dir = opendir(_root.c_str());
-// 	if (!dir)
-// 		throw std::runtime_error("Invalid root file path");
-// 	location->setRoot(dir, _root);
-// 	std::cout << "Root : " << _root << std::endl;
-// }
-
-// void Config::_parseRoot(std::istringstream &ss, Server *server)
-// {
-// 	std::string _root;
-// 	DIR *dir;
-	
-// 	ss >> _root;
-
-// 	if (ss.fail())
-// 		throw std::runtime_error("Invalid root");
-// 	dir = opendir(_root.c_str());
-// 	if (!dir)
-// 		throw std::runtime_error("Invalid root file path");
-// 	server->setRoot(dir, _root);
-// 	std::cout << "Root : " << _root << std::endl;
-// }
 
 std::string Config::_getRessourceType(std::istringstream &ss)  //add things here!!
 {
