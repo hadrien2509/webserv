@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/25 15:34:53 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/25 18:05:33 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,12 @@ class Config
 		void		_parseLocation(std::istringstream &, Server *);
 		void		_parseServerName(std::istringstream &, Server *);
 		void		_parseListen(std::istringstream &, Server *);
-		// void		_parseRoot(std::istringstream &, Server *);
-		// void		_parseIndex(std::istringstream &, Server *);
+
 		void		_parseErrorPage(std::istringstream &, Server *);
 		void		_parseCgiPath(std::istringstream &, Server *);
 		void		_parseCgiExt(std::istringstream &, Server *);
 		void		_parseAllowMethods(std::istringstream &ss, Location *location);
 		
-		// void		_parseRoot(std::istringstream &, Location *);
-		// void		_parseIndex(std::istringstream &, Location *);
-		
-		// void		_parseErrorPage(std::istringstream &, Server *);
-		// void		_parseAutoIndex(std::istringstream &, Location *);
 		std::string	_getRessourceType(std::istringstream &);
 		
 		void		_createPoll();
@@ -79,13 +73,10 @@ class Config
 		
 	public :
 
-		void										addResponse(int fd, Response *response);
 		void run();
-		
-		Config();
+
 		Config(const std::string &);
 		~Config();
-    	Config(const Config &copy);
 		Config &operator=(const Config &copy);
 		void _sendResponse(int fd);
 

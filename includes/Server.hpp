@@ -88,6 +88,6 @@ class Server
         std::vector<std::string> 			_cgiExtension;
 };
 
-std::string autoIndexGenerator(const std::string& path);
+std::string autoIndexGenerator(const std::string& root, const std::string& path);
 
 #endif

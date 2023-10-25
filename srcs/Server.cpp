@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/25 15:58:54 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/25 18:03:35 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -301,17 +301,21 @@ Location* Server::checkLocation(Request& request)
     return location;
 }
 
-std::string autoIndexGenerator(const std::string& path)
+std::string autoIndexGenerator(const std::string& root, const std::string& path)
 {
 	std::string html = "<html><head><title>Index of " + path + "</title></head><body><h1>Index of " + path + "</h1><hr><pre>";
 	struct dirent *dir;
-	DIR *d = opendir(path.c_str());
+	std::string	fullPath = root + path;
+	DIR *d = opendir(fullPath.c_str());
 	if (d)
 	{
 		while ((dir = readdir(d)) != NULL)
 		{
 			std::string name = dir->d_name;
-			html += "<a href=\"" + name + "\">" + name + "</a><br>";
+			if (path[path.length() - 1] == '/')
+				html += "<a href=\"" + path + name + "\">" + name + "</a><br>";
+			else
+				html += "<a href=\"" + path + "/" + name + "\">" + name + "</a><br>";
 		}
 		closedir(d);
 	}
@@ -329,12 +333,12 @@ Response* Server::checkRequest(Request& request)
 	{
 		for (std::vector<std::string>::const_iterator it = _index.begin(); it != _index.end(); it++)
 		{
-			request.setPath(_rootPath + request.getPath() + (*it));
-			if (access(request.getPath().c_str(), F_OK) == 0)
+			fullPath += (*it);
+			if (access(fullPath.c_str(), F_OK) == 0)
 			{
+				request.setPath(_rootPath + request.getPath() + (*it));
 				try
 				{
-					// std::cerr << "[SERVER] Request path: " << request.getPath() << std::endl;
 					Response *response = cgiHandler(request, this);
 					return (response);
 				}
@@ -357,8 +361,7 @@ Response* Server::checkRequest(Request& request)
 		}
 		if (_autoIndex)
 		{
-			std::cout << "AutoIndex" << std::endl;
-			std::string autoIndex = autoIndexGenerator(fullPath);
+			std::string autoIndex = autoIndexGenerator(_rootPath, request.getPath());
 			return (new Response("200 OK", autoIndex, request.getHttpVersion()));
 		}
 		else
@@ -374,10 +377,9 @@ Response* Server::checkRequest(Request& request)
 	}
 	else if (statbuf.st_mode & S_IFREG)
 	{
-		// std::cout << "File" << std::endl;
-		request.setPath(_rootPath + request.getPath());
-		if (access(request.getPath().c_str(), F_OK) == 0)
+		if (access(fullPath.c_str(), F_OK) == 0)
 		{
+			request.setPath(fullPath);
 			try
 			{
 				// std::cerr << "[SERVER] Request path: " << request.getPath() << std::endl;
