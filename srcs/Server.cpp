@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/25 18:03:35 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/25 18:26:11 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -377,12 +377,11 @@ Response* Server::checkRequest(Request& request)
 	}
 	else if (statbuf.st_mode & S_IFREG)
 	{
-		if (access(fullPath.c_str(), F_OK) == 0)
+		if (access(fullPath.c_str(), R_OK) == 0)
 		{
 			request.setPath(fullPath);
 			try
 			{
-				// std::cerr << "[SERVER] Request path: " << request.getPath() << std::endl;
 				Response *response = cgiHandler(request, this);
 				return (response);
 			}
