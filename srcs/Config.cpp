@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/25 15:35:44 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/25 19:16:10 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,6 @@ void Config::_parseServerName(std::istringstream &ss, Server *server)
 	ss >> _serverName;
 	server->setServerName(_serverName);
 	std::cout << "Server name : " << _serverName << std::endl;
-}
-
-void Config::_parseErrorPage(std::istringstream &ss, Server *server)
-{
-	std::string errorPage;
-	int			errorCode;
-
-	ss >> errorCode >> errorPage ;
-	server->setErrorPage(errorCode, errorPage);
 }
 
 std::string Config::_ignoreComments(std::string line) //skip comments and empty lines
@@ -109,6 +100,8 @@ void Config::_parseServer(std::istringstream &ssold)
 			_parseCgiExt(ss, server);
 		else if (type == "autoindex")
 			_parseAutoIndex(ss, server);
+		else if (type == "client_max_body_size")
+			_parseClientMaxBodySize(ss, server);
 		else if (type == "}")
 			return ;
 		else
@@ -189,7 +182,7 @@ void Config::_parseLocation(std::istringstream &ss, Server *server)
 	ressourceType = _getRessourceType(ss);
 
 	Location *location = new Location(server);
-	//server->addLocation(ressourceType, location);
+
 	server->addLocation(location);
 	location->setUri(ressourceType);
 	std::string line, type;
@@ -208,8 +201,8 @@ void Config::_parseLocation(std::istringstream &ss, Server *server)
 			_parseIndex(ss, location);
 		else if (type == "autoindex")
 			_parseAutoIndex(ss, location);
-		// else if (type == "error_page")
-		// 	_parseErrorPage(ss, location);
+		else if (type == "error_page")
+			_parseErrorPage(ss, location);
 		// else if (type == "client_max_body_size")
 		// 	_parseClientMaxBodySize(ss, location);
 		else if (type == "allow_methods")

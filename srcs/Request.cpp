@@ -6,21 +6,21 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:01 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/23 12:14:16 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/25 19:43:26 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Request.hpp"
 
-Request::Request(const int& connection) : _connection(connection)
+Request::Request(const int& connection, Server* server) : _connection(connection)
 {
 	std::string request;
 
 	char	buffer[1024] = {0};
 	int		ret;
 
+	(void)server;      // Needed for client max body size and server name
 	ret = recv(_connection, buffer, 1023, 0);
-
 	if (ret != -1)
 		buffer[ret] = '\0';
 	// std::cerr << "BUFFER: " << buffer << std::endl;

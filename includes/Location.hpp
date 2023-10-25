@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:20:40 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/25 15:30:53 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/25 19:32:17 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ class Location
 		void			setUri(std::string);
 		void			addIndex(std::string);
 		Response*		checkRequest(Request& request);
-		void		printAllowMethods();
+		void			setErrorPage(int, std::string);
+
 		void		addAllowMethods(std::string);
 		bool 		checkMethod(std::string method);
 		void		setAutoIndex(bool);

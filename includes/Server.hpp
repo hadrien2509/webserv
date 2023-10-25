@@ -36,11 +36,11 @@ class Server
 		void	setCgiPath(std::vector<std::string> cgi_path);
 		void	setCgiExtension(std::vector<std::string> cgi_extension);
 		void	setAutoIndex(bool autoIndex);
+		void	setMaxBodySize(size_t maxBodySize);
 
 		void	addCgiExtension(std::string extension);
 		void	addCgiPath(std::string path);
 		void	addPort(int port);
-//		void	addLocation(std::string ressourceType, Location *location);
 		void	addLocation(Location *location);
 
 		const std::string&							getServerName() const;
@@ -56,6 +56,7 @@ class Server
 		const bool&									getAutoIndex() const;
 		const std::map<std::string, std::string>&	getMimeTypes() const;
 		const std::vector<struct pollfd>&			getPollfds() const;
+		const size_t&								getMaxBodySize() const;
 		
 		const std::vector<std::string>&				getCgiExtension() const;
 		const std::vector<std::string>&				getCgiPath() const;
@@ -67,11 +68,9 @@ class Server
 
     private:
 		void _initMimeTypes();
-		void _initErrorPages();
 
 		std::vector<struct pollfd>			_pollfds;
 		std::string							_serverName;
-		//std::map<std::string,Location*>	_locations;
 		std::vector<Location*>				_locations;
 		std::string							_host;
 		DIR*								_root;
@@ -81,6 +80,7 @@ class Server
 		std::map<int, std::string>			_errorPage;
 		std::vector<std::string>			_allowMethods;
 		std::string							_ressourcePath;
+		size_t								_maxBodySize;
 
 	    std::map<std::string, std::string>	_mimeTypes;
 

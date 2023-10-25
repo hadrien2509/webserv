@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/25 18:15:11 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/25 19:34:36 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ void Config::run()
 				else
 				{
 					Server *server = _clientSocketToServer[_poll[i].fd];
-					Request request(_poll[i].fd);
+					Request request(_poll[i].fd, server);
 					if (request.getPath() == "")
 						continue;
 					Location *location = server->checkLocation(request);

@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/25 18:05:33 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/25 19:16:24 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ class Config
 		void		_parseServerName(std::istringstream &, Server *);
 		void		_parseListen(std::istringstream &, Server *);
 
-		void		_parseErrorPage(std::istringstream &, Server *);
 		void		_parseCgiPath(std::istringstream &, Server *);
 		void		_parseCgiExt(std::istringstream &, Server *);
 		void		_parseAllowMethods(std::istringstream &ss, Location *location);
@@ -82,6 +81,27 @@ class Config
 
 		
 };
+
+template<typename T>
+void _parseClientMaxBodySize(std::istringstream &ss, T* server)
+{
+	int	maxBodySize;
+	
+	ss >> maxBodySize;
+	if (ss.fail())
+		throw std::runtime_error("Invalid max body size");
+	server->setMaxBodySize(maxBodySize);
+}
+
+template<typename T>
+void _parseErrorPage(std::istringstream &ss, T* server)
+{
+	std::string errorPage;
+	int			errorCode;
+
+	ss >> errorCode >> errorPage ;
+	server->setErrorPage(errorCode, errorPage);
+}
 
 template<typename T>
 void _parseAutoIndex(std::istringstream &ss, T* location)

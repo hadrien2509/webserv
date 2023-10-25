@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:21:31 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/25 18:26:04 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/25 19:32:42 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,11 @@ void Location::addAllowMethods(std::string method)
 void Location::setAutoIndex(bool autoIndex)
 {
 	this->_autoIndex = autoIndex;
+}
+
+void Location::setErrorPage(int errorCode, std::string errorPage)
+{
+	this->_errorPage[errorCode] = errorPage;
 }
 
 //check if the method is allowed

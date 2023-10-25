@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/25 18:26:11 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/25 19:36:30 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,15 +82,9 @@ void Server::_initMimeTypes()
 	_mimeTypes[".7z"] = "application/x-7z-compressed";
 }
 
-void Server::_initErrorPages()
-{
-
-}
-
-Server::Server() : _autoIndex(false)
+Server::Server() : _autoIndex(false), _maxBodySize(0)
 {
 	_initMimeTypes();
-	_initErrorPages();
 }
 
 Server::Server(const Server &copy)
@@ -145,9 +139,19 @@ void	Server::setCgiExtension(std::vector<std::string> cgiExtension)
 	_cgiExtension = cgiExtension;
 }
 
+void	Server::setMaxBodySize(size_t maxBodySize)
+{
+	_maxBodySize = maxBodySize;
+}
+
 const std::vector<struct pollfd>&	Server::getPollfds() const
 {
 	return (_pollfds);
+}
+
+const size_t&	Server::getMaxBodySize() const
+{
+	return (_maxBodySize);
 }
 
 void	Server::addPort(int port)
@@ -164,12 +168,11 @@ void	Server::addPort(int port)
 		throw std::runtime_error("Failed to set socket options");
 	    close(sockfd);
 	}
-	// Listen to port 80 on any address
+
 	sockaddr_in sockaddr;
 	sockaddr.sin_family = AF_INET;
 	sockaddr.sin_addr.s_addr = INADDR_ANY;
-	sockaddr.sin_port = htons(port); // htons is necessary to convert a number to
-								   // network byte order
+	sockaddr.sin_port = htons(port); // htons is necessary to convert a number to network byte order
 	if (bind(sockfd, (struct sockaddr *)&sockaddr, sizeof(sockaddr)) < 0)
 		throw std::runtime_error("Failed to bind to port. errno: ");
 
