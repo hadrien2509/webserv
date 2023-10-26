@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/25 19:54:01 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/26 14:24:24 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,22 +45,6 @@ std::string Config::_ignoreComments(std::string line) //skip comments and empty 
 	std::getline(ss2, line, '#');
 	return line;
 }
-
-void Config::_parseCgiExt(std::istringstream &ss, Server *server)
-{
-	std::string extension;
-	while (ss >> extension)	
-		server->addCgiExtension(extension);
-}
-
-void Config::_parseCgiPath(std::istringstream &ss, Server *server)
-{
-	std::string path;
-	while (ss >> path)
-		server->addCgiPath(path);
-}
-
-
 
 void Config::_parseServer(std::istringstream &ssold)
 {
@@ -149,8 +133,10 @@ void Config::_parseLocation(std::istringstream &ss, Server *server)
 		// 	_parseClientMaxBodySize(ss, location);
 		else if (type == "allow_methods")
 			_parseAllowMethods(ss, location);
-		// else if (type == "cgi")
-		// 	_parseCgi(ss, location);
+		else if (type == "cgi_path")
+			_parseCgiPath(ss, location);
+		else if (type == "cgi_ext")
+			_parseCgiExt(ss, location);
 		else if (type == "}")
 			return ;
 		else

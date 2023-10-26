@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:21:31 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/25 19:32:42 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/26 14:56:09 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,16 @@ void Location::addAllowMethods(std::string method)
 	this->_allowMethods.push_back(method);
 }
 
+void Location::addCgiPath(std::string cgiPath)
+{
+	_cgiPath.push_back(cgiPath);
+}
+
+void Location::addCgiExtension(std::string cgiExtension)
+{
+	_cgiExtension.push_back(cgiExtension);
+}
+
 void Location::setAutoIndex(bool autoIndex)
 {
 	this->_autoIndex = autoIndex;
@@ -168,7 +178,6 @@ Response* Location::checkRequest(Request& request)
 				}
 				catch(const std::exception& e)
 				{
-					std::cerr << e.what() << '\n';
 					return (new Response("200 OK", request, _mimeTypes));
 				}
 			}
@@ -212,7 +221,6 @@ Response* Location::checkRequest(Request& request)
 			catch (const std::exception &e)
 			{
 				return (new Response("200 OK", request, _mimeTypes));
-				std::cerr << e.what() << '\n';
 			}
 		}
 		else

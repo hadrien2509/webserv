@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/25 19:36:30 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/26 14:56:18 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -347,7 +347,6 @@ Response* Server::checkRequest(Request& request)
 				}
 				catch(const std::exception& e)
 				{
-					std::cerr << e.what() << '\n';
 					return (new Response("200 OK", request, _mimeTypes));
 				}
 			}
@@ -391,7 +390,6 @@ Response* Server::checkRequest(Request& request)
 			catch (const std::exception &e)
 			{
 				return (new Response("200 OK", request, _mimeTypes));
-				std::cerr << e.what() << '\n';
 			}
 		}
 		else

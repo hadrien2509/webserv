@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/22 01:59:09 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/26 14:30:46 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ Cgi::Cgi(const std::vector<std::string> & extension, std::vector<std::string> en
 {
 	std::istringstream iss(ressourcePath);
 	
-	if (envExecutable.size() != extension.size())
+	if (envExecutable.size() != extension.size() || envExecutable.empty())
 		throw CgiEnvExtException();
 	
 	std::vector<std::string>::iterator itExe = envExecutable.begin();

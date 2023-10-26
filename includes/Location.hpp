@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:20:40 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/25 19:32:17 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/26 14:32:25 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ class Location
 		void			setErrorPage(int, std::string);
 
 		void		addAllowMethods(std::string);
+		void		addCgiExtension(std::string extension);
+		void		addCgiPath(std::string path);
 		bool 		checkMethod(std::string method);
 		void		setAutoIndex(bool);
 };

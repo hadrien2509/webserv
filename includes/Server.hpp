@@ -84,7 +84,7 @@ class Server
 
 	    std::map<std::string, std::string>	_mimeTypes;
 
-        std::vector<std::string> 			_cgiPath;  //needed here?
+        std::vector<std::string> 			_cgiPath;
         std::vector<std::string> 			_cgiExtension;
 };
 

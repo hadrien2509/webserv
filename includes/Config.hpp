@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/25 19:16:24 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/26 14:51:10 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,6 @@ class Config
 		void		_parseServerName(std::istringstream &, Server *);
 		void		_parseListen(std::istringstream &, Server *);
 
-		void		_parseCgiPath(std::istringstream &, Server *);
-		void		_parseCgiExt(std::istringstream &, Server *);
 		void		_parseAllowMethods(std::istringstream &ss, Location *location);
 		
 		std::string	_getRessourceType(std::istringstream &);
@@ -81,6 +79,22 @@ class Config
 
 		
 };
+
+template<typename T>
+void	_parseCgiPath(std::istringstream &ss, T* server)
+{
+	std::string path;
+	while (ss >> path)
+		server->addCgiPath(path);
+}
+
+template<typename T>
+void	_parseCgiExt(std::istringstream &ss, T* server)
+{
+	std::string extension;
+	while (ss >> extension)	
+		server->addCgiExtension(extension);
+}
 
 template<typename T>
 void _parseClientMaxBodySize(std::istringstream &ss, T* server)
@@ -166,7 +180,7 @@ template<typename T> Response *cgiHandler(Request & req, T *serv)
 	}
 	catch(const std::exception& e)
 	{
-		std::cerr << e.what() << '\n';
+		// std::cerr << e.what() << '\n';
 		// delete res;
 		throw Cgi::CgiException();
 	}
