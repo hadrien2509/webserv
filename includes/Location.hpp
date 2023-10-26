@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:20:40 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/26 14:32:25 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/26 19:31:26 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ class Location
 {
 	private:
 		std::vector<std::string>			_index;
-		DIR*								_root;
 		std::string							_rootPath;
 		bool								_autoIndex;
 		std::vector<std::string>			_allowMethods;
@@ -40,14 +39,21 @@ class Location
 		std::string							_uri;
 		
 	public :
-		Location();
 		Location(Server*);
 		Location(const Location &);
-		Location(const Location &, const Location &);
 		~Location();
 		Location &operator=(const Location &);
-		
-		const DIR*									getRoot() const;
+
+		void			setRoot(std::string);
+		void			setUri(std::string);
+		void			addIndex(std::string);
+		void			setErrorPage(int, std::string);
+		void			addAllowMethods(std::string);
+		void			addCgiExtension(std::string extension);
+		void			addCgiPath(std::string path);
+		bool 			checkMethod(std::string method);
+		void			setAutoIndex(bool);
+
 		std::string									getRootPath() const;
 		const std::vector<std::string>&				getIndex() const;
 		const bool&									getAutoIndex() const;
@@ -57,17 +63,7 @@ class Location
 		const std::map<std::string, std::string> 	getMimeTypes() const;
 		const std::string&							getUri() const;
 
-		void			setRoot(DIR*, std::string);
-		void			setUri(std::string);
-		void			addIndex(std::string);
 		Response*		checkRequest(Request& request);
-		void			setErrorPage(int, std::string);
-
-		void		addAllowMethods(std::string);
-		void		addCgiExtension(std::string extension);
-		void		addCgiPath(std::string path);
-		bool 		checkMethod(std::string method);
-		void		setAutoIndex(bool);
 };
 
 # include "Server.hpp"

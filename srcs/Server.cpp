@@ -6,11 +6,15 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/26 16:45:22 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/26 19:22:28 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+
+/* ************************************************************************** */
+/* ----------------------- CONSTRUCTOR & DESTRUCTOR --------------------------*/
+/* ************************************************************************** */
 
 void Server::_initMimeTypes()
 {
@@ -87,26 +91,15 @@ Server::Server() : _autoIndex(false), _maxBodySize(0)
 	_initMimeTypes();
 }
 
-Server::Server(const Server &copy)
-{
-	*this = copy;
-}
-
 Server::~Server()
 {
-	closedir(_root);
 	for (std::vector<Location*>::iterator it = _locations.begin(); it != _locations.end(); it++)
 		delete (*it);
 }
 
-Server &Server::operator=(const Server &copy)
-{
-	if (this != &copy)
-	{
-		
-	}
-	return (*this);
-}
+/* ************************************************************************** */
+/* ------------------------------- SETTERS -----------------------------------*/
+/* ************************************************************************** */
 
 void	Server::setServerName(std::string serverName)
 {
@@ -118,9 +111,8 @@ void	Server::setHost(std::string host)
 	_host = host;
 }
 
-void	Server::setRoot(DIR* root, std::string rootPath)
+void	Server::setRoot(std::string rootPath)
 {
-	_root = root;
 	_rootPath = rootPath;
 }
 
@@ -144,15 +136,6 @@ void	Server::setMaxBodySize(size_t maxBodySize)
 	_maxBodySize = maxBodySize;
 }
 
-const std::vector<struct pollfd>&	Server::getPollfds() const
-{
-	return (_pollfds);
-}
-
-const size_t&	Server::getMaxBodySize() const
-{
-	return (_maxBodySize);
-}
 
 void	Server::addPort(int port)
 {
@@ -192,15 +175,13 @@ void Server::addLocation(Location *location)
 	_locations.push_back(location);
 } 
 
+/* ************************************************************************** */
+/* ------------------------------- GETTERS -----------------------------------*/
+/* ************************************************************************** */
 
 const std::string&	Server::getServerName() const
 {
 	return (_serverName);
-}
-
-DIR*			Server::getRoot() const
-{
-	return (_root);
 }
 
 const std::string&		Server::getRootPath() const
@@ -213,6 +194,15 @@ const std::vector<std::string>&	Server::getIndex() const
 	return (_index);
 }
 
+const std::vector<struct pollfd>&	Server::getPollfds() const
+{
+	return (_pollfds);
+}
+
+const size_t&	Server::getMaxBodySize() const
+{
+	return (_maxBodySize);
+}
 
 const std::vector<std::string>&	Server::getCgiExtension() const
 {
@@ -242,13 +232,6 @@ const bool& Server::getAutoIndex() const
 const std::vector<std::string>&	Server::getAllowMethods() const
 {
 	return (_allowMethods);
-}
-
-void Server::openRoot()
-{
-	_root = opendir(_rootPath.c_str());
-	if (_root == NULL)
-		throw std::runtime_error("Error: Could not open root directory" + _rootPath);
 }
 
 const std::vector<Location*>	Server::getLocations() const
@@ -286,23 +269,9 @@ void Server::setAutoIndex(bool autoIndex)
 	_autoIndex = autoIndex;
 }
 
-Location* Server::checkLocation(Request& request)
-{
-    std::string bestMatch = "";
-    Location* location = 0;
-    const std::vector<Location*>& locations = _locations;
-	for (std::vector<Location*>::const_iterator it = locations.begin(); it != locations.end(); ++it) {
-		Location* loc = *it;
-		const std::string& locationUri = loc->getUri();
-		if (request.getPath().find(locationUri) != std::string::npos && locationUri.length() > bestMatch.length()) {
-			bestMatch = locationUri;
-			location = loc;
-		}
-    }
-    if (location && bestMatch.length() > 1)
-        request.setPath(request.getPath().substr(bestMatch.length()));
-    return location;
-}
+/* ************************************************************************** */
+/* ----------------------------- AUTO-INDEX ----------------------------------*/
+/* ************************************************************************** */
 
 std::string autoIndexGenerator(const std::string& root, const std::string& path)
 {
@@ -324,6 +293,28 @@ std::string autoIndexGenerator(const std::string& root, const std::string& path)
 	}
 	html += "</pre><hr></body></html>";
 	return (html);
+}
+
+/* ************************************************************************** */
+/* ------------------------------- METHODS -----------------------------------*/
+/* ************************************************************************** */
+
+Location* Server::checkLocation(Request& request)
+{
+    std::string bestMatch = "";
+    Location* location = 0;
+    const std::vector<Location*>& locations = _locations;
+	for (std::vector<Location*>::const_iterator it = locations.begin(); it != locations.end(); ++it) {
+		Location* loc = *it;
+		const std::string& locationUri = loc->getUri();
+		if (request.getPath().find(locationUri) != std::string::npos && locationUri.length() > bestMatch.length()) {
+			bestMatch = locationUri;
+			location = loc;
+		}
+    }
+    if (location && bestMatch.length() > 1)
+        request.setPath(request.getPath().substr(bestMatch.length()));
+    return location;
 }
 
 Response* Server::checkRequest(Request& request)

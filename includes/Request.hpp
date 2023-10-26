@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:25 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/25 19:42:08 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/26 19:34:01 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class Request
 		std::string		_httpVersion;
 		std::string		_querryString;
 		
-		void _parseRequest(const std::string &);
+		void					_parseRequest(const std::string &);
 
 	public :
 		Request(const int &, Server*);
@@ -37,14 +37,14 @@ class Request
 		~Request();
 		Request &operator=(const Request &);
 		
-		const std::string&	getMethod() const;
-		const std::string&	getPath() const;
-		const std::string&	getHttpVersion() const;
-		std::string&	getQuerryString();
-		void	setPath(std::string path);
-		void getBody(std::string request);
-};
+		void					setPath(std::string path);
 
-// #include "Server.hpp"
+		const std::string&		getMethod() const;
+		const std::string&		getPath() const;
+		const std::string&		getHttpVersion() const;
+		std::string&			getQuerryString();
+		void 					getBody(std::string request);
+		
+};
 
 #endif

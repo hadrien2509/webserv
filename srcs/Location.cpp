@@ -6,20 +6,19 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:21:31 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/26 17:02:13 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/26 19:27:42 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Location.hpp"
 
-Location::Location()
-{
-}
+/* ************************************************************************** */
+/* ------------------------------ CONSTRUCTORS ------------------------------ */
+/* ************************************************************************** */
 
 Location::Location(Server *server)
 {
 	_rootPath = server->getRootPath();
-	_root = opendir(_rootPath.c_str());
 	_autoIndex = server->getAutoIndex();
 	_allowMethods = server->getAllowMethods();
 	_cgiExtension = server->getCgiExtension();
@@ -36,14 +35,12 @@ Location::Location(const Location &copy)
 
 Location::~Location()
 {
-	closedir(_root);
 }
 
 Location &Location::operator=(const Location &copy)
 {
 	if (this != &copy)
 	{
-		_root = copy._root;
 		_rootPath = copy._rootPath;
 		_autoIndex = copy._autoIndex;
 		_allowMethods = copy._allowMethods;
@@ -56,10 +53,9 @@ Location &Location::operator=(const Location &copy)
 	return (*this);
 }
 
-const DIR*		Location::getRoot() const
-{
-	return (this->_root);
-}
+/* ************************************************************************** */
+/* -------------------------- GETTERS & SETTERS ----------------------------- */
+/* ************************************************************************** */
 
 std::string		Location::getRootPath() const
 {
@@ -96,9 +92,8 @@ const std::map<std::string, std::string> Location::getMimeTypes() const
 	return (this->_mimeTypes);
 }
 
-void Location::setRoot(DIR *dir, std::string rootPath)
+void Location::setRoot(std::string rootPath)
 {
-	this->_root = dir;
 	this->_rootPath = rootPath;
 }
 
@@ -115,12 +110,11 @@ void Location::setUri(std::string uri)
 		this->_uri = uri;
 }
 
-void			Location::addIndex(std::string index)
+void Location::addIndex(std::string index)
 {
 	this->_index.push_back(index);
 }
 
-//addAllowMethods
 void Location::addAllowMethods(std::string method)
 {
 	this->_allowMethods.push_back(method);
@@ -146,7 +140,10 @@ void Location::setErrorPage(int errorCode, std::string errorPage)
 	this->_errorPage[errorCode] = errorPage;
 }
 
-//check if the method is allowed
+/* ************************************************************************** */
+/* ------------------------------- METHODS ---------------------------------- */
+/* ************************************************************************** */
+
 bool Location::checkMethod(std::string method)
 {
 	for (std::vector<std::string>::iterator it = _allowMethods.begin(); it != _allowMethods.end(); it++)

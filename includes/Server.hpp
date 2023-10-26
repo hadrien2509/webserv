@@ -22,50 +22,6 @@
 
 class Server
 {
-    public:
-        Server();
-        ~Server();
-        Server(const Server &copy);
-        Server &operator=(const Server &copy);
-
-		void	setServerName(std::string serverName);
-		void	setHost(std::string host);
-		void	setRoot(DIR * root, std::string rootPath);
-		void	addIndex(std::string index);
-		void	setErrorPage(int errorCode, std::string errorPage);
-		void	setCgiPath(std::vector<std::string> cgi_path);
-		void	setCgiExtension(std::vector<std::string> cgi_extension);
-		void	setAutoIndex(bool autoIndex);
-		void	setMaxBodySize(size_t maxBodySize);
-
-		void	addCgiExtension(std::string extension);
-		void	addCgiPath(std::string path);
-		void	addPort(int port);
-		void	addLocation(Location *location);
-
-		const std::string&							getServerName() const;
-		DIR*										getRoot() const;
-		const std::string&							getRootPath() const;
-		const std::vector<std::string>&				getIndex() const;
-		//const std::map<std::string,Location*>&		getLocations() const;
-		const std::vector<Location*>				getLocations() const;
-		const std::string&							getRessourcePath() const;
-		const std::map<int, std::string>&			getErrorPage() const;
-		const std::string&							getHost() const;
-		const std::vector<std::string>&				getAllowMethods() const;
-		const bool&									getAutoIndex() const;
-		const std::map<std::string, std::string>&	getMimeTypes() const;
-		const std::vector<struct pollfd>&			getPollfds() const;
-		const size_t&								getMaxBodySize() const;
-		
-		const std::vector<std::string>&				getCgiExtension() const;
-		const std::vector<std::string>&				getCgiPath() const;
-		void						openRoot();
-		Response*					checkRequest(Request &request);
-
-		Location*					checkLocation(Request &request);
-		
-
     private:
 		void _initMimeTypes();
 
@@ -73,7 +29,6 @@ class Server
 		std::string							_serverName;
 		std::vector<Location*>				_locations;
 		std::string							_host;
-		DIR*								_root;
 		std::string							_rootPath;
 		std::vector<std::string>			_index;
 		bool								_autoIndex;
@@ -86,6 +41,44 @@ class Server
 
         std::vector<std::string> 			_cgiPath;
         std::vector<std::string> 			_cgiExtension;
+
+    public:
+        Server();
+        ~Server();
+
+		void	setServerName(std::string serverName);
+		void	setHost(std::string host);
+		void	setRoot(std::string rootPath);
+		void	addIndex(std::string index);
+		void	setErrorPage(int errorCode, std::string errorPage);
+		void	setCgiPath(std::vector<std::string> cgi_path);
+		void	setCgiExtension(std::vector<std::string> cgi_extension);
+		void	setAutoIndex(bool autoIndex);
+		void	setMaxBodySize(size_t maxBodySize);
+		void	addCgiExtension(std::string extension);
+		void	addCgiPath(std::string path);
+		void	addPort(int port);
+		void	addLocation(Location *location);
+
+		const std::string&							getServerName() const;
+		const std::string&							getRootPath() const;
+		const std::vector<std::string>&				getIndex() const;
+		const std::vector<Location*>				getLocations() const;
+		const std::string&							getRessourcePath() const;
+		const std::map<int, std::string>&			getErrorPage() const;
+		const std::string&							getHost() const;
+		const std::vector<std::string>&				getAllowMethods() const;
+		const bool&									getAutoIndex() const;
+		const std::map<std::string, std::string>&	getMimeTypes() const;
+		const std::vector<struct pollfd>&			getPollfds() const;
+		const size_t&								getMaxBodySize() const;
+		
+		const std::vector<std::string>&				getCgiExtension() const;
+		const std::vector<std::string>&				getCgiPath() const;
+
+		Response*					checkRequest(Request &request);
+		Location*					checkLocation(Request &request);
+
 };
 
 std::string autoIndexGenerator(const std::string& root, const std::string& path);

@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 16:12:24 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/23 14:30:17 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/26 19:33:09 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,6 @@ class Response
 		Response(std::string code, Request& req, std::map<std::string, std::string>& mimeTypes);
 		~Response();
 		
-		const std::string&	get() const;
-		const std::string&	getVersion() const;
-		const std::string&	getStatus() const;
-		const std::string&	getPath() const;
-		const std::string&	getContentType() const;
-		const std::string&	getContentLength() const;
-		const std::string&	getHeader() const;
-		const std::string&	getContent() const;
-		
 		void setResponse(const std::string & response);
 		void setVersion(std::string & version);
 		void setStatus(const std::string & status);
@@ -58,6 +49,15 @@ class Response
 		void setContentLength(const std::string & contentLength);
 		void setHeader(std::string & header);
 		void setContent(const std::string & content);
+
+		const std::string&	get() const;
+		const std::string&	getVersion() const;
+		const std::string&	getStatus() const;
+		const std::string&	getPath() const;
+		const std::string&	getContentType() const;
+		const std::string&	getContentLength() const;
+		const std::string&	getHeader() const;
+		const std::string&	getContent() const;
 };
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/26 14:24:24 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/26 19:11:23 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void Config::_parseServer(std::istringstream &ssold)
 	}
 }
 
-std::string Config::_getRessourceType(std::istringstream &ss)  //add things here!!
+std::string Config::_getRessourceType(std::istringstream &ss)
 {
 	std::string ressourceType;
 	ss >> ressourceType;
@@ -174,7 +174,11 @@ void Config::_openConfig(const std::string &input)
 		throw std::runtime_error("Failed to open configuration file");
 }
 
-Config::Config(const std::string &input) : _pollsize(0)
+/* ************************************************************************** */
+/* ------------------------ CONSTRUCTOR & DESTRUCTOR ------------------------ */
+/* ************************************************************************** */
+
+Config::Config(const std::string &input) : _pollsize(0), _poll(NULL)
 {
 	_openConfig(input);
 	std::string line, type;
@@ -194,8 +198,18 @@ Config::Config(const std::string &input) : _pollsize(0)
 
 Config::~Config()
 {
-	_configFile.close();
+	if (_configFile.is_open())
+		_configFile.close();
 	for (std::vector<Server*>::iterator it = _cluster.begin(); it != _cluster.end(); it++)
 		delete (*it);
-	delete [] _poll;
+	for (std::map<int, std::deque<Response*> >::iterator it = _responses.begin(); it != _responses.end(); it++)
+	{
+		while (!it->second.empty())
+		{
+			delete it->second.front();
+			it->second.pop_front();
+		}
+	}
+	if (_poll)
+		delete [] _poll;
 }

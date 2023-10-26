@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/26 14:51:10 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/26 19:03:27 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ class Config
 	private:
 	
 		void		_openConfig(const std::string &);
-		
+		std::string	_ignoreComments(std::string line);
+
 		void		_parseServer(std::istringstream &);
 		void		_parseLocation(std::istringstream &, Server *);
 		void		_parseServerName(std::istringstream &, Server *);
 		void		_parseListen(std::istringstream &, Server *);
-
 		void		_parseAllowMethods(std::istringstream &ss, Location *location);
 		
 		std::string	_getRessourceType(std::istringstream &);
@@ -55,27 +55,24 @@ class Config
 		void		_addPollfd(int fd, short events);
 		void		_removePollfd(int fd);
 		
-		void										_deleteResponse(int fd);
+		void		_deleteResponse(int fd);
 		
-		std::string					_ignoreComments(std::string line);
 		std::vector<Server*>		_cluster;
 		std::ifstream				_configFile;
 		size_t						_pollsize;
 		pollfd*						_poll;
-		std::map<int, std::deque<Response*> >			_responses;
 		
-		std::map<int, Server*>		_serverSocketToServer;
-		std::map<int, Server*>		_clientSocketToServer;
-		std::map<int, Response*>	_clientSocketToResponse;
+		std::map<int, std::deque<Response*> >			_responses;
+		std::map<int, Server*>							_serverSocketToServer;
+		std::map<int, Server*>							_clientSocketToServer;
 		
 	public :
-
-		void run();
-
 		Config(const std::string &);
 		~Config();
-		Config &operator=(const Config &copy);
+
+		void run();
 		void _sendResponse(int fd);
+
 
 		
 };
@@ -132,18 +129,19 @@ void _parseAutoIndex(std::istringstream &ss, T* location)
 template<typename T>
 void _parseRoot(std::istringstream &ss, T* location)
 {
-	std::string _root;
+	std::string root;
 	DIR *dir;
 	
-	ss >> _root;
+	ss >> root;
 
 	if (ss.fail())
 		throw std::runtime_error("Invalid root");
-	dir = opendir(_root.c_str());
+	dir = opendir(root.c_str());
 	if (!dir)
 		throw std::runtime_error("Invalid root file path");
-	location->setRoot(dir, _root);
-	std::cout << "Root : " << _root << std::endl;
+	closedir(dir);
+	location->setRoot(root);
+	std::cout << "Root : " << root << std::endl;
 }
 
 template<typename T>
