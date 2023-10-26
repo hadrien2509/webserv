@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/26 14:56:18 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/26 16:45:22 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -332,11 +332,31 @@ Response* Server::checkRequest(Request& request)
     struct stat statbuf;
 
 	stat(fullPath.c_str(), &statbuf);
-	if (statbuf.st_mode & S_IFDIR && access(fullPath.c_str(),F_OK) == 0)
+	if (access(fullPath.c_str(),F_OK))
+	{
+		if (_errorPage.find(404) != _errorPage.end() && (access((_rootPath + "/" + _errorPage[404]).c_str(), F_OK) == 0))
+		{
+			request.setPath(_rootPath + "/" + _errorPage[404]);
+			return (new Response("404 File Not Found", request, _mimeTypes));
+		}
+		else
+			return (new Response("404 File Not Found", request));
+	}
+	if (access(fullPath.c_str(),R_OK))
+	{
+		if (_errorPage.find(403) != _errorPage.end())
+		{
+			request.setPath(_rootPath + "/" + _errorPage[403]);
+			return (new Response("403 Forbidden", request, _mimeTypes));
+		}
+		else
+			return (new Response("403 Forbidden", request));
+	}
+	if (statbuf.st_mode & S_IFDIR)
 	{
 		for (std::vector<std::string>::const_iterator it = _index.begin(); it != _index.end(); it++)
 		{
-			fullPath += (*it);
+			fullPath = _rootPath + request.getPath() + (*it);
 			if (access(fullPath.c_str(), F_OK) == 0)
 			{
 				request.setPath(_rootPath + request.getPath() + (*it));
@@ -377,40 +397,18 @@ Response* Server::checkRequest(Request& request)
 				return (new Response("403 Forbidden", request));
 		}
 	}
-	else if (statbuf.st_mode & S_IFREG)
+	if (statbuf.st_mode & S_IFREG)
 	{
-		if (access(fullPath.c_str(), R_OK) == 0)
+		request.setPath(fullPath);
+		try
 		{
-			request.setPath(fullPath);
-			try
-			{
-				Response *response = cgiHandler(request, this);
-				return (response);
-			}
-			catch (const std::exception &e)
-			{
-				return (new Response("200 OK", request, _mimeTypes));
-			}
+			Response *response = cgiHandler(request, this);
+			return (response);
 		}
-		else
+		catch (const std::exception &e)
 		{
-			if (_errorPage.find(403) != _errorPage.end())
-			{
-				request.setPath(_rootPath + "/" + _errorPage[403]);
-				return (new Response("403 Forbidden", request, _mimeTypes));
-			}
-			else
-				return (new Response("403 Forbidden", request));
+			return (new Response("200 OK", request, _mimeTypes));
 		}
 	}
-	else
-	{
-		if (_errorPage.find(404) != _errorPage.end() && (access((_rootPath + "/" + _errorPage[404]).c_str(), F_OK) == 0))
-		{
-			request.setPath(_rootPath + "/" + _errorPage[404]);
-			return (new Response("404 File Not Found", request, _mimeTypes));
-		}
-		else
-			return (new Response("404 File Not Found", request));
-	}
+	return NULL;
 }
