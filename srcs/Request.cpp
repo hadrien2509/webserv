@@ -12,25 +12,15 @@
 
 #include "Request.hpp"
 
-Request::Request(const int& connection, Server* server) : _connection(connection)
+Request::Request(std::string str, int fd, Server* server) : _connection(fd)
 {
-	std::string request;
-
-	char	buffer[1024] = {0};
-	int		ret;
 
 	(void)server;      // Needed for client max body size and server name
-	ret = recv(_connection, buffer, 1023, 0);
-	if (ret != -1)
-		buffer[ret] = '\0';
-	// std::cerr << "BUFFER: " << buffer << std::endl;
-	// if (!ret)
-	// 	std::cout << "\rConnection was closed by client.\n" << std::endl;
-	// else if (ret == -1)
-	// 	std::cout << "\rRead error, closing connection.\n" << std::endl;
+	std::cout << "--------------------------------------------" << std::endl;
+	//std::cout << "Request received : \n" << str << std::endl;
+	_parseRequest(str);
 
-	request += buffer;
-	_parseRequest(request);
+	std::cout << "--------------------------------------------" << std::endl;
 }
 
 Request::Request(const Request &src) : _connection(src._connection)
@@ -78,7 +68,10 @@ void	Request::_parseRequest(const std::string &request)
         _path = _path.substr(0, pos);
     }
 	if (_method != "GET")
+	{
 		getBody(request);
+	}
+	std::cout << "mathod <" << _method << "> path <" << _path << "> querry <" << _querryString << ">" << std::endl;
 }
 
 const std::string&	Request::getMethod() const

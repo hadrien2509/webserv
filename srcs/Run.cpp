@@ -12,6 +12,17 @@
 
 #include "Config.hpp"
 
+void Config::_readRequest(int fd, std::string &request)
+{
+	char	buffer[1024] = {0};
+
+	std::cout << "read fd : " << fd << std::endl;
+	int ret = recv(fd, buffer, 1023, 0);
+	if (ret != -1)
+		buffer[ret] = '\0';
+	request += buffer;
+}
+
 void Config::_sendResponse(int fd)
 {
 	if (_responses[fd].empty())
@@ -90,11 +101,10 @@ void Config::_addPollfd(int fd, short events)
 
 void Config::run()
 {
-	int IDK;
 	_createPoll();
 	while (1)
 	{
-		if ((IDK = poll(_poll, _pollsize, -1)) <= 0)
+		if ((poll(_poll, _pollsize, -1)) <= 0)
 			continue;
 		for (size_t i = 0; i < _pollsize; i++)
 		{
@@ -124,10 +134,17 @@ void Config::run()
 				}
 				else
 				{
-					Server *server = _clientSocketToServer[_poll[i].fd];
-					Request request(_poll[i].fd, server);
-					if (request.getPath() == "")
+					_readRequest(_poll[i].fd, _requestString[i]);
+				}
+			}
+			else if (_poll[i].revents & POLLOUT)
+			{
+					if (_requestString[i] == "")
 						continue;
+					Server *server = _clientSocketToServer[_poll[i].fd];
+					std::cout << "create request of "<< _poll[i].fd << std::endl;
+					Request request(_requestString[i], _poll[i].fd, server);
+					_requestString[i].clear();
 					Location *location = server->checkLocation(request);
 					Response *response;
 					if (location)
@@ -135,10 +152,9 @@ void Config::run()
 					else
 						response = server->checkRequest(request);
 					_responses[_poll[i].fd].push_back(response);
-				}
-			}
-			if (_poll[i].revents & POLLOUT)
+
 				_sendResponse(_poll[i].fd);
+			}
 		}
 	}
 }

@@ -197,15 +197,15 @@ const std::string& Cgi::run()
 		close(fdOut[1]);
 		dup2(fdIn[1], STDIN_FILENO);
 		dup2(fdOut[0], STDOUT_FILENO);
-		std::cerr << "before waitpid\n";
+		//std::cerr << "before waitpid\n";
 		waitpid(-1, NULL, 0);
-		std::cerr << "after waitpid\n";
+		//std::cerr << "after waitpid\n";
 
 		while (ret > 0)
 		{
-			std::cerr << "before read\n";
+		//	std::cerr << "before read\n";
 			ret = read(fdOut[0], buffer, 1023);
-			std::cerr << "after read\n";
+		//	std::cerr << "after read\n";
 			buffer[ret] = '\0';
 			_fromOut += std::string(buffer, ret);
 			if (ret < 1023)

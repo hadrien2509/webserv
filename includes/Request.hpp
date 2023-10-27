@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #ifndef REQUEST_HPP
-# define REQUEST_HPP
+#define REQUEST_HPP
 
 #include <iostream>
 #include <string>
@@ -22,29 +22,28 @@ class Server;
 
 class Request
 {
-	private :
-		const int		_connection;
-		std::string		_method;
-		std::string		_path;
-		std::string		_httpVersion;
-		std::string		_querryString;
-		
-		void					_parseRequest(const std::string &);
+private:
+	const int _connection;
+	std::string _method;
+	std::string _path;
+	std::string _httpVersion;
+	std::string _querryString;
 
-	public :
-		Request(const int &, Server*);
-		Request(const Request &);
-		~Request();
-		Request &operator=(const Request &);
-		
-		void					setPath(std::string path);
+	void _parseRequest(const std::string &);
 
-		const std::string&		getMethod() const;
-		const std::string&		getPath() const;
-		const std::string&		getHttpVersion() const;
-		std::string&			getQuerryString();
-		void 					getBody(std::string request);
-		
+public:
+	Request(std::string str, int fd, Server *);
+	Request(const Request &);
+	~Request();
+	Request &operator=(const Request &);
+
+	void setPath(std::string path);
+
+	const std::string &getMethod() const;
+	const std::string &getPath() const;
+	const std::string &getHttpVersion() const;
+	std::string &getQuerryString();
+	void getBody(std::string request);
 };
 
 #endif
