@@ -1,50 +1,35 @@
-#!/usr/bin/env python3
 
-print("Content-type: text/html\n")
-print("<head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><link rel='stylesheet' href='../styles.css'><title>Bienvenue chez les Webmajordomes</title></head>\n")
+import sys
+import os
 
-# Récupère les données du formulaire
-import cgi
+print("data_pairs", file=sys.stderr)
+post_data = sys.stdin.read() # blocant ici
 
-formulaire = cgi.FieldStorage()
-nom = formulaire.getvalue("name")
-email = formulaire.getvalue("email")
+data_pairs = post_data.split('&')
+name = None
+email = None
+for pair in data_pairs:
+    key, value = pair.split('=')
+    if key == 'name':
+        name = value
+    elif key == 'email':
+        email = value
 
-print(f"<h1>Données reçues : {nom} {email}</h1>")
-
-# Vérifie si les données sont présentes
-if nom is not None and email is not None:
-    # Écrit les données dans un fichier
-    try:
-        with open("donnees.txt", "a") as fichier:
-            fichier.write(f"Nom: {nom}, Email: {email}\n")
-        print("<h1>Données enregistrées avec succès !</h1>")
-    except Exception as e:
-        print(f"<h1>Une erreur s'est produite : {e}</h1>")
-else:
-    print("<h1>Veuillez fournir un nom et un email.</h1>")
+with open('output.txt', 'wb') as file:
+    data = "Nom : {}\nEmail : {}".format(name, email).encode('utf-8')
+    file.write(data)
 
 
+content_length = len("Content-type: text/html\n\n<html><head><title>Données enregistrées</title></head><body><h1>Données enregistrées avec succès !</h1></body></html>")
 
-# import cgi
+print("Content-type: text/html")
+print("Content-Length: {}\n".format(content_length))
 
-# cgi.cgitb.enable()
-
-# print("Content-type: text/html\n")
-
-# form = cgi.FieldStorage()
-
-# if "input_text" in form:
-#     input_text = form.getvalue("input_text")
-# else:
-#     input_text = "Aucune donnée POST reçue."
-
-# print("<html>")
-# print("<head>")
-# print("<title>Script CGI Python</title>")
-# print("</head>")
-# print("<body>")
-# print("<h1>Données POST récupérées :</h1>")
-# print("<p>{}</p>".format(input_text))
-# print("</body>")
-# print("</html>")
+print("<html>")
+print("<head><title>Données enregistrées</title></head>")
+print("<body>")
+print("<h1>Données enregistrées avec succès !</h1>")
+print("<p>Nom : {}</p>".format(name))
+print("<p>Email : {}</p>".format(email))
+print("</body>")
+print("</html>")

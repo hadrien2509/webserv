@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/26 14:30:46 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/27 04:43:32 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,14 +197,21 @@ const std::string& Cgi::run()
 		close(fdOut[1]);
 		dup2(fdIn[1], STDIN_FILENO);
 		dup2(fdOut[0], STDOUT_FILENO);
+		std::cerr << "before waitpid\n";
 		waitpid(-1, NULL, 0);
+		std::cerr << "after waitpid\n";
 
 		while (ret > 0)
 		{
+			std::cerr << "before read\n";
 			ret = read(fdOut[0], buffer, 1023);
+			std::cerr << "after read\n";
 			buffer[ret] = '\0';
 			_fromOut += std::string(buffer, ret);
+			if (ret < 1023)
+				break;
 		}
+		close(fdIn[1]);
 		close(fdOut[0]);
 	}
 	for (int i = 0; env[i] != NULL; i++) {
