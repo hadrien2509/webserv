@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/27 18:04:53 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/27 20:06:47 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,7 @@ const std::string& Cgi::run()
 		dup2(fdIn[0], STDIN_FILENO);
 		dup2(fdOut[1], STDOUT_FILENO);
 
+		
 		execve(_exePath[_varExtension].c_str(), const_cast<char *const *> (arg), env);
 		std::cerr << "CGI exception: execve failed" << std::endl;
 		write(fdOut[1], "500 Internal Server Error\n", 26);
@@ -194,7 +195,7 @@ const std::string& Cgi::run()
 		}
 		int retVal = 0;
 		waitpid(-1, &retVal, 0);
-		while (retVal != 0 && ret > 0)
+		while (retVal == 0 && ret > 0)
 		{
 			ret = read(fdOut[0], buffer, 1023);
 			buffer[ret] = '\0';
@@ -206,7 +207,6 @@ const std::string& Cgi::run()
 		close(fdOut[0]);
 		dup2(fdInSave, STDIN_FILENO);
 		dup2(fdOutSave, STDOUT_FILENO);
-		// std::cerr << "CGI: " << retVal << std::endl;
 		if (retVal != 0)
 		{
 			for (int i = 0; env[i] != NULL; i++) {

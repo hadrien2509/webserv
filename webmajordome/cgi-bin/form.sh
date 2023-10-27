@@ -7,6 +7,7 @@ echo
 # Lire les données POST envoyées par le formulaire
 read -n $CONTENT_LENGTH POST_DATA
 
+# echo "here" $POST_DATA 1>&2
 # Fonction pour décoder les caractères spéciaux
 urldecode() {
   local url_encoded="${1//+/ }"
