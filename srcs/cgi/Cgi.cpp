@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/27 21:02:05 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/27 21:05:43 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,9 +148,8 @@ const std::string& Cgi::run()
 		close(fdIn[1]);
 		close(fdOut[0]);
 		close(fdOut[1]);
-		for (int i = 0; env[i] != NULL; i++) {
+		for (int i = 0; env[i] != NULL; i++)
         	delete[] env[i];
-		}
 		delete[] env;
 		throw CgiForkException();
 	}
@@ -165,10 +164,10 @@ const std::string& Cgi::run()
 		execve(_exePath[_varExtension].c_str(), const_cast<char *const *> (arg), env);
 		std::cerr << "CGI exception: execve failed" << std::endl;
 		write(fdOut[1], "500 Internal Server Error\n", 26);
-		for (int i = 0; env[i] != NULL; i++) {
+		for (int i = 0; env[i] != NULL; i++)
         	delete[] env[i];
-		}
 		delete[] env;
+		throw CgiException();
 	}
 	else
 	{
