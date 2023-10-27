@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/27 13:59:39 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/27 14:48:23 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,17 @@ void Config::_parseServer(std::istringstream &ssold)
 	Server* server = new Server;
 	_cluster.push_back(server);
 
-	std::string line, type;
+	std::string line;
 	while (std::getline(_configFile, line))
 	{
+		std::string type;
 		line = _ignoreComments(line);
 		std::istringstream ss(line);
 		if (ss.eof())
 			continue ;
 		ss >> type;
+		if (type.size() == 0)
+			continue ;
 		if (type == "location")
 			_parseLocation(ss, server);
 		else if (type == "server")
@@ -111,14 +114,17 @@ void Config::_parseLocation(std::istringstream &ss, Server *server)
 
 	server->addLocation(location);
 	location->setUri(ressourceType);
-	std::string line, type;
+	std::string line;
 	while (std::getline(_configFile, line))
 	{
+		std::string type;
 		line = _ignoreComments(line);
 		std::istringstream ss(line);
 		if (ss.eof())
 			continue ;
 		ss >> type;
+		if (type.size() == 0)
+			continue ;
 		if (type == "location")
 			throw std::runtime_error("Location block inside location block");
 		else if (type == "root")
@@ -181,14 +187,18 @@ void Config::_openConfig(const std::string &input)
 Config::Config(const std::string &input) : _pollsize(0), _poll(NULL)
 {
 	_openConfig(input);
-	std::string line, type;
+	std::string line;
 	while (std::getline(_configFile, line))
 	{
+		std::string type;
 		line = _ignoreComments(line);
 		std::istringstream ss(line);
-		ss >> type;
+		std::cout << "line config : " << line << std::endl;
 		if (ss.eof())
-			continue;
+			continue ;
+		ss >> type;
+		if (type.size() == 0)
+			continue ;
 		if (type == "server")
 			_parseServer(ss);
 		else
