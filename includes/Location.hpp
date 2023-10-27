@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:20:40 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/26 19:31:26 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/27 17:52:41 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ class Server;
 class Location
 {
 	private:
+		Response* _errorResponse(const std::string &response, int code, Request &request);
+		
 		std::vector<std::string>			_index;
 		std::string							_rootPath;
 		bool								_autoIndex;
