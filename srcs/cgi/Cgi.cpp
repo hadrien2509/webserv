@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/27 20:06:47 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/27 21:02:05 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void Cgi::_ressourceToEnv()
 	std::stringstream ss;
 	ss << _toIn.size();
 	_env["REQUEST_METHOD"] = _method;
-	if (_method == "POST")
+	if (_method != "POST")
 		_env["QUERY_STRING"] = _toIn;
 	_env["CONTENT_LENGTH"] = ss.str();
 	_env["CONTENT_TYPE"] = "text/html";
@@ -98,18 +98,14 @@ const std::string& Cgi::run()
 	char buffer[1024];
 	
 	std::string totalPath = _path;
-	//std::cerr << "CGI: " << totalPath << std::endl;
-	// std::cerr << "HERE" << '\n';
 	if (!strchr(totalPath.c_str(), '.'))
 		throw CgiPathException();
 
 	_varExtension = strchr(totalPath.c_str(), '.');
 	const char *arg[] = {_exePath[_varExtension].c_str(), totalPath.c_str(), NULL};
 		
-	// char **env process
 	_ressourceToEnv();
 	char **env = _mapToEnv(_env);
-	// =================
 
 	fdInSave = dup(STDIN_FILENO);
 	fdOutSave = dup(STDOUT_FILENO);
@@ -145,9 +141,7 @@ const std::string& Cgi::run()
 		throw CgiPipeException();
 	}
 
-
 	pid = fork();
-
 	if (pid == -1)
 	{
 		close(fdIn[0]);
@@ -189,10 +183,6 @@ const std::string& Cgi::run()
 			_env["CONTENT_LENGTH"] = std::string(ss.str());
 			write(fdIn[1], _toIn.c_str(), _toIn.size());
 		}
-		else
-		{
-			// build querry string 
-		}
 		int retVal = 0;
 		waitpid(-1, &retVal, 0);
 		while (retVal == 0 && ret > 0)
@@ -209,16 +199,14 @@ const std::string& Cgi::run()
 		dup2(fdOutSave, STDOUT_FILENO);
 		if (retVal != 0)
 		{
-			for (int i = 0; env[i] != NULL; i++) {
+			for (int i = 0; env[i] != NULL; i++)
 				delete[] env[i];
-			}
 			delete[] env;
 			throw CgiInternalException();
 		}
 	}
-	for (int i = 0; env[i] != NULL; i++) {
+	for (int i = 0; env[i] != NULL; i++)
         delete[] env[i];
-    }
     delete[] env;
 	return (_fromOut);
 }
