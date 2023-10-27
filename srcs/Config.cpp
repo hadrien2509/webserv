@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/26 19:11:23 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/27 13:59:39 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ void Config::_openConfig(const std::string &input)
 }
 
 /* ************************************************************************** */
-/* ------------------------ CONSTRUCTOR & DESTRUCTOR ------------------------ */
+/* ----------------------- CONSTRUCTOR & DESTRUCTOR ------------------------- */
 /* ************************************************************************** */
 
 Config::Config(const std::string &input) : _pollsize(0), _poll(NULL)
@@ -186,9 +186,9 @@ Config::Config(const std::string &input) : _pollsize(0), _poll(NULL)
 	{
 		line = _ignoreComments(line);
 		std::istringstream ss(line);
+		ss >> type;
 		if (ss.eof())
 			continue;
-		ss >> type;
 		if (type == "server")
 			_parseServer(ss);
 		else
