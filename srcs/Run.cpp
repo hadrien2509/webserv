@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/25 19:34:36 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/27 15:47:05 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,13 @@ void Config::_readRequest(int fd, std::string &request)
 
 	std::cout << "read fd : " << fd << std::endl;
 	int ret = recv(fd, buffer, 1023, 0);
-	if (ret != -1)
-		buffer[ret] = '\0';
+	if (ret == -1)
+	{
+		std::cout << "Error : " << strerror(errno) << std::endl;
+		_removePollfd(fd);
+		return;
+	}
+	buffer[ret] = '\0';
 	request += buffer;
 }
 
@@ -31,7 +36,13 @@ void Config::_sendResponse(int fd)
 	if (response == NULL)
 		return;
 	// std::cout << "\n\n" << response->getHeader() << "\n\n\n\n" << std::endl;
-	send(fd, response->get().c_str(), response->get().size(), 0);
+	int ret = send(fd, response->get().c_str(), response->get().size(), 0);
+	if (ret == -1)
+	{
+		std::cout << "Error : " << strerror(errno) << std::endl;
+		_removePollfd(fd);
+		return;
+	}
 	_deleteResponse(fd);
 }
 
