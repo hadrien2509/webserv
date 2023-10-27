@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/26 19:46:22 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/27 17:23:47 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,9 +170,10 @@ void _parseIndex(std::istringstream &ss, T*	location)
 	}
 }
 
-template<typename T> Response *cgiHandler(Request & req, T *serv)
+template<typename T>
+Response *cgiHandler(Request & req, T *serv)
 {
-	Cgi cgi(serv->getCgiExtension(), serv->getCgiPath(), req.getPath(), req.getQuerryString(), req.getMethod());
+	Cgi cgi(serv->getCgiExtension(), serv->getCgiPath(), req);
 
 	try
 	{
@@ -180,22 +181,20 @@ template<typename T> Response *cgiHandler(Request & req, T *serv)
 	}
 	catch(const Cgi::CgiFileException& e)
 	{
-		// res->setStatus("404 Not Found");
 		throw Cgi::CgiFileException();
 	}
 	catch(const Cgi::CgiNotCgiException& e)
 	{
-		// delete res;
 		throw Cgi::CgiNotCgiException();
+	}
+	catch(const Cgi::CgiInternalException& e)
+	{
+		throw Cgi::CgiException();
 	}
 	catch(const std::exception& e)
 	{
-		// std::cerr << e.what() << '\n';
-		// delete res;
 		throw Cgi::CgiException();
 	}
-	// std::cerr << "Response: " << res->getStatus() << std::endl;
-	// return (NULL);
 }
 
 #endif

@@ -6,19 +6,15 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/27 16:01:19 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/27 17:22:57 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Cgi.hpp"
 
-Cgi::Cgi()
+Cgi::Cgi(const std::vector<std::string> & extension, std::vector<std::string> envExecutable, Request & req): _request(req)
 {
-}
-
-Cgi::Cgi(const std::vector<std::string> & extension, std::vector<std::string> envExecutable, const std::string & ressourcePath, std::string & querryString, const std::string & method)
-{
-	std::istringstream iss(ressourcePath);
+	std::istringstream iss(req.getPath());
 	
 	if (envExecutable.size() != extension.size() || envExecutable.empty())
 		throw CgiEnvExtException();
@@ -29,16 +25,11 @@ Cgi::Cgi(const std::vector<std::string> & extension, std::vector<std::string> en
 		_exePath.insert(std::pair<std::string, std::string>(*it, *itExe));
 		itExe++;
 	}
-	_ressourcePath = ressourcePath + "?" + querryString;
+	_ressourcePath = req.getPath() + "?" + req.getQuerryString();
 
-	_path = ressourcePath;
-	_toIn = querryString;
-	_method = method;
-}
-
-Cgi::Cgi(const Cgi & src)
-{
-	*this = src;
+	_path = req.getPath();
+	_toIn = req.getQuerryString();
+	_method = req.getMethod();
 }
 
 Cgi::~Cgi()
@@ -201,15 +192,11 @@ const std::string& Cgi::run()
 		{
 			// build querry string 
 		}
-		//std::cerr << "before waitpid\n";
-		waitpid(-1, NULL, 0);
-		//std::cerr << "after waitpid\n";
-
-		while (ret > 0)
+		int retVal = 0;
+		waitpid(-1, &retVal, 0);
+		while (retVal != 0 && ret > 0)
 		{
-		//	std::cerr << "before read\n";
 			ret = read(fdOut[0], buffer, 1023);
-		//	std::cerr << "after read\n";
 			buffer[ret] = '\0';
 			_fromOut += std::string(buffer, ret);
 			if (ret < 1023)
@@ -219,6 +206,14 @@ const std::string& Cgi::run()
 		close(fdOut[0]);
 		dup2(fdInSave, STDIN_FILENO);
 		dup2(fdOutSave, STDOUT_FILENO);
+		if (retVal != 0)
+		{
+			for (int i = 0; env[i] != NULL; i++) {
+				delete[] env[i];
+			}
+			delete[] env;
+			throw CgiInternalException();
+		}
 	}
 	for (int i = 0; env[i] != NULL; i++) {
         delete[] env[i];
