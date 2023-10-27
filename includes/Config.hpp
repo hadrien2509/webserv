@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/27 17:23:47 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/27 18:04:41 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,7 @@ Response *cgiHandler(Request & req, T *serv)
 	}
 	catch(const Cgi::CgiInternalException& e)
 	{
-		throw Cgi::CgiException();
+		throw Cgi::CgiInternalException();
 	}
 	catch(const std::exception& e)
 	{

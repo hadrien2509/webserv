@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/27 17:22:57 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/27 18:04:53 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,6 +206,7 @@ const std::string& Cgi::run()
 		close(fdOut[0]);
 		dup2(fdInSave, STDIN_FILENO);
 		dup2(fdOutSave, STDOUT_FILENO);
+		// std::cerr << "CGI: " << retVal << std::endl;
 		if (retVal != 0)
 		{
 			for (int i = 0; env[i] != NULL; i++) {
