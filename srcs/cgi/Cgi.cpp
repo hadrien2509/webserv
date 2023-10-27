@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/27 04:43:32 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/27 15:44:00 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,17 +150,6 @@ const std::string& Cgi::run()
 		throw CgiPipeException();
 	}
 
-	if (_method == "POST")
-	{
-		std::stringstream ss;
-		ss << _toIn.size();
-		_env["CONTENT_LENGTH"] = std::string(ss.str());
-		write(fdIn[1], _toIn.c_str(), _toIn.size());
-	}
-	else
-	{
-		// build querry string 
-	}
 
 	pid = fork();
 
@@ -197,6 +186,17 @@ const std::string& Cgi::run()
 		close(fdOut[1]);
 		dup2(fdIn[1], STDIN_FILENO);
 		dup2(fdOut[0], STDOUT_FILENO);
+		if (_method == "POST")
+		{
+			std::stringstream ss;
+			ss << _toIn.size();
+			_env["CONTENT_LENGTH"] = std::string(ss.str());
+			write(fdIn[1], _toIn.c_str(), _toIn.size());
+		}
+		else
+		{
+			// build querry string 
+		}
 		//std::cerr << "before waitpid\n";
 		waitpid(-1, NULL, 0);
 		//std::cerr << "after waitpid\n";

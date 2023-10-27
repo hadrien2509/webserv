@@ -1,9 +1,11 @@
-
 import sys
 import os
 
 print("data_pairs", file=sys.stderr)
-post_data = sys.stdin.read() # blocant ici
+
+# Lire seulement CONTENT_LENGTH caractères de l'entrée standard
+content_length = int(os.environ.get('CONTENT_LENGTH', 0))
+post_data = sys.stdin.read(content_length)
 
 data_pairs = post_data.split('&')
 name = None
@@ -19,17 +21,13 @@ with open('output.txt', 'wb') as file:
     data = "Nom : {}\nEmail : {}".format(name, email).encode('utf-8')
     file.write(data)
 
+# Calculer la longueur de la réponse
+response_content = "<html><head><title>Données enregistrées</title></head><body><h1>Données enregistrées avec succès !</h1><p>Nom : {}</p><p>Email : {}</p></body></html>".format(name, email)
+content_length = len(response_content)
 
-content_length = len("Content-type: text/html\n\n<html><head><title>Données enregistrées</title></head><body><h1>Données enregistrées avec succès !</h1></body></html>")
-
+# Imprimer l'en-tête de la réponse
 print("Content-type: text/html")
 print("Content-Length: {}\n".format(content_length))
 
-print("<html>")
-print("<head><title>Données enregistrées</title></head>")
-print("<body>")
-print("<h1>Données enregistrées avec succès !</h1>")
-print("<p>Nom : {}</p>".format(name))
-print("<p>Email : {}</p>".format(email))
-print("</body>")
-print("</html>")
+# Imprimer le corps de la réponse
+print(response_content)
