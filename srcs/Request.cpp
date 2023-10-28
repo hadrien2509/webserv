@@ -11,15 +11,80 @@
 /* ************************************************************************** */
 
 #include "Request.hpp"
+#include <fstream>
+
+void createFileFromData(const std::string& data, const std::string& folderPath) {
+	std::cout << "data lenght : " << data.size()<< std::endl;
+	std::cout << "data : " << data << std::endl;
+std::string delimiter = "-----------------------------";
+    size_t startPos = data.find(delimiter);
+    if (startPos == std::string::npos) {
+        std::cerr << "Invalid data format." << std::endl;
+        return;
+    }
+
+    // Find the end delimiter
+    size_t endPos = data.find(delimiter, startPos + delimiter.length());
+    if (endPos == std::string::npos) {
+        std::cerr << "End delimiter not found." << std::endl;
+        return;
+    }
+
+    // Find the filename
+    size_t filenamePos = data.find("filename=\"", startPos);
+    if (filenamePos == std::string::npos) {
+        std::cerr << "Filename not found." << std::endl;
+        return;
+    }
+    filenamePos += 10; // Move to the beginning of the filename
+    size_t filenameEnd = data.find("\"", filenamePos);
+    if (filenameEnd == std::string::npos) {
+        std::cerr << "Invalid filename format." << std::endl;
+        return;
+    }
+    std::string filename = data.substr(filenamePos, filenameEnd - filenamePos);
+
+    // Create the full file path
+    std::string filePath = folderPath + "/" + filename;
+
+    // Find the start of the file content
+    size_t contentPos = data.find("\n\n", startPos);
+    if (contentPos == std::string::npos) {
+        std::cerr << "File content not found." << std::endl;
+        return;
+    }
+    contentPos += 2; // Move past the newline characters
+
+    // Extract the file content
+    std::string fileContent = data.substr(contentPos, endPos - contentPos);
+
+    // Write the content to the file
+    std::ofstream outputFile(filePath.c_str(), std::ios::out | std::ios::binary);
+    if (!outputFile) {
+        std::cerr << "Failed to create the file." << std::endl;
+        return;
+    }
+
+    outputFile.write(fileContent.c_str(), fileContent.size());
+    outputFile.close();
+
+    std::cout << "File '" << filename << "' created in '" << folderPath << "'." << std::endl;
+}
+
 
 Request::Request(std::string str, int fd, Server* server) : _connection(fd)
 {
 
 	(void)server;      // Needed for client max body size and server name
 	std::cout << "--------------------------------------------" << std::endl;
-	//std::cout << "Request received : \n" << str << std::endl;
+	std::cout << "Request received : \n" << str << std::endl;
 	_parseRequest(str);
 
+	if (_method == "PUT")
+	{
+		std::cout << "download file ..." << std::endl;
+		createFileFromData(_querryString, "downloads");
+	}
 	std::cout << "--------------------------------------------" << std::endl;
 }
 
@@ -71,7 +136,7 @@ void	Request::_parseRequest(const std::string &request)
 	{
 		getBody(request);
 	}
-	std::cout << "mathod <" << _method << "> path <" << _path << "> querry <" << _querryString << ">" << std::endl;
+	//std::cout << "method <" << _method << "> path <" << _path << "> querry <" << _querryString << ">" << std::endl;
 }
 
 const std::string&	Request::getMethod() const

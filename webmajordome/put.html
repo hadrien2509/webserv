@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="styles.css">
+    <title>Upload ta photo</title>
+	<style>
+		button {
+			background-color: #0077d9;
+			color: #fff;
+			cursor: pointer;
+			padding: 1em;
+			margin-top: 1em;
+			width: 100%;
+			border: none;
+			border-radius: 5px;
+		}
+			.custum-file-upload {
+			height: 200px;
+			width: 300px;
+			display: flex;
+			flex-direction: column;
+			align-items: space-between;
+			gap: 20px;
+			cursor: pointer;
+			align-items: center;
+			justify-content: center;
+			border: 2px dashed #e8e8e8;
+			background-color: #212121;
+			padding: 1.5rem;
+			border-radius: 10px;
+			box-shadow: 0px 48px 35px -48px #e8e8e8;
+			}
+
+			.custum-file-upload .icon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			}
+
+			.custum-file-upload .icon svg {
+			height: 80px;
+			fill: #e8e8e8;
+			}
+
+			.custum-file-upload .text {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			}
+
+			.custum-file-upload .text span {
+			font-weight: 400;
+			color: #e8e8e8;
+			}
+
+			.custum-file-upload input {
+			display: none;
+			}
+	</style>
+</head>
+<body>
+    <h1>Upload ta photo préférée</h1>
+
+    <form enctype="multipart/form-data">
+		<label for="file" class="custum-file-upload">
+			<div class="icon">
+				<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384v38.6C310.1 219.5 256 287.4 256 368c0 59.1 29.1 111.3 73.7 143.3c-3.2 .5-6.4 .7-9.7 .7H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zm48 96a144 144 0 1 1 0 288 144 144 0 1 1 0-288zm16 80c0-8.8-7.2-16-16-16s-16 7.2-16 16v48H368c-8.8 0-16 7.2-16 16s7.2 16 16 16h48v48c0 8.8 7.2 16 16 16s16-7.2 16-16V384h48c8.8 0 16-7.2 16-16s-7.2-16-16-16H448V304z"/></svg>
+			</div>
+			<div class="text">
+			   <span id="file-name">Click to upload image</span>
+			   </div>
+			   <input class="custom-file-input" id="file" type="file">
+			</label>
+			<button id="submit-button" type="button">Soumettre (fichier)</button>
+	</form>
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+		  const photoInput = document.getElementById('file');
+		  const fileNameDisplay = document.getElementById('file-name');
+		  const iconContainer = document.querySelector('.icon');
+	  
+		  photoInput.addEventListener('change', function() {
+			const fileName = this.value.split('\\').pop();
+			fileNameDisplay.textContent = fileName;
+			iconContainer.innerHTML = `
+			<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384v38.6C310.1 219.5 256 287.4 256 368c0 59.1 29.1 111.3 73.7 143.3c-3.2 .5-6.4 .7-9.7 .7H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM288 368a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm211.3-43.3c-6.2-6.2-16.4-6.2-22.6 0L416 385.4l-28.7-28.7c-6.2-6.2-16.4-6.2-22.6 0s-6.2 16.4 0 22.6l40 40c6.2 6.2 16.4 6.2 22.6 0l72-72c6.2-6.2 6.2-16.4 0-22.6z"/></svg>
+			`;
+		  });
+		});
+	  </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#submit-button').click(function() {
+                var fileInput = $('#file')[0].files[0];
+                if (fileInput) {
+                    var formData = new FormData();
+                    formData.append('file', fileInput);
+
+                    $.ajax({
+                        url: 'put.html',
+                        type: 'PUT',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            console.log('Fichier envoyé avec succès.');
+                            // Faire quelque chose après l'envoi réussi
+                        },
+                        error: function() {
+                            console.log('Erreur lors de l\'envoi du fichier.');
+                        }
+                    });
+                } else {
+                    alert('Sélectionnez un fichier avant de soumettre.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
