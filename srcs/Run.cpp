@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/27 15:47:05 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/28 12:32:11 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,20 @@ void Config::_readRequest(int fd, std::string &request)
 	char	buffer[1024] = {0};
 
 	std::cout << "read fd : " << fd << std::endl;
-	int ret = recv(fd, buffer, 1023, 0);
+	int ret = recv(fd, buffer, 1024, 0);
+	if (ret == 0)
+	{
+		std::cout << "Client disconnected" << std::endl;
+		_removePollfd(fd);
+		return;
+	}
 	if (ret == -1)
 	{
 		std::cout << "Error : " << strerror(errno) << std::endl;
 		_removePollfd(fd);
 		return;
 	}
-	buffer[ret] = '\0';
-	request += buffer;
+	request.append(buffer, ret);
 }
 
 void Config::_sendResponse(int fd)
