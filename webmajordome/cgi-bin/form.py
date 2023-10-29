@@ -1,7 +1,7 @@
 import sys
 import os
 
-print("data_pairs", file=sys.stderr)
+# print("data_pairs", file=sys.stderr)
 
 # Lire seulement CONTENT_LENGTH caractères de l'entrée standard
 content_length = int(os.environ.get('CONTENT_LENGTH', 0))

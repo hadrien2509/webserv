@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/28 12:32:11 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/29 15:46:08 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void Config::_readRequest(int fd, std::string &request)
 {
 	char	buffer[1024] = {0};
 
-	std::cout << "read fd : " << fd << std::endl;
+	// std::cout << "read fd : " << fd << std::endl;
 	int ret = recv(fd, buffer, 1024, 0);
 	if (ret == 0)
 	{
@@ -158,7 +158,7 @@ void Config::run()
 					if (_requestString[i] == "")
 						continue;
 					Server *server = _clientSocketToServer[_poll[i].fd];
-					std::cout << "create request of "<< _poll[i].fd << std::endl;
+					// std::cout << "create request of "<< _poll[i].fd << std::endl;
 					Request request(_requestString[i], _poll[i].fd, server);
 					_requestString[i].clear();
 					Location *location = server->checkLocation(request);
