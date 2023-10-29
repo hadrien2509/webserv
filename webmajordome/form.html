@@ -120,6 +120,14 @@
             </form>
         </div>
 		<div class="form-container">
+            <h2>POST FILE</h2>
+            <form action="cgi-bin/upload.php" enctype="multipart/form-data" method="post">
+				<label for="fichier">Sélectionnez un fichier :</label>
+                <input type="file" id="fichier" name="fichier" required>
+                <input type="submit" value="Soumettre (POST)">
+            </form>
+        </div>
+		<div class="form-container">
             <h2>PUT</h2>
             <form action="result.php" method="put">
                 <label for="put_name">Nom :</label>
