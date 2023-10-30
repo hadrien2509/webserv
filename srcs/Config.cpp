@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/27 14:48:23 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/30 15:33:14 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ void Config::_parseServer(std::istringstream &ssold)
 			_parseAutoIndex(ss, server);
 		else if (type == "client_max_body_size")
 			_parseClientMaxBodySize(ss, server);
+		else if (type == "timeout")
+			_parseTimeout(ss,server);
 		else if (type == "}")
 			return ;
 		else
@@ -135,6 +137,8 @@ void Config::_parseLocation(std::istringstream &ss, Server *server)
 			_parseAutoIndex(ss, location);
 		else if (type == "error_page")
 			_parseErrorPage(ss, location);
+		else if (type == "timeout")
+			_parseTimeout(ss, location);
 		// else if (type == "client_max_body_size")
 		// 	_parseClientMaxBodySize(ss, location);
 		else if (type == "allow_methods")
@@ -157,7 +161,8 @@ void Config::_parseAllowMethods(std::istringstream &ss, Location *location)
 	{
 		if (ss.fail())
 			throw std::runtime_error("Invalid method");
-		location->addAllowMethods(method);
+		if (method == "GET" || method == "POST" || method == "DELETE" || method == "PUT")
+			location->addAllowMethods(method);
 		std::cout << "Method : " << method << std::endl;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:21:31 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/27 17:55:48 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/30 16:07:46 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,11 @@ const std::vector<std::string>&	Location::getCgiPath() const
 	return (this->_cgiPath);
 }
 
+const size_t&	Location::getTimeout() const
+{
+	return (this->_timeout);
+}
+
 const std::map<std::string, std::string> Location::getMimeTypes() const
 {
 	return (this->_mimeTypes);
@@ -138,6 +143,11 @@ void Location::setAutoIndex(bool autoIndex)
 void Location::setErrorPage(int errorCode, std::string errorPage)
 {
 	this->_errorPage[errorCode] = errorPage;
+}
+
+void Location::setTimeout(size_t timeout)
+{
+	this->_timeout = timeout;
 }
 
 /* ************************************************************************** */

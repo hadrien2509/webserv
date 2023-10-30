@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:20:40 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/27 17:52:41 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/30 16:07:12 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,13 @@ class Location
 		std::string							_rootPath;
 		bool								_autoIndex;
 		std::vector<std::string>			_allowMethods;
-		std::vector<std::string>			_cgiExtension;
-		std::vector<std::string>			_cgiPath;
 		std::map<std::string, std::string>	_mimeTypes;
 		std::map<int, std::string>			_errorPage;
 		std::string							_uri;
+
+		std::vector<std::string>			_cgiExtension;
+		std::vector<std::string>			_cgiPath;
+		size_t								_timeout;
 		
 	public :
 		Location(Server*);
@@ -55,6 +57,7 @@ class Location
 		void			addCgiPath(std::string path);
 		bool 			checkMethod(std::string method);
 		void			setAutoIndex(bool);
+		void			setTimeout(size_t);
 
 		std::string									getRootPath() const;
 		const std::vector<std::string>&				getIndex() const;
@@ -64,6 +67,7 @@ class Location
 		const std::vector<std::string>&				getCgiPath() const;
 		const std::map<std::string, std::string> 	getMimeTypes() const;
 		const std::string&							getUri() const;
+		const size_t&								getTimeout() const;
 
 		Response*		checkRequest(Request& request);
 };

@@ -42,6 +42,7 @@ class Server
 
         std::vector<std::string> 			_cgiPath;
         std::vector<std::string> 			_cgiExtension;
+		size_t 								_timeout;
 
     public:
         Server();
@@ -60,6 +61,7 @@ class Server
 		void	addCgiPath(std::string path);
 		void	addPort(int port);
 		void	addLocation(Location *location);
+		void	setTimeout(size_t timeout);
 
 		const std::string&							getServerName() const;
 		const std::string&							getRootPath() const;
@@ -76,6 +78,7 @@ class Server
 		
 		const std::vector<std::string>&				getCgiExtension() const;
 		const std::vector<std::string>&				getCgiPath() const;
+		const size_t&								getTimeout() const;
 
 		Response*					checkRequest(Request &request);
 		Location*					checkLocation(Request &request);

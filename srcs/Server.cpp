@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/27 17:55:03 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/30 16:08:28 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,6 +214,11 @@ const std::vector<std::string>&	Server::getCgiPath() const
 	return (_cgiPath);
 }
 
+const size_t&	Server::getTimeout() const
+{
+	return (_timeout);
+}
+
 const std::string&	Server::getHost() const
 {
 	return (_host);
@@ -267,6 +272,11 @@ void Server::addCgiExtension(std::string cgiExtension)
 void Server::setAutoIndex(bool autoIndex)
 {
 	_autoIndex = autoIndex;
+}
+
+void Server::setTimeout(size_t timeout)
+{
+	_timeout = timeout;
 }
 
 /* ************************************************************************** */

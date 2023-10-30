@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/27 18:04:41 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/30 16:13:50 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,10 +106,21 @@ void	_parseCgiExt(std::istringstream &ss, T* server)
 }
 
 template<typename T>
+void	_parseTimeout(std::istringstream &ss, T* server)
+{
+	size_t timeout;
+	
+	ss >> timeout;
+	if (ss.fail())
+		throw std::runtime_error("Invalid timeout");
+	server->setTimeout(timeout);
+}
+
+template<typename T>
 void _parseClientMaxBodySize(std::istringstream &ss, T* server)
 {
-	int	maxBodySize;
-	
+	size_t	maxBodySize;
+
 	ss >> maxBodySize;
 	if (ss.fail())
 		throw std::runtime_error("Invalid max body size");
