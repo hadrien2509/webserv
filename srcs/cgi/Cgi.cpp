@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/28 17:23:55 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/30 22:42:23 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,11 @@ Cgi& Cgi::operator=(const Cgi & src)
 		_fromOut = src._fromOut;
 	}
 	return (*this);
+}
+
+void Cgi::setTimeOut(size_t ms)
+{
+	_timeOut = ms;
 }
 
 char** Cgi::_mapToEnv(std::map<std::string, std::string> & env)
@@ -90,6 +95,7 @@ std::string Cgi::getExtension() const
 const std::string& Cgi::run()
 {
 	pid_t pid;
+	pid_t pidTimeOut;
 	int fdIn[2];
 	int fdOut[2];
 	int fdInSave;
@@ -171,6 +177,20 @@ const std::string& Cgi::run()
 	}
 	else
 	{
+		pidTimeOut = fork();
+		if (pidTimeOut == -1)
+		{
+			for (int i = 0; env[i] != NULL; i++)
+				delete[] env[i];
+			delete[] env;
+			throw CgiException();
+		}
+		else if (!pidTimeOut)
+		{
+			usleep(1000 * _timeOut);
+			kill(pid, SIGTERM);
+			exit(2);
+		}
 		close(fdIn[0]);
 		close(fdOut[1]);
 		dup2(fdIn[1], STDIN_FILENO);
@@ -183,7 +203,8 @@ const std::string& Cgi::run()
 			write(fdIn[1], _toIn.c_str(), _toIn.size());
 		}
 		int retVal = 0;
-		waitpid(-1, &retVal, 0);
+		waitpid(pid, &retVal, 0);
+		kill(pidTimeOut, SIGTERM);
 		while (retVal == 0 && ret > 0)
 		{
 			ret = read(fdOut[0], buffer, 1023);

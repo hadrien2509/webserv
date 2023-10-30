@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:24:44 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/27 17:21:51 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/30 22:10:27 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <sstream>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <signal.h>
 # include "Request.hpp"
 
 class Cgi
@@ -45,12 +46,15 @@ class Cgi
 		std::string					_toIn;
 		std::string					_fromOut;
 
+		size_t						_timeOut;
+
 	public:
 		Cgi(const std::vector<std::string> & extension, std::vector<std::string> envExecutable, Request & req);
 		~Cgi();
 
 		const std::string& run();
 		std::string getExtension() const;
+		void setTimeOut(size_t ms);
 		
 		class CgiException: public std::exception
 		{

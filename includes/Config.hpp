@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/30 16:13:50 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/30 22:54:16 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,6 +185,8 @@ template<typename T>
 Response *cgiHandler(Request & req, T *serv)
 {
 	Cgi cgi(serv->getCgiExtension(), serv->getCgiPath(), req);
+	std::cerr << "Config: " << serv->getTimeout() << "\n";
+	cgi.setTimeOut(serv->getTimeout());
 
 	try
 	{

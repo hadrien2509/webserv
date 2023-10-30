@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/30 17:28:23 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/30 19:51:05 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void Config::_parseServer(std::istringstream &ssold)
 			_parseAutoIndex(ss, server);
 		else if (type == "client_max_body_size")
 			_parseClientMaxBodySize(ss, server);
-		else if (type == "timeout")
+		else if (type == "cgi_timeout")
 			_parseTimeout(ss,server);
 		else if (type == "}")
 			return ;
