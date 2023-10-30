@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/30 15:33:14 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/30 17:28:23 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ void Config::_parseAllowMethods(std::istringstream &ss, Location *location)
 	{
 		if (ss.fail())
 			throw std::runtime_error("Invalid method");
-		if (method == "GET" || method == "POST" || method == "DELETE" || method == "PUT")
+		if (method == "GET" || method == "POST" || method == "DELETE")
 			location->addAllowMethods(method);
 		std::cout << "Method : " << method << std::endl;
 	}
