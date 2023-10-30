@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/30 16:08:28 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/30 16:19:38 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void Server::_initMimeTypes()
 	_mimeTypes[".7z"] = "application/x-7z-compressed";
 }
 
-Server::Server() : _autoIndex(false), _maxBodySize(0)
+Server::Server() : _autoIndex(false), _maxBodySize(0), _timeout(0)
 {
 	_initMimeTypes();
 }

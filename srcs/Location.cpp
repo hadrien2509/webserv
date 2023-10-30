@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:21:31 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/30 16:07:46 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/10/30 16:20:45 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ Location::Location(Server *server)
 	_index = server->getIndex();
 	_mimeTypes = server->getMimeTypes();
 	_errorPage = server->getErrorPage();
+	_timeout = server->getTimeout();
 }
 
 Location::Location(const Location &copy)
