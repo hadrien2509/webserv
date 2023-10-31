@@ -1,0 +1,137 @@
+.card {
+	width: calc(25% - 20px);
+	margin: 1em;
+	position: relative;
+	width: 190px;
+	height: 254px;
+	background: rgb(255, 0, 179);
+	background: linear-gradient(137deg, rgb(255, 0, 179) 0%, rgba(0, 212, 255, 1) 100%);
+	transition: 0.3s ease;
+	border-radius: 30px;
+	filter: drop-shadow(0px 0px 30px rgba(209, 38, 197, 0.5));
+}
+
+h1 {
+	text-align: center;
+	color: #fff;
+	font-size: 12em;
+}
+
+.card::after {
+	content: '';
+	background-color: #181818;
+	position: absolute;
+	z-index: 1;
+	transition: 0.3s ease;
+	height: 98%;
+	width: 98%;
+	top: 1%;
+	left: 1%;
+	border-radius: 28px;
+}
+
+.card:hover {
+	filter: drop-shadow(0px 0px 30px rgba(209, 38, 197, 1));
+}
+
+.card img {
+	position: absolute;
+	z-index: 2;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 28px;
+}
+
+.card-container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: align-left;
+	width: 80%;
+	margin: 0 auto;
+}
+
+body {
+	background-color: #181818;
+	margin: 0;
+	padding: 0;
+}
+
+#submit-button {
+	background-color: #0077d9;
+	color: #fff;
+	cursor: pointer;
+	padding: 1.5em;
+	width: 100%;
+	border: none;
+	border-radius: 0 0 28px 28px;
+	z-index: 2;
+	position: absolute;
+	bottom: 0;
+	display: none;
+}
+
+.custum-file-upload {
+	height: 200px;
+	width: 300px;
+	display: flex;
+	flex-direction: column;
+	align-items: space-between;
+	gap: 20px;
+	cursor: pointer;
+	align-items: center;
+	justify-content: center;
+	border: 2px dashed #e8e8e8;
+	background-color: #212121;
+	padding: 1.5rem;
+	border-radius: 10px;
+	box-shadow: 0px 48px 35px -48px #e8e8e8;
+	position: absolute;
+	z-index: 2;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 28px;
+}
+
+.custom-file-input {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.card .icon {
+	position: absolute;
+	z-index: 2;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 28px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.card .icon svg {
+	height: 80px;
+	fill: #e8e8e8;
+}
+
+.card .text {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.card .text span {
+	font-weight: 400;
+	color: #e8e8e8;
+}
+
+.card input {
+	display: none;
+}
