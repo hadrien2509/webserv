@@ -13,6 +13,11 @@
 #include "Request.hpp"
 #include <fstream>
 
+bool fileExists(const std::string &filePath) {
+    std::ifstream file(filePath.c_str());
+    return file.good();
+}
+
 bool Request::createFileFromData(const std::string &folderPath)
 {
 	// std::cout << "data lenght : " << _querryString.size()<< std::endl;
@@ -51,7 +56,17 @@ bool Request::createFileFromData(const std::string &folderPath)
 
 	// Create the full file path
 	std::string filePath = folderPath + "/" + filename;
-
+ 	int fileIndex = 0;
+	std::string baseFilename = filename.substr(0, filename.find_last_of('.'));
+	std::string extension = filename.substr(filename.find_last_of('.'));
+	while (fileExists(filePath)) {
+        // File with the same name already exists, append a number in parentheses
+        fileIndex++;
+        std::ostringstream oss;
+        oss << " (" << fileIndex << ")";
+        filename = baseFilename + oss.str() + extension;
+        filePath = folderPath + "/" + filename;
+    }
 	// Find the start of the file content
 	size_t contentPos = _querryString.find("\r\n\r\n", startPos);
 	if (contentPos == std::string::npos) {
@@ -64,7 +79,6 @@ bool Request::createFileFromData(const std::string &folderPath)
 	std::string fileContent = _querryString.substr(contentPos, endPos - contentPos);
 
 	// Write the content to the file
-	std::cout << "File Path : " << filePath.c_str() << std::endl;
 	std::ofstream outputFile(filePath.c_str(), std::ios::out | std::ios::binary);
 	if (!outputFile) {
 		std::cerr << "Failed to create the file." << std::endl;

@@ -164,7 +164,7 @@ void _parseRoot(std::istringstream &ss, T* location)
 		throw std::runtime_error("Invalid root file path");
 	closedir(dir);
 	location->setRoot(root);
-	std::cout << "Root : " << root << std::endl;
+	//std::cout << "Root : " << root << std::endl;
 }
 
 template<typename T>
@@ -177,7 +177,7 @@ void _parseIndex(std::istringstream &ss, T*	location)
 		if (ss.fail())
 			throw std::runtime_error("Invalid index");
 		location->addIndex(_index);
-		std::cout << "Index : " << _index << std::endl;
+		//std::cout << "Index : " << _index << std::endl;
 	}
 }
 

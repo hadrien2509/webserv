@@ -20,7 +20,7 @@ void Config::_parseListen(std::istringstream &ss, Server *server)
 		if (ss.fail())
 			throw std::runtime_error("Invalid port");
 		server->addPort(port);
-		std::cout << "Port : " << port << std::endl;
+		//std::cout << "Port : " << port << std::endl;
 	}
 }
 
@@ -30,7 +30,7 @@ void Config::_parseServerName(std::istringstream &ss, Server *server)
 
 	ss >> _serverName;
 	server->setServerName(_serverName);
-	std::cout << "Server name : " << _serverName << std::endl;
+	//std::cout << "Server name : " << _serverName << std::endl;
 }
 
 std::string Config::_ignoreComments(std::string line) //skip comments and empty lines
@@ -163,7 +163,7 @@ void Config::_parseAllowMethods(std::istringstream &ss, Location *location)
 			throw std::runtime_error("Invalid method");
 		if (method == "GET" || method == "POST" || method == "DELETE")
 			location->addAllowMethods(method);
-		std::cout << "Method : " << method << std::endl;
+		//std::cout << "Method : " << method << std::endl;
 	}
 }
 
@@ -198,7 +198,7 @@ Config::Config(const std::string &input) : _pollsize(0), _poll(NULL)
 		std::string type;
 		line = _ignoreComments(line);
 		std::istringstream ss(line);
-		std::cout << "line config : " << line << std::endl;
+		//std::cout << "line config : " << line << std::endl;
 		if (ss.eof())
 			continue ;
 		ss >> type;

@@ -162,13 +162,18 @@ void Config::run()
 				}
 				else
 				{
+					std::cout << "Read request" << std::endl;
 					_readRequest(_poll[i].fd, _requestString[i]);
 				}
 			}
 			else if (_poll[i].revents & POLLOUT)
 			{
 				if (_requestString[i] == "")
+				{
+            	//	_removePollfd(_poll[i].fd);
 					continue;
+				}
+				std::cout << "Send response" << std::endl;
 				Server *server = _clientSocketToServer[_poll[i].fd];
 				Request request(_requestString[i], _poll[i].fd, server);
 				if (request.isComplete())
