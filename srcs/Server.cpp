@@ -322,7 +322,7 @@ Location* Server::checkLocation(Request& request)
 			location = loc;
 		}
     }
-    if (location && bestMatch.length() > 1)
+    if (location && bestMatch.length() > 1 && bestMatch.compare(request.getPath()) != 0)
         request.setPath(request.getPath().substr(bestMatch.length()));
     return location;
 }

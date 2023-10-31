@@ -26,10 +26,15 @@ private:
 	const int _connection;
 	std::string _method;
 	std::string _path;
+	std::string _header;
 	std::string _httpVersion;
 	std::string _querryString;
+	std::string	_boundary;
+	unsigned long _contentLength;
 
 	void _parseRequest(const std::string &);
+	unsigned long _extractData(const std::string &header);
+	void _extractBoundary(const std::string& httpRequest);
 
 public:
 	Request(std::string str, int fd, Server *);
@@ -37,13 +42,16 @@ public:
 	~Request();
 	Request &operator=(const Request &);
 
-	void setPath(std::string path);
-
 	const std::string &getMethod() const;
 	const std::string &getPath() const;
+	const std::string &getHeader() const;
 	const std::string &getHttpVersion() const;
 	std::string &getQuerryString();
-	void getBody(std::string request);
+	void setHeader(const std::string &request);
+	void setPath(std::string path);
+	void setBody(std::string request);
+	bool isComplete();
+	bool createFileFromData(const std::string &folderPath);
 };
 
 #endif

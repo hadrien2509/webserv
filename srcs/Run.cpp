@@ -3,35 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/29 15:46:08 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/28 12:32:11 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Config.hpp"
 
-void Config::_readRequest(int fd, std::string &request)
-{
-	char	buffer[1024] = {0};
+void Config::_readRequest(int fd, std::string &request) {
+    char buffer[1024];
+    bool requestComplete = false;
 
-	// std::cout << "read fd : " << fd << std::endl;
-	int ret = recv(fd, buffer, 1024, 0);
-	if (ret == 0)
-	{
-		std::cout << "Client disconnected" << std::endl;
-		_removePollfd(fd);
-		return;
-	}
-	if (ret == -1)
-	{
-		std::cout << "Error : " << strerror(errno) << std::endl;
-		_removePollfd(fd);
-		return;
-	}
-	request.append(buffer, ret);
+    while (!requestComplete) {
+        int ret = recv(fd, buffer, sizeof(buffer), 0);
+
+        if (ret == 0) {
+            std::cout << "Client disconnected" << std::endl;
+            _removePollfd(fd);
+            return;
+        }
+        if (ret == -1) {
+            std::cout << "Error : " << strerror(errno) << std::endl;
+            _removePollfd(fd);
+            return;
+        }
+
+        // Append the received data to the request
+        request.append(buffer, ret);
+
+        // Check if the request is complete
+        size_t pos = request.find("\r\n\r\n");
+        if (pos != std::string::npos) {
+            requestComplete = true;
+            // Extract the headers and the body separately if needed
+            // Example: std::string headers = request.substr(0, pos + 4);
+            //           std::string body = request.substr(pos + 4);
+        }
+    }
 }
+
 
 void Config::_sendResponse(int fd)
 {
@@ -40,7 +52,7 @@ void Config::_sendResponse(int fd)
 	Response* response = _responses[fd].front();
 	if (response == NULL)
 		return;
-	// std::cout << "\n\n" << response->getHeader() << "\n\n\n\n" << std::endl;
+	std::cout << "response status <"<< response->getStatus() << ">" << std::endl;
 	int ret = send(fd, response->get().c_str(), response->get().size(), 0);
 	if (ret == -1)
 	{
@@ -155,11 +167,15 @@ void Config::run()
 			}
 			else if (_poll[i].revents & POLLOUT)
 			{
-					if (_requestString[i] == "")
-						continue;
-					Server *server = _clientSocketToServer[_poll[i].fd];
-					// std::cout << "create request of "<< _poll[i].fd << std::endl;
-					Request request(_requestString[i], _poll[i].fd, server);
+				if (_requestString[i] == "")
+					continue;
+				Server *server = _clientSocketToServer[_poll[i].fd];
+				Request request(_requestString[i], _poll[i].fd, server);
+				if (request.isComplete())
+				{
+					std::cout << "Request received : \n" << std::endl;
+					std::cout << "Method <" << request.getMethod() << "> ";
+					std::cout << "Path <" << request.getPath() << ">" << std::endl;
 					_requestString[i].clear();
 					Location *location = server->checkLocation(request);
 					Response *response;
@@ -168,8 +184,8 @@ void Config::run()
 					else
 						response = server->checkRequest(request);
 					_responses[_poll[i].fd].push_back(response);
-
-				_sendResponse(_poll[i].fd);
+					_sendResponse(_poll[i].fd);
+				}
 			}
 		}
 	}
