@@ -183,9 +183,9 @@ Response* Location::checkRequest(Request& request)
 	{
 		if (request.isComplete() && request.getHeader().find("Content-Type: multipart/form-data") != std::string::npos)
 		{
-			//if (request.createFileFromData(_rootPath + request.getPath()))
+			if (request.createFileFromData(_rootPath + request.getPath()))
 				return (new Response("200 OK", "File Upload", request.getHttpVersion()));
-			//return (_errorResponse("500 Internal Server Error", 500, request));
+			return (_errorResponse("500 Internal Server Error", 500, request));
 		}
 	}
 	stat(fullPath.c_str(), &statbuf);
