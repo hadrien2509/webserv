@@ -173,9 +173,9 @@ void Config::run()
             	//	_removePollfd(_poll[i].fd);
 					continue;
 				}
-				std::cout << "Send response" << std::endl;
 				Server *server = _clientSocketToServer[_poll[i].fd];
 				Request request(_requestString[i], _poll[i].fd, server);
+				request.isComplete();
 				if (request.isComplete())
 				{
 					std::cout << "Request received : \n" << std::endl;

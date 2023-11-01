@@ -116,6 +116,7 @@ void Request::setHeader(const std::string &request) {
 
 Request::Request(std::string str, int fd, Server *server) : _connection(fd)
 {
+	_contentLength = 0;
 	(void)server; // Needed for client max body size and server name
 	//std::cout << str << std::endl;
 	_parseRequest(str);
