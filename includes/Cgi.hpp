@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:24:44 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/30 22:10:27 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/31 17:39:27 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ class Cgi
 		const std::string& run();
 		std::string getExtension() const;
 		void setTimeOut(size_t ms);
+		size_t getTimeOut(void) const;
 		
 		class CgiException: public std::exception
 		{

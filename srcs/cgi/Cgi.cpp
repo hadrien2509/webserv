@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/10/30 22:42:23 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/31 17:40:42 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,11 @@ Cgi& Cgi::operator=(const Cgi & src)
 void Cgi::setTimeOut(size_t ms)
 {
 	_timeOut = ms;
+}
+
+size_t Cgi::getTimeOut(void) const
+{
+	return (_timeOut);
 }
 
 char** Cgi::_mapToEnv(std::map<std::string, std::string> & env)

@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/30 22:54:16 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/31 17:38:47 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,6 +187,7 @@ Response *cgiHandler(Request & req, T *serv)
 	Cgi cgi(serv->getCgiExtension(), serv->getCgiPath(), req);
 	std::cerr << "Config: " << serv->getTimeout() << "\n";
 	cgi.setTimeOut(serv->getTimeout());
+	std::cerr << "TimeOut: " << cgi.getTimeOut() << "\n";
 
 	try
 	{
