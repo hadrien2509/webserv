@@ -138,7 +138,7 @@ void Config::run()
 		{
 			if (_poll[i].revents & POLLERR)
 			{
-				std::cerr << "POLL QUIT" << std::endl;
+				//std::cerr << "POLL QUIT" << std::endl;
 				_removePollfd(_poll[i].fd);
 			}
 			else if (_poll[i].revents & POLLHUP)
@@ -156,21 +156,17 @@ void Config::run()
 					int client_socket = accept(_poll[i].fd, (struct sockaddr *)&client_addr, &client_addr_len);
 					if (client_socket < 0)
 						throw std::runtime_error("Failed to grab connection. errno: ");
-					std::cout << "New connection in " << _poll[i].fd << std::endl;
 					_clientSocketToServer[client_socket] = server;
 					_addPollfd(client_socket, POLLIN | POLLOUT);
 				}
 				else
-				{
-					std::cout << "Read request" << std::endl;
 					_readRequest(_poll[i].fd, _requestString[i]);
-				}
 			}
 			else if (_poll[i].revents & POLLOUT)
 			{
 				if (_requestString[i] == "")
 				{
-            	//	_removePollfd(_poll[i].fd);
+            		//_removePollfd(_poll[i].fd);
 					continue;
 				}
 				Server *server = _clientSocketToServer[_poll[i].fd];

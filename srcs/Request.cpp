@@ -18,79 +18,150 @@ bool fileExists(const std::string &filePath) {
     return file.good();
 }
 
+// bool Request::createFileFromData(const std::string &folderPath)
+// {
+// 	std::cout << "start downloading..." << std::endl;
+// 	size_t startPos = _querryString.find(_boundary);
+// 	if (startPos == std::string::npos) {
+// 		std::cerr << "Invalid data format." << std::endl;
+// 		return (false);
+// 	}
+
+// 	// Find the end delimiter
+// 	size_t endPos = _querryString.find(_boundary, startPos + _boundary.length()) - 2; // temporary fix for the extra \r\n
+// 	if (endPos == std::string::npos) {
+// 		std::cerr << "End delimiter not found." << std::endl;
+// 		return (false);
+// 	}
+
+// 	// Find the filename
+// 	size_t filenamePos = _querryString.find("filename=\"", startPos);
+// 	if (filenamePos == std::string::npos) {
+// 		std::cerr << "Filename not found." << std::endl;
+// 		return (false);
+// 	}
+// 	filenamePos += 10; // Move to the beginning of the filename
+// 	size_t filenameEnd = _querryString.find("\"", filenamePos);
+// 	if (filenameEnd == std::string::npos) {
+// 		std::cerr << "Invalid filename format." << std::endl;
+// 		return (false);
+// 	}
+// 	std::string filename = _querryString.substr(filenamePos, filenameEnd - filenamePos);
+
+// 	// Create the full file path
+// 	std::string filePath = folderPath + "/" + filename;
+//  	int fileIndex = 0;
+// 	std::string baseFilename = filename.substr(0, filename.find_last_of('.'));
+// 	std::string extension = filename.substr(filename.find_last_of('.'));
+// 	while (fileExists(filePath)) {
+//         // File with the same name already exists, append a number in parentheses
+//         fileIndex++;
+//         std::ostringstream oss;
+//         oss << " (" << fileIndex << ")";
+//         filename = baseFilename + oss.str() + extension;
+//         filePath = folderPath + "/" + filename;
+//     }
+// 	// Find the start of the file content
+// 	size_t contentPos = _querryString.find("\r\n\r\n", startPos);
+// 	if (contentPos == std::string::npos) {
+// 		std::cerr << "File content not found." << std::endl;
+// 		return (false);
+// 	}
+// 	contentPos += 4; // Move past the newline characters \r\n\r\n
+
+// 	// Extract the file content
+// 	std::string fileContent = _querryString.substr(contentPos, endPos - contentPos);
+
+// 	// Write the content to the file
+// 	std::ofstream outputFile(filePath.c_str(), std::ios::out | std::ios::binary);
+// 	if (!outputFile) {
+// 		std::cerr << "Failed to create the file." << std::endl;
+// 		return (false);
+// 	}
+
+// 	outputFile.write(fileContent.c_str(), fileContent.size());
+// 	outputFile.close();
+
+// 	std::cerr << "File '" << filename << "' created in '" << folderPath << "'." << std::endl;
+// 	return (true);
+// }
+
 bool Request::createFileFromData(const std::string &folderPath)
 {
-	// std::cout << "data lenght : " << _querryString.size()<< std::endl;
-	// std::cout << "data : " << data << std::endl;
-	std::string delimiter;
-	if (_boundary == "")
-		delimiter = "------WebKitFormBoundary";
-	else
-		delimiter = _boundary;
-	size_t startPos = _querryString.find(delimiter);
-	if (startPos == std::string::npos) {
-		std::cerr << "Invalid data format." << std::endl;
-		return (false);
-	}
+    std::cout << "start downloading..." << std::endl;
+	int fileIndex = 0;
+    size_t startPos = 0;
+	size_t endPos = 0;
+    while ((startPos = _querryString.find(_boundary, startPos)) != std::string::npos) {
+		startPos += _boundary.length();
+		endPos = _querryString.find(_boundary, startPos);
+		if (endPos == std::string::npos) {
+			if (startPos + 4 == _contentLength)
+				return true;
+			std::cerr << "End delimiter found." << std::endl;
+			return false;
+		}
+		fileIndex++;
+		size_t filenamePos = _querryString.find("filename=\"", startPos);
+        if (filenamePos == std::string::npos) {
+            std::cerr << "Filename not found." << std::endl;
+            return false;
+        }
 
-	// Find the end delimiter
-	size_t endPos = _querryString.find(delimiter, startPos + delimiter.length()) - 2; // temporary fix for the extra \r\n
-	if (endPos == std::string::npos) {
-		std::cerr << "End delimiter not found." << std::endl;
-		return (false);
-	}
+        filenamePos += 10; // Move to the beginning of the filename
+        size_t filenameEnd = _querryString.find("\"", filenamePos);
+        if (filenameEnd == std::string::npos) {
+            std::cerr << "Invalid filename format." << std::endl;
+            return false;
+        }
 
-	// Find the filename
-	size_t filenamePos = _querryString.find("filename=\"", startPos);
-	if (filenamePos == std::string::npos) {
-		std::cerr << "Filename not found." << std::endl;
-		return (false);
-	}
-	filenamePos += 10; // Move to the beginning of the filename
-	size_t filenameEnd = _querryString.find("\"", filenamePos);
-	if (filenameEnd == std::string::npos) {
-		std::cerr << "Invalid filename format." << std::endl;
-		return (false);
-	}
-	std::string filename = _querryString.substr(filenamePos, filenameEnd - filenamePos);
+        std::string filename = _querryString.substr(filenamePos, filenameEnd - filenamePos);
 
-	// Create the full file path
-	std::string filePath = folderPath + "/" + filename;
- 	int fileIndex = 0;
-	std::string baseFilename = filename.substr(0, filename.find_last_of('.'));
-	std::string extension = filename.substr(filename.find_last_of('.'));
-	while (fileExists(filePath)) {
-        // File with the same name already exists, append a number in parentheses
-        fileIndex++;
-        std::ostringstream oss;
-        oss << " (" << fileIndex << ")";
-        filename = baseFilename + oss.str() + extension;
-        filePath = folderPath + "/" + filename;
+        if (filename.empty()) 
+			filename = "untitled";
+		std::string filePath = folderPath + "/" + filename;
+		int fileIndex = 0;
+		std::string baseFilename = filename.substr(0, filename.find_last_of('.'));
+		size_t lastDotPos = filename.find_last_of('.');
+		std::string extension = "";
+		if (lastDotPos != std::string::npos)
+			extension = filename.substr(lastDotPos);
+		
+		while (fileExists(filePath)) {
+			// File with the same name already exists, append a number in parentheses
+			fileIndex++;
+			std::ostringstream oss;
+			oss << " (" << fileIndex << ")";
+			filename = baseFilename + oss.str() + extension;
+			filePath = folderPath + "/" + filename;
+		}
+
+		size_t contentPos = _querryString.find("\r\n\r\n", startPos);
+		if (contentPos == std::string::npos) {
+			std::cerr << "File content not found." << std::endl;
+			return false;
+		}
+
+		contentPos += 4; // Move past the newline characters \r\n\r\n
+		std::string fileContent = _querryString.substr(contentPos, endPos - contentPos);
+
+		std::ofstream outputFile(filePath.c_str(), std::ios::out | std::ios::binary);
+		if (!outputFile) {
+			std::cerr << "Failed to create the file." << std::endl;
+			return false;
+		}
+
+		outputFile.write(fileContent.c_str(), fileContent.size());
+		outputFile.close();
+
+		std::cerr << "File '" << filename << "' created in '" << folderPath << "'." << std::endl;
+
+        startPos = endPos;
     }
-	// Find the start of the file content
-	size_t contentPos = _querryString.find("\r\n\r\n", startPos);
-	if (contentPos == std::string::npos) {
-		std::cerr << "File content not found." << std::endl;
-		return (false);
-	}
-	contentPos += 4; // Move past the newline characters \r\n\r\n
-
-	// Extract the file content
-	std::string fileContent = _querryString.substr(contentPos, endPos - contentPos);
-
-	// Write the content to the file
-	std::ofstream outputFile(filePath.c_str(), std::ios::out | std::ios::binary);
-	if (!outputFile) {
-		std::cerr << "Failed to create the file." << std::endl;
-		return (false);
-	}
-
-	outputFile.write(fileContent.c_str(), fileContent.size());
-	outputFile.close();
-
-	std::cerr << "File '" << filename << "' created in '" << folderPath << "'." << std::endl;
-	return (true);
+    return true;
 }
+
+
 
 void Request::_extractBoundary(const std::string& httpRequest) {
     std::string boundaryString = "; boundary=";
@@ -100,7 +171,8 @@ void Request::_extractBoundary(const std::string& httpRequest) {
     if (pos != std::string::npos)
 	{
 		pos += boundaryString.length();
-	    _boundary = httpRequest.substr(pos);
+	    _boundary = "--" + httpRequest.substr(pos); 
+		_boundary.resize(_boundary.size() - 1);// rm \n
     }
 }
 
@@ -118,7 +190,7 @@ Request::Request(std::string str, int fd, Server *server) : _connection(fd)
 {
 	_contentLength = 0;
 	(void)server; // Needed for client max body size and server name
-	//std::cout << str << std::endl;
+//	std::cout << str << std::endl;
 	_parseRequest(str);
 }
 
