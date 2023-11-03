@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/11/03 13:54:04 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/03 15:51:19 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void Cgi::_ressourceToEnv()
 	std::stringstream ss;
 	ss << _toIn.size();
 	_env["REQUEST_METHOD"] = _method;
+	_env["PATH"] = _path;
 	if (_method != "POST")
 		_env["QUERY_STRING"] = _toIn;
 	_env["CONTENT_LENGTH"] = ss.str();
