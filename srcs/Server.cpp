@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/03 13:29:04 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/03 13:46:28 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void Server::_initMimeTypes()
 	_mimeTypes[".7z"] = "application/x-7z-compressed";
 }
 
-Server::Server() : _autoIndex(false), _maxBodySize(0), _timeout(100)
+Server::Server() : _autoIndex(false), _maxBodySize(0), _timeout(0)
 {
 	_initMimeTypes();
 }

@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/11/03 13:19:37 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/03 13:54:04 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,20 +182,24 @@ const std::string& Cgi::run()
 	}
 	else
 	{
-		pidTimeOut = fork();
-		if (pidTimeOut == -1)
+		if (_timeOut != 0)
 		{
-			for (int i = 0; env[i] != NULL; i++)
-				delete[] env[i];
-			delete[] env;
-			throw CgiException();
-		}
-		else if (!pidTimeOut)
-		{
-			std::cerr << "CGI timeout: " << _timeOut << "ms" << std::endl;
-			usleep(1000 * _timeOut);
-			kill(pid, SIGTERM);
-			exit(2);
+
+			pidTimeOut = fork();
+			if (pidTimeOut == -1)
+			{
+				for (int i = 0; env[i] != NULL; i++)
+					delete[] env[i];
+				delete[] env;
+				throw CgiException();
+			}
+			else if (!pidTimeOut)
+			{
+				std::cerr << "CGI timeout: " << _timeOut << "ms" << std::endl;
+				usleep(1000 * _timeOut);
+				kill(pid, SIGTERM);
+				exit(2);
+			}
 		}
 		close(fdIn[0]);
 		close(fdOut[1]);
@@ -210,7 +214,8 @@ const std::string& Cgi::run()
 		}
 		int retVal = 0;
 		waitpid(pid, &retVal, 0);
-		kill(pidTimeOut, SIGTERM);
+		if (_timeOut != 0)
+			kill(pidTimeOut, SIGTERM);
 		while (retVal == 0 && ret > 0)
 		{
 			ret = read(fdOut[0], buffer, 1023);
