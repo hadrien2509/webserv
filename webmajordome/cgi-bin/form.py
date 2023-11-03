@@ -17,8 +17,8 @@ for pair in data_pairs:
     elif key == 'email':
         email = value
 
-while 1:
-    print("Test time out errors\n")
+# while 1:
+#     print("Test time out errors\n")
 
 with open('output.txt', 'wb') as file:
     data = "Nom : {}\nEmail : {}".format(name, email).encode('utf-8')

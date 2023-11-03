@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/28 12:32:11 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/03 18:23:15 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ void Config::run()
 				request.isComplete();
 				if (request.isComplete())
 				{
-					std::cout << "Request received : \n" << std::endl;
+					std::cout << "\nRequest received : " << std::endl;
 					std::cout << "Method <" << request.getMethod() << "> ";
 					std::cout << "Path <" << request.getPath() << ">" << std::endl;
 					_requestString[i].clear();

@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/11/03 16:23:09 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/03 17:44:59 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ void Cgi::_ressourceToEnv()
 	std::string realPath(_path);
 	realPath.erase(realPath.find_last_of('/'), realPath.size());
 	
+
 	_env["REQUEST_METHOD"] = _method;
 	_env["PWD"] = realPath;
 	if (_method != "POST")
@@ -118,7 +119,8 @@ const std::string& Cgi::run()
 		throw CgiPathException();
 
 	_varExtension = strchr(totalPath.c_str(), '.');
-	const char *arg[] = {_exePath[_varExtension].c_str(), totalPath.c_str(), NULL};
+	size_t lastSlash = totalPath.find_last_of('/');
+	const char *arg[] = {_exePath[_varExtension].c_str(), &totalPath.c_str()[lastSlash + 1], NULL};
 		
 	_ressourceToEnv();
 	char **env = _mapToEnv(_env);
@@ -134,7 +136,7 @@ const std::string& Cgi::run()
 		delete[] env;
 		throw CgiNotCgiException();
 	}
-	if (access(arg[0], F_OK) != 0 || access(arg[1], F_OK) != 0)
+	if (access(arg[0], F_OK) != 0 || access(totalPath.c_str(), F_OK) != 0)
 	{
 		for (int i = 0; env[i] != NULL; i++) {
         	delete[] env[i];
@@ -176,14 +178,16 @@ const std::string& Cgi::run()
 		dup2(fdIn[0], STDIN_FILENO);
 		dup2(fdOut[1], STDOUT_FILENO);
 
-		
-		execve(_exePath[_varExtension].c_str(), const_cast<char *const *> (arg), env);
+		totalPath.erase(totalPath.find_last_of('/'), totalPath.size());
+		if (!chdir(totalPath.c_str()))
+			execve(_exePath[_varExtension].c_str(), const_cast<char *const *> (arg), env);
 		std::cerr << "CGI exception: execve failed" << std::endl;
 		write(fdOut[1], "500 Internal Server Error\n", 26);
 		for (int i = 0; env[i] != NULL; i++)
         	delete[] env[i];
 		delete[] env;
-		throw CgiException();
+		// throw CgiException();
+		exit(1);
 	}
 	else
 	{
@@ -200,7 +204,6 @@ const std::string& Cgi::run()
 			}
 			else if (!pidTimeOut)
 			{
-				std::cerr << "CGI timeout: " << _timeOut << "ms" << std::endl;
 				usleep(1000 * _timeOut);
 				kill(pid, SIGTERM);
 				exit(2);
