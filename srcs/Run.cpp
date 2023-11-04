@@ -41,6 +41,7 @@ void Config::_readRequest(pollfd& poll) {
 				std::cerr << "Error : " << e.what() << std::endl;
 				_responses[poll.fd].push_back(new Response("413", "Payload Too Large", "HTTP/1.1"));
 				_sendResponse(poll.fd);
+				_removePollfd(poll.fd); // Pour éviter qu'il continue à envoyer
 				return;
 			}
 		}
