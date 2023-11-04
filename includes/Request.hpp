@@ -24,6 +24,7 @@ class Request
 {
 private:
 	const int _connection;
+	std::string _strRequest;
 	std::string _method;
 	std::string _path;
 	std::string _header;
@@ -33,7 +34,7 @@ private:
 	unsigned long _contentLength;
 
 	void _parseRequest(const std::string &);
-	unsigned long _extractData(const std::string &header);
+	void _extractData(const std::string &header);
 	void _extractBoundary(const std::string& httpRequest);
 
 public:
@@ -46,12 +47,22 @@ public:
 	const std::string &getPath() const;
 	const std::string &getHeader() const;
 	const std::string &getHttpVersion() const;
+	const std::string &getStrRequest() const;
+	void appendRequest(char *str, int nb);
 	std::string &getQuerryString();
 	void setHeader(const std::string &request);
 	void setPath(std::string path);
-	void setBody(std::string request);
+	void setBody();
 	bool isComplete();
 	bool createFileFromData(const std::string &folderPath);
+	class BodyTooLargeException: public std::exception
+		{
+			public:
+				const char * what() const throw()
+				{
+					return ("body too large");
+				}
+		};
 };
 
 #endif

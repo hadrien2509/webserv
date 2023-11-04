@@ -3,38 +3,53 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/03 18:23:15 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/10/28 12:32:11 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Config.hpp"
 
-void Config::_readRequest(int fd, std::string &request) {
+void Config::_readRequest(pollfd& poll) {
     char buffer[1024];
     bool requestComplete = false;
 
     while (!requestComplete) {
-        int ret = recv(fd, buffer, sizeof(buffer), 0);
+        int ret = recv(poll.fd, buffer, sizeof(buffer), 0);
 
         if (ret == 0) {
             std::cout << "Client disconnected" << std::endl;
-            _removePollfd(fd);
+            _removePollfd(poll.fd);
             return;
         }
         if (ret == -1) {
             std::cout << "Error : " << strerror(errno) << std::endl;
-            _removePollfd(fd);
+            _removePollfd(poll.fd);
             return;
         }
-
-        // Append the received data to the request
-        request.append(buffer, ret);
-
+		if (_requests[poll.fd] == NULL)
+		{
+			try
+			{
+				Server *server = _clientSocketToServer[poll.fd];
+				_requests[poll.fd] = new Request(buffer, poll.fd, server);
+			}
+			catch (std::exception &e)
+			{
+				std::cerr << "Error : " << e.what() << std::endl;
+				_responses[poll.fd].push_back(new Response("413", "Payload Too Large", "HTTP/1.1"));
+				_sendResponse(poll.fd);
+				return;
+			}
+		}
+		else
+			_requests[poll.fd]->appendRequest(buffer, ret);
+		// Append the received data to the request
+        //request.append(buffer, ret);
         // Check if the request is complete
-        size_t pos = request.find("\r\n\r\n");
+        size_t pos = _requests[poll.fd]->getStrRequest().find("\r\n\r\n");
         if (pos != std::string::npos) {
             requestComplete = true;
             // Extract the headers and the body separately if needed
@@ -44,7 +59,6 @@ void Config::_readRequest(int fd, std::string &request) {
     }
 }
 
-
 void Config::_sendResponse(int fd)
 {
 	if (_responses[fd].empty())
@@ -52,7 +66,7 @@ void Config::_sendResponse(int fd)
 	Response* response = _responses[fd].front();
 	if (response == NULL)
 		return;
-	std::cout << "response status <"<< response->getStatus() << ">" << std::endl;
+	std::cout << "Response : status <"<< response->getStatus() << ">" << std::endl;
 	int ret = send(fd, response->get().c_str(), response->get().size(), 0);
 	if (ret == -1)
 	{
@@ -60,6 +74,7 @@ void Config::_sendResponse(int fd)
 		_removePollfd(fd);
 		return;
 	}
+	_removePollfd(fd);
 	_deleteResponse(fd);
 }
 
@@ -138,7 +153,7 @@ void Config::run()
 		{
 			if (_poll[i].revents & POLLERR)
 			{
-				//std::cerr << "POLL QUIT" << std::endl;
+				std::cerr << "POLL QUIT" << std::endl;
 				_removePollfd(_poll[i].fd);
 			}
 			else if (_poll[i].revents & POLLHUP)
@@ -160,30 +175,28 @@ void Config::run()
 					_addPollfd(client_socket, POLLIN | POLLOUT);
 				}
 				else
-					_readRequest(_poll[i].fd, _requestString[i]);
+					_readRequest(_poll[i]);
 			}
-			else if (_poll[i].revents & POLLOUT)
+			else if (_poll[i].revents & POLLOUT && _requests[_poll[i].fd])
 			{
-				if (_requestString[i] == "")
-				{
-            		//_removePollfd(_poll[i].fd);
-					continue;
-				}
 				Server *server = _clientSocketToServer[_poll[i].fd];
-				Request request(_requestString[i], _poll[i].fd, server);
-				request.isComplete();
-				if (request.isComplete())
+				Response *response;
+				Request *request = _requests[_poll[i].fd];
+				request->setBody();
+				if (request->isComplete())
 				{
-					std::cout << "\nRequest received : " << std::endl;
-					std::cout << "Method <" << request.getMethod() << "> ";
-					std::cout << "Path <" << request.getPath() << ">" << std::endl;
-					_requestString[i].clear();
-					Location *location = server->checkLocation(request);
-					Response *response;
+				/*
+				*/
+					std::cout << "\nRequest  : Method <" << request->getMethod() << "> ";
+					std::cout << "Path <" << request->getPath() << ">" << std::endl;
+					//std::cout << "querry <" << request->getQuerryString() << ">" << std::endl;
+					Location *location = server->checkLocation(*request);
 					if (location)
-						response = location->checkRequest(request);
+						response = location->checkRequest(*request);
 					else
-						response = server->checkRequest(request);
+						response = server->checkRequest(*request);
+					delete _requests[_poll[i].fd];//_requests[i].clear();
+					_requests[_poll[i].fd] = NULL;
 					_responses[_poll[i].fd].push_back(response);
 					_sendResponse(_poll[i].fd);
 				}

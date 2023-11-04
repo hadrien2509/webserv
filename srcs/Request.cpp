@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "Request.hpp"
+#include "Server.hpp"
 #include <fstream>
 
 bool fileExists(const std::string &filePath) {
@@ -89,19 +90,17 @@ bool fileExists(const std::string &filePath) {
 bool Request::createFileFromData(const std::string &folderPath)
 {
     std::cout << "start downloading..." << std::endl;
-	int fileIndex = 0;
-    size_t startPos = 0;
+	size_t startPos = 0;
 	size_t endPos = 0;
     while ((startPos = _querryString.find(_boundary, startPos)) != std::string::npos) {
 		startPos += _boundary.length();
 		endPos = _querryString.find(_boundary, startPos);
 		if (endPos == std::string::npos) {
-			if (startPos + 4 == _contentLength)
+			if (startPos + 4 >= _contentLength)
 				return true;
 			std::cerr << "End delimiter found." << std::endl;
 			return false;
 		}
-		fileIndex++;
 		size_t filenamePos = _querryString.find("filename=\"", startPos);
         if (filenamePos == std::string::npos) {
             std::cerr << "Filename not found." << std::endl;
@@ -161,8 +160,6 @@ bool Request::createFileFromData(const std::string &folderPath)
     return true;
 }
 
-
-
 void Request::_extractBoundary(const std::string& httpRequest) {
     std::string boundaryString = "; boundary=";
 
@@ -189,9 +186,14 @@ void Request::setHeader(const std::string &request) {
 Request::Request(std::string str, int fd, Server *server) : _connection(fd)
 {
 	_contentLength = 0;
-	(void)server; // Needed for client max body size and server name
-//	std::cout << str << std::endl;
-	_parseRequest(str);
+	_strRequest = str;
+	_parseRequest(_strRequest);
+	if (server->getMaxBodySize() < _contentLength)
+	{
+		std::cout << "max body size : " << server->getMaxBodySize() << std::endl;
+		throw Request::BodyTooLargeException();
+	}
+
 }
 
 /*
@@ -213,16 +215,18 @@ Request &Request::operator=(const Request &rhs)
 	return (*this);
 }
 
-void Request::setBody(std::string request)
+void Request::appendRequest(char *str, int nb)
 {
-	std::string body;
-	const unsigned long pos = request.find("\r\n\r\n");
-
-	if (pos != std::string::npos)
-		_querryString = request.substr(pos + 4);
+	_strRequest.append(str, nb);
 }
 
-unsigned long Request::_extractData(const std::string &header)
+void Request::setBody()
+{
+	if (_method != "GET")
+		_querryString = _strRequest.substr(_strRequest.find("\r\n\r\n") + 4);
+}
+
+void Request::_extractData(const std::string &header)
 {
 	std::istringstream iss(header);
 	std::string line;
@@ -253,7 +257,6 @@ unsigned long Request::_extractData(const std::string &header)
 				_extractBoundary(headerValue);
 		}
 	}
-	return (0); 
 }
 
 bool Request::isComplete()
@@ -267,12 +270,12 @@ bool Request::isComplete()
 
 void Request::_parseRequest(const std::string &request)
 {
-	std::istringstream iss(request);
-	std::string line;
 	std::string headerName;
 	std::string headerValue;
 
 	setHeader(request);
+	std::istringstream iss(request);
+	std::string line;
 	if (std::getline(iss, line))
 	{
 		std::istringstream iss2(line);
@@ -286,10 +289,7 @@ void Request::_parseRequest(const std::string &request)
 			_querryString = _path.substr(pos + 1);
 		_path = _path.substr(0, pos);
 	}
-
 	_extractData(request);
-	if (_method != "GET")
-		_querryString = request.substr(request.find("\r\n\r\n") + 4);
 }
 
 const std::string &Request::getMethod() const
@@ -305,6 +305,11 @@ const std::string &Request::getPath() const
 const std::string &Request::getHeader() const
 {
 	return (_header);
+}
+
+const std::string &Request::getStrRequest() const
+{
+	return (_strRequest);
 }
 
 void Request::setPath(std::string path)

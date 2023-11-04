@@ -54,7 +54,7 @@ class Config
 		void		_addPollfd(int fd, short events);
 		void		_removePollfd(int fd);	
 		void		_deleteResponse(int fd);
-		void		_readRequest(int fd, std::string &request);
+		void		_readRequest(pollfd& poll);
 		
 		std::vector<Server*>							_cluster;
 		std::ifstream									_configFile;
@@ -64,7 +64,7 @@ class Config
 		std::map<int, std::deque<Response*> >			_responses;
 		std::map<int, Server*>							_serverSocketToServer;
 		std::map<int, Server*>							_clientSocketToServer;
-		std::map<int, std::string>						_requestString;
+		std::map<int, Request*>							_requests;
 		
 	public :
 		
