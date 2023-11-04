@@ -74,7 +74,6 @@ void Config::_sendResponse(int fd)
 		_removePollfd(fd);
 		return;
 	}
-	_removePollfd(fd);
 	_deleteResponse(fd);
 }
 
