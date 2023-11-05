@@ -179,14 +179,11 @@ Response* Location::checkRequest(Request& request)
 	std::string	fullPath = _rootPath + request.getPath();
     struct stat statbuf;
 
-	if (true) // location allow downloads
+	if (request.getHeader().find("Content-Type: multipart/form-data") != std::string::npos)
 	{
-		if (request.isComplete() && request.getHeader().find("Content-Type: multipart/form-data") != std::string::npos)
-		{
-			if (request.createFileFromData(_rootPath + request.getPath()))
-				return (new Response("200 OK", "File Upload", request.getHttpVersion()));
-			return (_errorResponse("500 Internal Server Error", 500, request));
-		}
+		if (request.createFileFromData(_rootPath + request.getPath()))
+			return (new Response("200 OK", "File Upload", request.getHttpVersion()));
+		return (_errorResponse("500 Internal Server Error", 500, request));
 	}
 	stat(fullPath.c_str(), &statbuf);
 	if (access(fullPath.c_str(),F_OK))

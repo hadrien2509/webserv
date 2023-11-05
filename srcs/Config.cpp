@@ -20,7 +20,7 @@ void Config::_parseListen(std::istringstream &ss, Server *server)
 		if (ss.fail())
 			throw std::runtime_error("Invalid port");
 		server->addPort(port);
-		//std::cout << "Port : " << port << std::endl;
+		std::cout << "Port : " << port << std::endl;
 	}
 }
 
@@ -30,7 +30,7 @@ void Config::_parseServerName(std::istringstream &ss, Server *server)
 
 	ss >> _serverName;
 	server->setServerName(_serverName);
-	//std::cout << "Server name : " << _serverName << std::endl;
+	std::cout << "Server name : " << _serverName << std::endl;
 }
 
 std::string Config::_ignoreComments(std::string line) //skip comments and empty lines
