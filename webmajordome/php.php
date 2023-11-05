@@ -41,14 +41,16 @@
 		</label>
 	
 		<ul class="menu__box">
-			<li><a class="menu__item" href="index.html">Home</a></li>
-			<li><a class="menu__item" href="/404">error 404</a></li>
-			<li><a class="menu__item" href="form.html">form</a></li>
-			<li><a class="menu__item" href="rick.html">Rick</a></li>
-			<li><a class="menu__item" href="php.php">php</a></li>
-			<li><a class="menu__item" href="breakout/index.html">breakout</a></li>
-			<li><a class="menu__item" href="/breakout/pong.html">pong</a></li>
-		</ul>
+				<li><a class="menu__item" href="index.html">Home</a></li>
+				<li><a class="menu__item" href="put.html">Upload</a></li>
+				<li><a class="menu__item" href="/404">error 404</a></li>
+				<li><a class="menu__item" href="/downloads">downloads</a></li>
+				<li><a class="menu__item" href="form.html">form</a></li>
+				<li><a class="menu__item" href="rick.html">Rick</a></li>
+				<li><a class="menu__item" href="php.php">php</a></li>
+				<li><a class="menu__item" href="breakout/index.html">breakout</a></li>
+				<li><a class="menu__item" href="/breakout/pong.html">pong</a></li>
+			</ul>
 	</div>
 
     <main>

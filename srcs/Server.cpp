@@ -309,22 +309,31 @@ std::string autoIndexGenerator(const std::string& root, const std::string& path)
 /* ------------------------------- METHODS -----------------------------------*/
 /* ************************************************************************** */
 
-Location* Server::checkLocation(Request& request)
+bool Server::_checkMethod(std::string method)
 {
-    Location* location = 0;
-    const std::vector<Location*>& locations = _locations;
-
-    for (std::vector<Location*>::const_iterator it = locations.begin(); it != locations.end(); ++it) {
-        Location* loc = *it;
-        const std::string& locationUri = loc->getUri();
-        if (request.getPath() == locationUri) {
-            location = loc;
-            break;
-        }
-    }
-    return location;
+	for (std::vector<std::string>::iterator it = _allowMethods.begin(); it != _allowMethods.end(); it++)
+		if (*it == method)
+			return (true);
+	return (false);
 }
 
+Location* Server::checkLocation(Request& request)
+{
+    std::string bestMatch = "";
+    Location* location = 0;
+    const std::vector<Location*>& locations = _locations;
+	for (std::vector<Location*>::const_iterator it = locations.begin(); it != locations.end(); ++it) {
+		Location* loc = *it;
+		const std::string& locationUri = loc->getUri();
+		if (request.getPath().find(locationUri) != std::string::npos && locationUri.length() > bestMatch.length()) {
+			bestMatch = locationUri;
+			location = loc;
+		}
+    }
+    if (location && bestMatch.length() > 1 && bestMatch.compare(request.getPath()) != 0)
+        request.setPath(request.getPath().substr(bestMatch.length()));
+    return location;
+}
 
 Response* Server::_errorResponse(const std::string& error, int code, Request& request)
 {
@@ -342,12 +351,27 @@ Response* Server::checkRequest(Request& request)
 	std::string	fullPath = _rootPath + request.getPath();
     struct stat statbuf;
 
+	if (!_checkMethod(request.getMethod()))
+	{
+		return (_errorResponse("403 Forbidden", 403, request));
+	}
+
 	if (request.getHeader().find("Content-Type: multipart/form-data") != std::string::npos)
 	{
 		if (request.createFileFromData(_rootPath + request.getPath()))
 			return (new Response("200 OK", "File Upload", request.getHttpVersion()));
 		return (_errorResponse("500 Internal Server Error", 500, request));
 	}
+	
+	for (size_t i = 0; i < fullPath.size(); i++)
+	{
+		if (fullPath[i] == '%' && fullPath[i + 1] == '2' && fullPath[i + 2] == '0')
+		{
+			fullPath[i] = ' ';
+			fullPath.erase(i + 1, 2);
+		}
+	}
+
 	stat(fullPath.c_str(), &statbuf);
 	if (access(fullPath.c_str(),F_OK))
 	{

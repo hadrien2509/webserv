@@ -25,6 +25,7 @@ class Server
     private:
 		void		_initMimeTypes();
 		Response*	_errorResponse(const std::string &response, int code, Request &request);
+		bool		_checkMethod(std::string method);
 
 		std::vector<struct pollfd>			_pollfds;
 		std::string							_serverName;

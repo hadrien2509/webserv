@@ -189,13 +189,12 @@ void Config::run()
 				*/
 					std::cout << "\nRequest  : Method <" << request->getMethod() << "> ";
 					std::cout << "Path <" << request->getPath() << ">" << std::endl;
-					//std::cout << "querry <" << request->getQuerryString() << ">" << std::endl;
 					Location *location = server->checkLocation(*request);
 					if (location)
 						response = location->checkRequest(*request);
 					else
 						response = server->checkRequest(*request);
-					delete _requests[_poll[i].fd];//_requests[i].clear();
+					delete _requests[_poll[i].fd];
 					_requests[_poll[i].fd] = NULL;
 					_responses[_poll[i].fd].push_back(response);
 					_sendResponse(_poll[i].fd);

@@ -10,6 +10,31 @@ document.addEventListener('DOMContentLoaded', function() {
 		submitButton.style.display = 'block';
 	});
   
+	$(document).ready(function () {
+		$(".card").on("click", "#del-btn", function () {
+			var imageToDelete = $(this).siblings("img").attr("src");
+	
+			// Envoie une requête DELETE au serveur
+			$.ajax({
+				type: "DELETE",
+				url: "caca.py",
+				data: { action: "delete", image: imageToDelete },
+				success: function (response) {
+					// Affiche la réponse du serveur
+					//alert(response);
+					// Recharge la page pour afficher les images mises à jour
+					//location.reload();
+				},
+				error: function (xhr, status, error) {
+					// Gère les erreurs
+					//alert("Erreur : " + status);
+					console.log('Erreur lors de l\'envoi du fichier. ');
+				}
+			});
+		});
+	});
+	
+
 	$(document).ready(function() {
 		$('#submit-button').click(function() {
 			var fileInput = $('#file')[0].files[0];
@@ -19,13 +44,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 				$.ajax({
 					url: 'img/',
-					type: 'PUT',
+					type: 'POST',
 					data: formData,
 					processData: false,
 					contentType: false,
 					success: function(response) {
 						console.log('Fichier envoyé avec succès.');
-						//location.reload();
+						location.reload();
 					},
 					error: function() {
 						console.log('Erreur lors de l\'envoi du fichier.');

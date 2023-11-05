@@ -42,7 +42,19 @@ h1 {
 	object-fit: cover;
 	border-radius: 28px;
 }
-
+#del-btn {
+    background-color: #901010;
+	color: #fff;
+	font-style: bold;
+	cursor: pointer;
+	padding: 1.5em;
+	width: 100%;
+	border: none;
+	border-radius: 0 0 28px 28px;
+	z-index: 2;
+	position: absolute;
+	bottom: 0;
+}
 .card-container {
 	display: flex;
 	flex-wrap: wrap;

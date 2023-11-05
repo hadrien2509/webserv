@@ -88,9 +88,9 @@ void Cgi::_ressourceToEnv()
 	_env["PWD"] = realPath;
 	if (_method != "POST")
 		_env["QUERY_STRING"] = _toIn;
-	_env["CONTENT_LENGTH"] = ss.str();
 	_env["CONTENT_TYPE"] = "text/html";
 	_env["CONTENT_LENGTH"] = ss.str();
+	std::cout << "content length : " << ss.str() << std::endl;
 	_env["SERVER_NAME"] = "localhost"; // temporary hardcoded
 	_env["SERVER_PORT"] = "80"; // temporary hardcoded
 	_env["SCRIPT_NAME"] = _path;
@@ -213,7 +213,7 @@ const std::string& Cgi::run()
 		close(fdOut[1]);
 		dup2(fdIn[1], STDIN_FILENO);
 		dup2(fdOut[0], STDOUT_FILENO);
-		if (_method == "POST")
+		if (_method == "POST" || _method == "DELETE") // fix dans le cas des requests delete
 		{
 			std::stringstream ss;
 			ss << _toIn.size();

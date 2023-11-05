@@ -28,7 +28,8 @@ class Server;
 class Location
 {
 	private:
-		Response* _errorResponse(const std::string &response, int code, Request &request);
+		Response*	_errorResponse(const std::string &response, int code, Request &request);
+		bool 		_checkMethod(std::string method);
 		
 		std::vector<std::string>			_index;
 		std::string							_rootPath;
@@ -55,7 +56,6 @@ class Location
 		void			addAllowMethods(std::string);
 		void			addCgiExtension(std::string extension);
 		void			addCgiPath(std::string path);
-		bool 			checkMethod(std::string method);
 		void			setAutoIndex(bool);
 		void			setTimeout(size_t);
 

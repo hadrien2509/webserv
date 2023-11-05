@@ -155,7 +155,7 @@ void Location::setTimeout(size_t timeout)
 /* ------------------------------- METHODS ---------------------------------- */
 /* ************************************************************************** */
 
-bool Location::checkMethod(std::string method)
+bool Location::_checkMethod(std::string method)
 {
 	for (std::vector<std::string>::iterator it = _allowMethods.begin(); it != _allowMethods.end(); it++)
 		if (*it == method)
@@ -179,12 +179,26 @@ Response* Location::checkRequest(Request& request)
 	std::string	fullPath = _rootPath + request.getPath();
     struct stat statbuf;
 
+	if (!_checkMethod(request.getMethod()))
+	{
+		return (_errorResponse("403 Forbidden", 403, request));
+	}
+
 	if (request.getHeader().find("Content-Type: multipart/form-data") != std::string::npos)
 	{
 		if (request.createFileFromData(_rootPath + request.getPath()))
 			return (new Response("200 OK", "File Upload", request.getHttpVersion()));
 		return (_errorResponse("500 Internal Server Error", 500, request));
 	}
+	for (size_t i = 0; i < fullPath.size(); i++)
+	{
+		if (fullPath[i] == '%' && fullPath[i + 1] == '2' && fullPath[i + 2] == '0')
+		{
+			fullPath[i] = ' ';
+			fullPath.erase(i + 1, 2);
+		}
+	}
+
 	stat(fullPath.c_str(), &statbuf);
 	if (access(fullPath.c_str(),F_OK))
 	{

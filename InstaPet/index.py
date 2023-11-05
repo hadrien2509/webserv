@@ -27,12 +27,12 @@ print("""
 image_dir = "img"
 
 # Liste des fichiers d'images dans le dossier
-image_files = [f for f in os.listdir("InstaPet/" + image_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif'))]
+image_files = [f for f in os.listdir(image_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif'))]
 
 # Parcourir la liste des fichiers et générer les balises <div>
 for image_file in image_files:
     image_path = os.path.join(image_dir, image_file)
-    div_tag = f'<div class="card"><img src="{image_path}" alt="{image_file}"></div>'
+    div_tag = f'<div class="card"><img src="{image_path}" alt="{image_file}"><button id="del-btn">delete</button></div>'
     print(div_tag)
 
 # Fin de la page

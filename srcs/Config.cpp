@@ -21,6 +21,7 @@ void Config::_parseListen(std::istringstream &ss, Server *server)
 			throw std::runtime_error("Invalid port");
 		server->addPort(port);
 		std::cout << "Port : " << port << std::endl;
+		std::cout << "URL : http://localhost:" << port << std::endl;
 	}
 }
 
