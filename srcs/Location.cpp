@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:21:31 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/30 16:20:45 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/06 16:53:41 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@ Location::Location(Server *server)
 	_mimeTypes = server->getMimeTypes();
 	_errorPage = server->getErrorPage();
 	_timeout = server->getTimeout();
+	_redirect = server->getRedirect();
+	_redirectURL = server->getRedirectURL();
+	_redirectCode = server->getRedirectCode();
 }
 
 Location::Location(const Location &copy)
@@ -98,6 +101,21 @@ const std::map<std::string, std::string> Location::getMimeTypes() const
 	return (this->_mimeTypes);
 }
 
+const std::string&	Location::getRedirectURL() const
+{
+	return (this->_redirectURL);
+}
+
+const bool&	Location::getRedirect() const
+{
+	return (this->_redirect);
+}
+
+const int& Location::getRedirectCode() const
+{
+	return (this->_redirectCode);
+}
+
 void Location::setRoot(std::string rootPath)
 {
 	this->_rootPath = rootPath;
@@ -151,6 +169,13 @@ void Location::setTimeout(size_t timeout)
 	this->_timeout = timeout;
 }
 
+void Location::setRedirectURL(std::string url, int code)
+{
+	_redirectURL = url;
+	_redirect = true;
+	_redirectCode = code;
+}
+
 /* ************************************************************************** */
 /* ------------------------------- METHODS ---------------------------------- */
 /* ************************************************************************** */
@@ -176,9 +201,15 @@ Response* Location::_errorResponse(const std::string& error, int code, Request& 
 
 Response* Location::checkRequest(Request& request)
 {
+	if (_redirect)
+	{
+		request.setPath(_redirectURL);
+		_rootPath = "";
+	}
 	std::string	fullPath = _rootPath + request.getPath();
     struct stat statbuf;
 
+	std::cout << _rootPath << std::endl;
 	if (!_checkMethod(request.getMethod()))
 	{
 		return (_errorResponse("403 Forbidden", 403, request));
@@ -227,6 +258,8 @@ Response* Location::checkRequest(Request& request)
 				}
 				catch(const std::exception& e)
 				{
+					if (_redirect)
+						return (redirectHandler(this, request));
 					return (new Response("200 OK", request, _mimeTypes));
 				}
 			}
@@ -238,6 +271,8 @@ Response* Location::checkRequest(Request& request)
 		if (_autoIndex)
 		{
 			std::string autoIndex = autoIndexGenerator(_rootPath, request.getPath());
+			if (_redirect)
+				return (cgiRedirectHandler(this, autoIndex, request.getHttpVersion()));
 			return (new Response("200 OK", autoIndex, request.getHttpVersion()));
 		}
 		else
@@ -259,6 +294,8 @@ Response* Location::checkRequest(Request& request)
 		}
 		catch (const std::exception &e)
 		{
+			if (_redirect)
+				return (redirectHandler(this, request));
 			return (new Response("200 OK", request, _mimeTypes));
 		}
 	}

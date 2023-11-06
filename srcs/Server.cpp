@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/03 16:09:16 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/06 16:53:48 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,24 @@ void	Server::addPort(int port)
 void Server::addLocation(Location *location)
 {
 	_locations.push_back(location);
-} 
+}
+
+void Server::setAutoIndex(bool autoIndex)
+{
+	_autoIndex = autoIndex;
+}
+
+void Server::setTimeout(size_t timeout)
+{
+	_timeout = timeout;
+}
+
+void Server::setRedirectURL(std::string url, int code)
+{
+	_redirectURL = url;
+	_redirect = true;
+	_redirectCode = code;
+}
 
 /* ************************************************************************** */
 /* ------------------------------- GETTERS -----------------------------------*/
@@ -269,14 +286,19 @@ void Server::addCgiExtension(std::string cgiExtension)
 	_cgiExtension.push_back(cgiExtension);
 }
 
-void Server::setAutoIndex(bool autoIndex)
+const bool& Server::getRedirect() const
 {
-	_autoIndex = autoIndex;
+	return (_redirect);
 }
 
-void Server::setTimeout(size_t timeout)
+const std::string&	Server::getRedirectURL() const
 {
-	_timeout = timeout;
+	return (_redirectURL);
+}
+
+const int& Server::getRedirectCode() const
+{
+	return (_redirectCode);
 }
 
 /* ************************************************************************** */
@@ -348,6 +370,11 @@ Response* Server::_errorResponse(const std::string& error, int code, Request& re
 
 Response* Server::checkRequest(Request& request)
 {
+	if (_redirect)
+	{
+		request.setPath(_redirectURL);
+		_rootPath = _ressourcePath;
+	}
 	std::string	fullPath = _rootPath + request.getPath();
     struct stat statbuf;
 
@@ -400,6 +427,8 @@ Response* Server::checkRequest(Request& request)
 				}
 				catch(const std::exception& e)
 				{
+					if (_redirect)
+						return (redirectHandler(this, request));
 					return (new Response("200 OK", request, _mimeTypes));
 				}
 			}
@@ -411,6 +440,8 @@ Response* Server::checkRequest(Request& request)
 		if (_autoIndex)
 		{
 			std::string autoIndex = autoIndexGenerator(_rootPath, request.getPath());
+			if (_redirect)
+				return (cgiRedirectHandler(this, autoIndex, request.getHttpVersion()));
 			return (new Response("200 OK", autoIndex, request.getHttpVersion()));
 		}
 		else
@@ -432,6 +463,8 @@ Response* Server::checkRequest(Request& request)
 		}
 		catch (const std::exception &e)
 		{
+			if (_redirect)
+				return (redirectHandler(this, request));
 			return (new Response("200 OK", request, _mimeTypes));
 		}
 	}

@@ -45,6 +45,10 @@ class Server
         std::vector<std::string> 			_cgiExtension;
 		size_t 								_timeout;
 
+		std::string							_redirectURL;
+		int									_redirectCode;
+		bool								_redirect;
+
     public:
         Server();
         ~Server();
@@ -63,6 +67,7 @@ class Server
 		void	addPort(int port);
 		void	addLocation(Location *location);
 		void	setTimeout(size_t timeout);
+		void	setRedirectURL(std::string url, int code);
 
 		const std::string&							getServerName() const;
 		const std::string&							getRootPath() const;
@@ -80,6 +85,10 @@ class Server
 		const std::vector<std::string>&				getCgiExtension() const;
 		const std::vector<std::string>&				getCgiPath() const;
 		const size_t&								getTimeout() const;
+
+		const std::string&							getRedirectURL() const;
+		const bool&									getRedirect() const;
+		const int&									getRedirectCode() const;
 
 		Response*					checkRequest(Request &request);
 		Location*					checkLocation(Request &request);

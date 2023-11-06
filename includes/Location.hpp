@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:20:40 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/30 16:07:12 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/06 14:51:57 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,10 @@ class Location
 		std::vector<std::string>			_cgiPath;
 		size_t								_timeout;
 		
+		std::string							_redirectURL;
+		int									_redirectCode;
+		bool								_redirect;
+		
 	public :
 		Location(Server*);
 		Location(const Location &);
@@ -58,6 +62,7 @@ class Location
 		void			addCgiPath(std::string path);
 		void			setAutoIndex(bool);
 		void			setTimeout(size_t);
+		void			setRedirectURL(std::string, int code);
 
 		std::string									getRootPath() const;
 		const std::vector<std::string>&				getIndex() const;
@@ -68,6 +73,10 @@ class Location
 		const std::map<std::string, std::string> 	getMimeTypes() const;
 		const std::string&							getUri() const;
 		const size_t&								getTimeout() const;
+		
+		const std::string&							getRedirectURL() const;
+		const bool&									getRedirect() const;
+		const int&									getRedirectCode() const;
 
 		Response*		checkRequest(Request& request);
 };

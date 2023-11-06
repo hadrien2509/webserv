@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/30 19:51:05 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/06 13:19:22 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ void Config::_parseServer(std::istringstream &ssold)
 			_parseClientMaxBodySize(ss, server);
 		else if (type == "cgi_timeout")
 			_parseTimeout(ss,server);
+		else if (type == "return")
+			_parseRedirect(ss, server);
 		else if (type == "}")
 			return ;
 		else
@@ -148,6 +150,8 @@ void Config::_parseLocation(std::istringstream &ss, Server *server)
 			_parseCgiPath(ss, location);
 		else if (type == "cgi_ext")
 			_parseCgiExt(ss, location);
+		else if (type == "return")
+			_parseRedirect(ss, location);
 		else if (type == "}")
 			return ;
 		else

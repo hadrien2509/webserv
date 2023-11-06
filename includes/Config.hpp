@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/03 17:50:38 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/06 16:32:21 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,18 @@ class Config
 
   As we embrace the artistry that C++ templates offer, we become artisans of the craft, our hands guided by the principles of generic design and our minds opened to the endless possibilities of elegant problem-solving. Here's to the beauty, simplicity, and power that templates bring to our lines of code—turning them from instructions to art. 🌟💖
 ***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+
+template<typename T>
+void	_parseRedirect(std::istringstream &ss, T* server)
+{
+	std::string path;
+	int			code;
+
+	ss >> code >> path;
+	if (ss.fail() || (code != 301 && code != 302))
+		throw std::runtime_error("Invalid redirection status code in configuration, use 301 or 302");
+	server->setRedirectURL(path, code);
+}
 
 template<typename T>
 void	_parseCgiPath(std::istringstream &ss, T* server)
@@ -182,6 +194,27 @@ void _parseIndex(std::istringstream &ss, T*	location)
 }
 
 template<typename T>
+Response *redirectHandler(T* serv, Request& req)
+{
+	std::map<std::string, std::string> mime = serv->getMimeTypes();
+	if (serv->getRedirectCode() == 301)
+		return (new Response("301 Moved Permanently", req, mime));
+	if (serv->getRedirectCode() == 302)
+		return (new Response("302 Found", req, mime));
+	return (NULL);
+}
+
+template<typename T>
+Response *cgiRedirectHandler(T* serv, std::string run, std::string version)
+{
+	if (serv->getRedirectCode() == 301)
+		return (new Response("301 Moved Permanently", run, version));
+	if (serv->getRedirectCode() == 302)
+		return (new Response("302 Found", run, version));
+	return (NULL);
+}
+
+template<typename T>
 Response *cgiHandler(Request & req, T *serv)
 {
 	Cgi cgi(serv->getCgiExtension(), serv->getCgiPath(), req);
@@ -189,6 +222,10 @@ Response *cgiHandler(Request & req, T *serv)
 
 	try
 	{
+		if (serv->getRedirect())
+		{
+			return (cgiRedirectHandler(serv, cgi.run(), req.getHttpVersion()));
+		}
 		return (new Response("200 OK", cgi.run(), req.getHttpVersion()));
 	}
 	catch(const Cgi::CgiFileException& e)
