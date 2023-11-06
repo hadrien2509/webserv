@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/06 16:53:48 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/06 17:04:45 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -373,7 +373,7 @@ Response* Server::checkRequest(Request& request)
 	if (_redirect)
 	{
 		request.setPath(_redirectURL);
-		_rootPath = _ressourcePath;
+		_rootPath = "";
 	}
 	std::string	fullPath = _rootPath + request.getPath();
     struct stat statbuf;
