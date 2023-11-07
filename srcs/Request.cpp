@@ -157,7 +157,8 @@ void Request::setBody()
 	if (_method != "GET")
 	{
 		_querryString = _strRequest.substr(_strRequest.find("\r\n\r\n") + 4);
-		_querryString.resize(_contentLength);
+		if (_querryString.size() > _contentLength)
+			_querryString.resize(_contentLength);
 	}
 }
 
