@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:21:31 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/06 16:53:41 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/07 17:02:27 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ Location::Location(Server *server)
 	_redirect = server->getRedirect();
 	_redirectURL = server->getRedirectURL();
 	_redirectCode = server->getRedirectCode();
+	_serverName = server->getServerName();
 }
 
 Location::Location(const Location &copy)
@@ -114,6 +115,11 @@ const bool&	Location::getRedirect() const
 const int& Location::getRedirectCode() const
 {
 	return (this->_redirectCode);
+}
+
+const std::string& Location::getServerName() const
+{
+	return (this->_serverName);
 }
 
 void Location::setRoot(std::string rootPath)

@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:25 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/07 14:42:53 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/07 17:04:29 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ private:
 	std::string	_boundary;
 	unsigned long _contentLength;
 	sockaddr_in		_addr;
+	std::string		_serverName;
 
 	void _parseRequest(const std::string &);
 	void _extractData(const std::string &header);

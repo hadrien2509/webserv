@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:01 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/07 14:43:12 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/07 17:04:09 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ Request::Request(std::string str, int fd, Server *server, struct sockaddr_in add
 	_contentLength = 0;
 	_strRequest = str;
 	_parseRequest(_strRequest);
+	_serverName = server->getServerName();
 	if (server->getMaxBodySize() < _contentLength)
 	{
 		std::cout << "max body size : " << server->getMaxBodySize() << std::endl;

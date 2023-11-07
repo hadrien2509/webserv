@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:20:40 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/06 14:51:57 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/07 17:02:06 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ class Location
 		std::map<std::string, std::string>	_mimeTypes;
 		std::map<int, std::string>			_errorPage;
 		std::string							_uri;
+		std::string							_serverName;
 
 		std::vector<std::string>			_cgiExtension;
 		std::vector<std::string>			_cgiPath;
@@ -73,6 +74,7 @@ class Location
 		const std::map<std::string, std::string> 	getMimeTypes() const;
 		const std::string&							getUri() const;
 		const size_t&								getTimeout() const;
+		const std::string&							getServerName() const;
 		
 		const std::string&							getRedirectURL() const;
 		const bool&									getRedirect() const;
