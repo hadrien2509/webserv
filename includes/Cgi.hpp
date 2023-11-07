@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:24:44 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/11/07 15:57:06 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/07 16:22:17 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <signal.h>
 # include <stdlib.h>
 # include "Request.hpp"
+# include <cstdlib>
 
 class Cgi
 {
