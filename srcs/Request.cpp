@@ -155,7 +155,10 @@ void Request::appendRequest(char *str, int nb)
 void Request::setBody()
 {
 	if (_method != "GET")
+	{
 		_querryString = _strRequest.substr(_strRequest.find("\r\n\r\n") + 4);
+		_querryString.resize(_contentLength);
+	}
 }
 
 void Request::_extractData(const std::string &header)
