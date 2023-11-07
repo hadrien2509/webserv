@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/11/03 17:44:59 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/07 15:58:22 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ Cgi::Cgi(const std::vector<std::string> & extension, std::vector<std::string> en
 {
 	std::istringstream iss(req.getPath());
 	
+	_port = htons(req.getSockAddr().sin_port);
+	_httpVersion = req.getHttpVersion();
 	if (envExecutable.size() != extension.size() || envExecutable.empty())
 		throw CgiEnvExtException();
 	
@@ -92,10 +94,10 @@ void Cgi::_ressourceToEnv()
 	_env["CONTENT_LENGTH"] = ss.str();
 	std::cout << "content length : " << ss.str() << std::endl;
 	_env["SERVER_NAME"] = "localhost"; // temporary hardcoded
-	_env["SERVER_PORT"] = "80"; // temporary hardcoded
+	_env["SERVER_PORT"] = _port;
 	_env["SCRIPT_NAME"] = _path;
 	_env["PATH_INFO"] = _path;
-	_env["SERVER_PROTOCOL"] = "HTTP/1.1"; // temporary hardcoded
+	_env["SERVER_PROTOCOL"] = _httpVersion;
 }
 
 std::string Cgi::getExtension() const

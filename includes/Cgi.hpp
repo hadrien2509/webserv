@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:24:44 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/11/04 19:55:47 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/07 15:57:06 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,9 @@ class Cgi
 		std::string					_fromOut;
 
 		size_t						_timeOut;
+
+		int							_port;
+		std::string					_httpVersion;
 
 	public:
 		Cgi(const std::vector<std::string> & extension, std::vector<std::string> envExecutable, Request & req);
