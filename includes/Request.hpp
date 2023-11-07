@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:25 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/26 19:34:01 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/07 14:42:53 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <string>
 #include <sstream>
 #include <sys/socket.h>
+# include <netinet/in.h> // For sockaddr_in
 
 class Server;
 
@@ -32,13 +33,14 @@ private:
 	std::string _querryString;
 	std::string	_boundary;
 	unsigned long _contentLength;
+	sockaddr_in		_addr;
 
 	void _parseRequest(const std::string &);
 	void _extractData(const std::string &header);
 	void _extractBoundary(const std::string& httpRequest);
 
 public:
-	Request(std::string str, int fd, Server *);
+	Request(std::string str, int fd, Server *, struct sockaddr_in addr);
 	Request(const Request &);
 	~Request();
 	Request &operator=(const Request &);
@@ -48,6 +50,7 @@ public:
 	const std::string &getHeader() const;
 	const std::string &getHttpVersion() const;
 	const std::string &getStrRequest() const;
+	const sockaddr_in &getSockAddr() const;
 	void appendRequest(char *str, int nb);
 	std::string &getQuerryString();
 	void setHeader(const std::string &request);

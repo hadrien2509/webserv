@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/06 16:32:21 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/07 14:43:46 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ class Config
 		void		_addPollfd(int fd, short events);
 		void		_removePollfd(int fd);	
 		void		_deleteResponse(int fd);
-		void		_readRequest(pollfd& poll);
+		void		_readRequest(pollfd& poll, struct sockaddr_in addr);
 		
 		std::vector<Server*>							_cluster;
 		std::ifstream									_configFile;
@@ -64,6 +64,7 @@ class Config
 		std::map<int, std::deque<Response*> >			_responses;
 		std::map<int, Server*>							_serverSocketToServer;
 		std::map<int, Server*>							_clientSocketToServer;
+		std::map<int, sockaddr_in>						_clientSocketToServerAddr;
 		std::map<int, Request*>							_requests;
 		
 	public :

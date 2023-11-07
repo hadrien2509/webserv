@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:01 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/25 19:43:26 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/07 14:43:12 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void Request::setHeader(const std::string &request) {
     }
 }
 
-Request::Request(std::string str, int fd, Server *server) : _connection(fd)
+Request::Request(std::string str, int fd, Server *server, struct sockaddr_in addr) : _connection(fd), _addr(addr)
 {
 	_contentLength = 0;
 	_strRequest = str;
@@ -261,4 +261,9 @@ const std::string &Request::getHttpVersion() const
 std::string &Request::getQuerryString()
 {
 	return (_querryString);
+}
+
+const sockaddr_in& Request::getSockAddr() const
+{
+	return (_addr);
 }

@@ -6,13 +6,13 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/28 12:32:11 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/07 14:43:18 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Config.hpp"
 
-void Config::_readRequest(pollfd& poll) {
+void Config::_readRequest(pollfd& poll, struct sockaddr_in addr) {
     char buffer[1024];
     bool requestComplete = false;
 
@@ -34,7 +34,7 @@ void Config::_readRequest(pollfd& poll) {
 			try
 			{
 				Server *server = _clientSocketToServer[poll.fd];
-				_requests[poll.fd] = new Request(buffer, poll.fd, server);
+				_requests[poll.fd] = new Request(buffer, poll.fd, server, addr);
 			}
 			catch (std::exception &e)
 			{
@@ -101,7 +101,9 @@ void Config::_createPoll()
 
 void Config::_removePollfd(int fd)
 {
-	close(fd);
+	// close(fd);
+	_clientSocketToServer.erase(fd);
+	_clientSocketToServerAddr.erase(fd);
 	for (size_t i = 0; i < _pollsize; i++)
 	{
 		if (_poll[i].fd == fd)
@@ -159,6 +161,7 @@ void Config::run()
 			else if (_poll[i].revents & POLLHUP)
 			{
 				std::cerr << "POLLHUP" << std::endl;
+				close(_poll[i].fd);
 				_removePollfd(_poll[i].fd);
 			}
 			else if (_poll[i].revents & POLLIN)
@@ -170,12 +173,19 @@ void Config::run()
 					socklen_t client_addr_len = sizeof(client_addr);
 					int client_socket = accept(_poll[i].fd, (struct sockaddr *)&client_addr, &client_addr_len);
 					if (client_socket < 0)
-						throw std::runtime_error("Failed to grab connection. errno: ");
+						continue;
 					_clientSocketToServer[client_socket] = server;
+					sockaddr_in server_addr;
+					socklen_t server_addr_len = sizeof(server_addr);
+					getsockname(_poll[i].fd, (struct sockaddr *)&server_addr, &server_addr_len);
+					_clientSocketToServerAddr[client_socket] = server_addr;
 					_addPollfd(client_socket, POLLIN | POLLOUT);
 				}
 				else
-					_readRequest(_poll[i]);
+				{
+					sockaddr_in addr = _clientSocketToServerAddr[_poll[i].fd];
+					_readRequest(_poll[i], addr);
+				}
 			}
 			else if (_poll[i].revents & POLLOUT && _requests[_poll[i].fd])
 			{
