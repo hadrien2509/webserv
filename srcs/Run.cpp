@@ -15,11 +15,10 @@
 void Config::_readRequest(pollfd& poll, struct sockaddr_in addr) {
     char buffer[1024];
     bool requestComplete = false;
-
-    while (!requestComplete) {
-        int ret = recv(poll.fd, buffer, sizeof(buffer), 0);
-
-        if (ret == 0) {
+	memset(buffer, 0, 1024);
+	while (!requestComplete) {
+        int ret = recv(poll.fd, buffer, sizeof(buffer) -1, 0);
+		if (ret == 0) {
             std::cout << "Client disconnected" << std::endl;
             _removePollfd(poll.fd);
             return;
@@ -67,7 +66,11 @@ void Config::_sendResponse(int fd)
 	Response* response = _responses[fd].front();
 	if (response == NULL)
 		return;
-	std::cout << "Response : status <"<< response->getStatus() << ">" << std::endl;
+	if (response->getStatus() == "200 OK")
+		std::cout << GREEN;
+	else
+		std::cout << RED_BOLD;
+	std::cout << "Response : status <"<< response->getStatus() << ">" << DEFAULT << std::endl;
 	int ret = send(fd, response->get().c_str(), response->get().size(), 0);
 	if (ret == -1)
 	{
@@ -189,6 +192,7 @@ void Config::run()
 			}
 			else if (_poll[i].revents & POLLOUT && _requests[_poll[i].fd])
 			{
+				//std::cerr << "POLLOUT" << std::endl;
 				Server *server = _clientSocketToServer[_poll[i].fd];
 				Response *response;
 				Request *request = _requests[_poll[i].fd];
@@ -197,11 +201,17 @@ void Config::run()
 				{
 				/*
 				*/
+					if ( request->getMethod() == "GET")
+						std::cout << BLUE;
+					else
+						std::cout << PURPLE_BOLD;
 					std::cout << "\nRequest  : Method <" << request->getMethod() << "> ";
-					std::cout << "Path <" << request->getPath() << ">" << std::endl;
+					std::cout << "Path <" << request->getPath() << ">" << DEFAULT << std::endl;
 					Location *location = server->checkLocation(*request);
 					if (location)
+					{
 						response = location->checkRequest(*request);
+					}
 					else
 						response = server->checkRequest(*request);
 					delete _requests[_poll[i].fd];

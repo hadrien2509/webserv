@@ -215,7 +215,6 @@ Response* Location::checkRequest(Request& request)
 	std::string	fullPath = _rootPath + request.getPath();
     struct stat statbuf;
 
-	std::cout << _rootPath << std::endl;
 	if (!_checkMethod(request.getMethod()))
 	{
 		return (_errorResponse("403 Forbidden", 403, request));

@@ -36,6 +36,14 @@
 # include "Cgi.hpp"
 # include "Response.hpp"
 
+#define GREEN_BOLD "\033[1;32m"
+#define GREEN "\033[32m"
+#define DEFAULT "\033[0m"
+#define RED_BOLD "\033[1;31m"
+#define AMBER "\033[33m"
+#define PURPLE_BOLD "\033[1;35m"
+#define BLUE "\033[36m"
+
 class Config
 {
 	private:

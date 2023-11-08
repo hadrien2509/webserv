@@ -17,17 +17,12 @@ document.addEventListener('DOMContentLoaded', function() {
 			// Envoie une requête DELETE au serveur
 			$.ajax({
 				type: "DELETE",
-				url: "caca.py",
+				url: "delete.py",
 				data: { action: "delete", image: imageToDelete },
 				success: function (response) {
-					// Affiche la réponse du serveur
-					//alert(response);
-					// Recharge la page pour afficher les images mises à jour
-					//location.reload();
+					location.reload();
 				},
 				error: function (xhr, status, error) {
-					// Gère les erreurs
-					//alert("Erreur : " + status);
 					console.log('Erreur lors de l\'envoi du fichier. ');
 				}
 			});
@@ -37,27 +32,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	$(document).ready(function() {
 		$('#submit-button').click(function() {
-			var fileInput = $('#file')[0].files[0];
-			if (fileInput) {
+			var fileInput = $('#file')[0].files;
+			if (fileInput.length > 0) {
 				var formData = new FormData();
-				formData.append('file', fileInput);
+				for (var i = 0; i < fileInput.length; i++) {
+					formData.append('file[]', fileInput[i]);
+				}
 
 				$.ajax({
-					url: 'img/',
+					url: '/img',
 					type: 'POST',
 					data: formData,
 					processData: false,
 					contentType: false,
 					success: function(response) {
-						console.log('Fichier envoyé avec succès.');
+						console.log('Fichiers envoyés avec succès.');
 						location.reload();
 					},
 					error: function() {
-						console.log('Erreur lors de l\'envoi du fichier.');
+						console.log('Erreur lors de l\'envoi des fichiers.');
 					}
 				});
 			} else {
-				alert('Sélectionnez un fichier avant de soumettre.');
+				alert('Sélectionnez des fichiers avant de soumettre.');
 			}
 		});
 	});

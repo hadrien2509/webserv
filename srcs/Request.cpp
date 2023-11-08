@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:01 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/07 17:04:09 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/07 14:43:12 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,6 @@ Request::Request(std::string str, int fd, Server *server, struct sockaddr_in add
 		std::cout << "max body size : " << server->getMaxBodySize() << std::endl;
 		throw Request::BodyTooLargeException();
 	}
-
 }
 
 /*
@@ -151,16 +150,26 @@ Request &Request::operator=(const Request &rhs)
 void Request::appendRequest(char *str, int nb)
 {
 	_strRequest.append(str, nb);
+
 }
 
 void Request::setBody()
 {
-	if (_method != "GET")
+	if (_method != "GET" && _contentLength > 0 && _querryString.empty())
 	{
 		_querryString = _strRequest.substr(_strRequest.find("\r\n\r\n") + 4);
 		if (_querryString.size() > _contentLength)
 			_querryString.resize(_contentLength);
+		
+		int result = _querryString.size() - _contentLength;
+		std::cout << _querryString.size() << " " << _contentLength << " = " <<  result << std::endl;
+		//std::cout << "[" << _strRequest  << "]" << std::endl;
 	}
+	//std::cout << "headerSize :    " << _header.size() << std::endl;
+	//std::cout << "bodySize   : " << _querryString.size() << std::endl;
+//	std::cout << "totalsize  : " << _strRequest.size() << std::endl;
+	//std::cout << _header << std::endl;
+	
 }
 
 void Request::_extractData(const std::string &header)
