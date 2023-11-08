@@ -36,6 +36,7 @@
 # include "Cgi.hpp"
 # include "Response.hpp"
 
+#define BUFFER_SIZE 1024
 #define GREEN_BOLD "\033[1;32m"
 #define GREEN "\033[32m"
 #define DEFAULT "\033[0m"
@@ -48,6 +49,8 @@ class Config
 {
 	private:
 	
+		void 		_removePolls();
+		void 		_initializeFds();
 		void		_openConfig(const std::string &);
 		std::string	_ignoreComments(std::string line);
 
@@ -60,7 +63,7 @@ class Config
 		
 		void		_createPoll();
 		void		_addPollfd(int fd, short events);
-		void		_removePollfd(int fd);	
+		void		_endPoll(int fd);
 		void		_deleteResponse(int fd);
 		void		_readRequest(pollfd& poll, struct sockaddr_in addr);
 		

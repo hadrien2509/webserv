@@ -13,19 +13,19 @@
 #include "Config.hpp"
 
 void Config::_readRequest(pollfd& poll, struct sockaddr_in addr) {
-    char buffer[1024];
+    char buffer[BUFFER_SIZE];
     bool requestComplete = false;
-	memset(buffer, 0, 1024);
+	memset(buffer, 0, BUFFER_SIZE);
 	while (!requestComplete) {
-        int ret = recv(poll.fd, buffer, sizeof(buffer) -1, 0);
+        int ret = recv(poll.fd, buffer, BUFFER_SIZE -1, 0);
 		if (ret == 0) {
             std::cout << "Client disconnected" << std::endl;
-            _removePollfd(poll.fd);
+            _endPoll(poll.fd);
             return;
         }
         if (ret == -1) {
             std::cout << "Error : " << strerror(errno) << std::endl;
-            _removePollfd(poll.fd);
+            _endPoll(poll.fd);
             return;
         }
 		if (_requests[poll.fd] == NULL)
@@ -40,21 +40,15 @@ void Config::_readRequest(pollfd& poll, struct sockaddr_in addr) {
 				std::cerr << "Error : " << e.what() << std::endl;
 				_responses[poll.fd].push_back(new Response("413", "Payload Too Large", "HTTP/1.1"));
 				_sendResponse(poll.fd);
-				_removePollfd(poll.fd); // Pour éviter qu'il continue à envoyer
+				_endPoll(poll.fd); // Pour éviter qu'il continue à envoyer
 				return;
 			}
 		}
 		else
 			_requests[poll.fd]->appendRequest(buffer, ret);
-		// Append the received data to the request
-        //request.append(buffer, ret);
-        // Check if the request is complete
         size_t pos = _requests[poll.fd]->getStrRequest().find("\r\n\r\n");
         if (pos != std::string::npos) {
             requestComplete = true;
-            // Extract the headers and the body separately if needed
-            // Example: std::string headers = request.substr(0, pos + 4);
-            //           std::string body = request.substr(pos + 4);
         }
     }
 }
@@ -66,6 +60,8 @@ void Config::_sendResponse(int fd)
 	Response* response = _responses[fd].front();
 	if (response == NULL)
 		return;
+		/*
+		*/
 	if (response->getStatus() == "200 OK")
 		std::cout << GREEN;
 	else
@@ -75,7 +71,7 @@ void Config::_sendResponse(int fd)
 	if (ret == -1)
 	{
 		std::cout << "Error : " << strerror(errno) << std::endl;
-		_removePollfd(fd);
+		_endPoll(fd);
 		return;
 	}
 	_deleteResponse(fd);
@@ -85,11 +81,7 @@ void Config::_createPoll()
 {
 	for (size_t i = 0; i < _cluster.size(); i++)
 		_pollsize += _cluster[i]->getPollfds().size();
-
-	// Allocate the memory
 	_poll = new pollfd[_pollsize];
-
-	// Copy the data
 	size_t currentIndex = 0;
 	for (size_t i = 0; i < _cluster.size(); i++)
 	{
@@ -102,41 +94,51 @@ void Config::_createPoll()
 	}
 }
 
-void Config::_removePollfd(int fd)
+void Config::_endPoll(int fd)
 {
-	// close(fd);
 	_clientSocketToServer.erase(fd);
 	_clientSocketToServerAddr.erase(fd);
-	for (size_t i = 0; i < _pollsize; i++)
-	{
-		if (_poll[i].fd == fd)
-		{
-			for (size_t j = i; j < _pollsize - 1; j++)
-			{
-				_poll[j] = _poll[j + 1];
-			}
-			_pollsize--;
+	close(fd);
 
-			struct pollfd *newPoll = new struct pollfd[_pollsize];
-			for (size_t j = 0; j < _pollsize; j++)
-			{
-				newPoll[j] = _poll[j];
-			}
-			delete[] _poll;
-			_poll = newPoll;
-			break;
-		}
+	if (_requests[fd])
+	{
+		delete _requests[fd];
+		_requests[fd] = NULL;
 	}
+	if (_responses[fd].empty())
+		_responses.erase(fd);
+	fd = -1;
 }
+void Config::_removePolls()
+{
+    size_t newPollSize = 0;
+    for (size_t i = 0; i < _pollsize; i++)
+    {
+        if (_poll[i].fd != -1)
+        {
+            _poll[newPollSize] = _poll[i];
+            newPollSize++;
+        }
+		else
+			std::cout << RED_BOLD << "Polls removed" << DEFAULT << std::endl;
+    }
+    if (newPollSize < _pollsize)
+    {
+        struct pollfd *newPoll = new struct pollfd[newPollSize];
+        for (size_t i = 0; i < newPollSize; i++)
+            newPoll[i] = _poll[i];
+        delete[] _poll;
+        _poll = newPoll;
+        _pollsize = newPollSize;
+    }
+}
+
 
 void Config::_addPollfd(int fd, short events)
 {
 	for (size_t i = 0; i < _pollsize; i++)
-	{
 		if (_poll[i].fd == fd)
 			return;
-	}
-
 	struct pollfd *newPoll = new struct pollfd[_pollsize + 1];
 	for (size_t i = 0; i < _pollsize; i++)
 		newPoll[i] = _poll[i];
@@ -148,7 +150,7 @@ void Config::_addPollfd(int fd, short events)
 }
 
 void Config::run()
-{
+{ 
 	_createPoll();
 	while (1)
 	{
@@ -159,13 +161,12 @@ void Config::run()
 			if (_poll[i].revents & POLLERR)
 			{
 				std::cerr << "POLL QUIT" << std::endl;
-				_removePollfd(_poll[i].fd);
+				_endPoll(_poll[i].fd);
 			}
 			else if (_poll[i].revents & POLLHUP)
 			{
+				_endPoll(_poll[i].fd);
 				std::cerr << "POLLHUP" << std::endl;
-				close(_poll[i].fd);
-				_removePollfd(_poll[i].fd);
 			}
 			else if (_poll[i].revents & POLLIN)
 			{
@@ -192,7 +193,6 @@ void Config::run()
 			}
 			else if (_poll[i].revents & POLLOUT && _requests[_poll[i].fd])
 			{
-				//std::cerr << "POLLOUT" << std::endl;
 				Server *server = _clientSocketToServer[_poll[i].fd];
 				Response *response;
 				Request *request = _requests[_poll[i].fd];
@@ -209,9 +209,7 @@ void Config::run()
 					std::cout << "Path <" << request->getPath() << ">" << DEFAULT << std::endl;
 					Location *location = server->checkLocation(*request);
 					if (location)
-					{
 						response = location->checkRequest(*request);
-					}
 					else
 						response = server->checkRequest(*request);
 					delete _requests[_poll[i].fd];
@@ -221,5 +219,6 @@ void Config::run()
 				}
 			}
 		}
+		_removePolls();
 	}
 }

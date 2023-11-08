@@ -81,12 +81,9 @@ bool Request::createFileFromData(const std::string &folderPath)
 			std::cerr << "Failed to create the file." << std::endl;
 			return false;
 		}
-
 		outputFile.write(fileContent.c_str(), fileContent.size());
 		outputFile.close();
-
 		std::cerr << "File '" << filename << "' created in '" << folderPath << "'." << std::endl;
-
         startPos = endPos;
     }
     return true;
@@ -128,8 +125,6 @@ Request::Request(std::string str, int fd, Server *server, struct sockaddr_in add
 	}
 }
 
-/*
-*/
 Request::Request(const Request &src) : _connection(src._connection)
 {
 	*this = src;
@@ -150,7 +145,6 @@ Request &Request::operator=(const Request &rhs)
 void Request::appendRequest(char *str, int nb)
 {
 	_strRequest.append(str, nb);
-
 }
 
 void Request::setBody()
@@ -160,16 +154,7 @@ void Request::setBody()
 		_querryString = _strRequest.substr(_strRequest.find("\r\n\r\n") + 4);
 		if (_querryString.size() > _contentLength)
 			_querryString.resize(_contentLength);
-		
-		int result = _querryString.size() - _contentLength;
-		std::cout << _querryString.size() << " " << _contentLength << " = " <<  result << std::endl;
-		//std::cout << "[" << _strRequest  << "]" << std::endl;
 	}
-	//std::cout << "headerSize :    " << _header.size() << std::endl;
-	//std::cout << "bodySize   : " << _querryString.size() << std::endl;
-//	std::cout << "totalsize  : " << _strRequest.size() << std::endl;
-	//std::cout << _header << std::endl;
-	
 }
 
 void Request::_extractData(const std::string &header)
