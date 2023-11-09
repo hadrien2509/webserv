@@ -5,8 +5,10 @@ function getHeure() {
 
     xhr.onload = function() {
 		if (xhr.status == 200) {
+            // console.log(xhr.responseText);
 			var response = JSON.parse(xhr.responseText);
             document.getElementById('heure').innerHTML = response.heure;
+            // document.getElementById('heure').innerHTML = xhr.response;
         }
     };
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:25 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/07 17:04:29 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/09 18:31:12 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ public:
 	const std::string &getHeader() const;
 	const std::string &getHttpVersion() const;
 	const std::string &getStrRequest() const;
+	const std::string &getServerName() const;
 	const sockaddr_in &getSockAddr() const;
 	void appendRequest(char *str, int nb);
 	std::string &getQuerryString();

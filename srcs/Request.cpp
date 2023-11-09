@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:01 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/07 14:43:12 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/09 18:33:39 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,4 +261,9 @@ std::string &Request::getQuerryString()
 const sockaddr_in& Request::getSockAddr() const
 {
 	return (_addr);
+}
+
+const std::string &Request::getServerName() const
+{
+	return (_serverName);
 }
