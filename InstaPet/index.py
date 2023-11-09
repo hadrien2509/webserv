@@ -18,7 +18,7 @@ print("""
 			</div>
 		</label>
 		<input multiple accept="image/png, image/jpeg" class="custom-file-input" id="file" type="file">
-		<button id="submit-button" type="button">envoyer la photo</button>
+		<button id="submit-button" type="button">envoyer les photos</button>
 	</div>
 	</form>
 """)

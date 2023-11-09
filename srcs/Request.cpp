@@ -112,10 +112,10 @@ void Request::setHeader(const std::string &request) {
     }
 }
 
-Request::Request(std::string str, int fd, Server *server, struct sockaddr_in addr) : _connection(fd), _addr(addr)
+Request::Request(char* str, int nb, int fd, Server *server, struct sockaddr_in addr) : _connection(fd), _addr(addr)
 {
 	_contentLength = 0;
-	_strRequest = str;
+	appendRequest(str, nb);
 	_parseRequest(_strRequest);
 	_serverName = server->getServerName();
 	if (server->getMaxBodySize() < _contentLength)
@@ -149,7 +149,7 @@ void Request::appendRequest(char *str, int nb)
 
 void Request::setBody()
 {
-	if (_method != "GET" && _contentLength > 0 && _querryString.empty())
+	if (_contentLength > 0 && _strRequest.size() > _contentLength && _querryString.empty())
 	{
 		_querryString = _strRequest.substr(_strRequest.find("\r\n\r\n") + 4);
 		if (_querryString.size() > _contentLength)

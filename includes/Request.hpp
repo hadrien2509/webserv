@@ -41,7 +41,7 @@ private:
 	void _extractBoundary(const std::string& httpRequest);
 
 public:
-	Request(std::string str, int fd, Server *, struct sockaddr_in addr);
+	Request(char *str, int nb, int fd, Server *, struct sockaddr_in addr);
 	Request(const Request &);
 	~Request();
 	Request &operator=(const Request &);

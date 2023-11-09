@@ -33,7 +33,7 @@ void Config::_readRequest(pollfd& poll, struct sockaddr_in addr) {
 			try
 			{
 				Server *server = _clientSocketToServer[poll.fd];
-				_requests[poll.fd] = new Request(buffer, poll.fd, server, addr);
+				_requests[poll.fd] = new Request(buffer, ret, poll.fd, server, addr);
 			}
 			catch (std::exception &e)
 			{
