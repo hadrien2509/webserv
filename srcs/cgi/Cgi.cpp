@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/11/07 16:25:17 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/09 18:03:46 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,9 @@ void Cgi::_ressourceToEnv()
 	_env["CONTENT_LENGTH"] = ss.str();
 	_env["SERVER_NAME"] = "localhost"; // temporary hardcoded
 
-	_env["SERVER_PORT"] = std::to_string(_port); //c++11
+	std::stringstream port;
+	port << _port;
+	_env["SERVER_PORT"] = port.str();
 
 	_env["SCRIPT_NAME"] = _path;
 	_env["PATH_INFO"] = _path;
