@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/11/09 19:09:03 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/10 17:07:24 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,8 +162,8 @@ const std::string& Cgi::run()
 		throw CgiPipeException();
 	}
 
-	fdInSave = dup(STDIN_FILENO); // CPT 
-	fdOutSave = dup(STDOUT_FILENO); // CPT
+	fdInSave = dup(STDIN_FILENO);
+	fdOutSave = dup(STDOUT_FILENO);
 
 	pid = fork();
 	if (pid == -1)
@@ -172,6 +172,8 @@ const std::string& Cgi::run()
 		close(fdIn[1]);
 		close(fdOut[0]);
 		close(fdOut[1]);
+		close(fdInSave);
+		close(fdOutSave);
 		for (int i = 0; env[i] != NULL; i++)
         	delete[] env[i];
 		delete[] env;
@@ -192,7 +194,6 @@ const std::string& Cgi::run()
 		for (int i = 0; env[i] != NULL; i++)
         	delete[] env[i];
 		delete[] env;
-		// throw CgiException();
 		std::exit(1);
 	}
 	else
@@ -253,5 +254,7 @@ const std::string& Cgi::run()
 	for (int i = 0; env[i] != NULL; i++)
         delete[] env[i];
     delete[] env;
+	close(fdInSave);
+	close(fdOutSave);
 	return (_fromOut);
 }
