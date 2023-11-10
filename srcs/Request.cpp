@@ -16,7 +16,9 @@
 
 bool fileExists(const std::string &filePath) {
     std::ifstream file(filePath.c_str());
-    return file.good();
+    bool exists = file.good();
+    file.close();
+    return exists;
 }
 
 bool Request::createFileFromData(const std::string &folderPath)

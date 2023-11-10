@@ -229,6 +229,7 @@ Response* Location::checkRequest(Request& request)
 			return (new Response("200 OK", "File Upload", request.getHttpVersion()));
 		return (_errorResponse("500 Internal Server Error", 500, request));
 	}
+	
 	for (size_t i = 0; i < fullPath.size(); i++)
 	{
 		if (fullPath[i] == '%' && fullPath[i + 1] == '2' && fullPath[i + 2] == '0')

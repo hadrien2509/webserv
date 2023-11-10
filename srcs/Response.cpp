@@ -70,7 +70,7 @@ Response::Response(std::string code, Request& req, std::map<std::string, std::st
 {	
 	std::ifstream file(req.getPath().c_str()); // Open the file for reading
 	if (!file.is_open())
-		throw std::runtime_error("Could not open file : " + req.getPath());//std::cerr << "can't open file : " << req.getPath() << std::endl;//throw std::runtime_error("Could not open file");
+		throw std::runtime_error("Could not open file : " + req.getPath());
 	std::stringstream ss1, ss2;
 	ss1 << file.rdbuf(); // Read the file
 	file.close(); // Close the file
