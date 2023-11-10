@@ -65,6 +65,7 @@ class Server
 		void	addCgiExtension(std::string extension);
 		void	addCgiPath(std::string path);
 		void	addPort(int port);
+		void	addAllowMethods(std::string);
 		void	addLocation(Location *location);
 		void	setTimeout(size_t timeout);
 		void	setRedirectURL(std::string url, int code);

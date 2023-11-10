@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/07 14:43:46 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/10 14:32:12 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ class Config
 		void		_parseLocation(std::istringstream &, Server *);
 		void		_parseServerName(std::istringstream &, Server *);
 		void		_parseListen(std::istringstream &, Server *);
-		void		_parseAllowMethods(std::istringstream &ss, Location *location);
 		std::string	_getRessourceType(std::istringstream &);
 		
 		void		_createPoll();
@@ -100,6 +99,20 @@ class Config
 
   As we embrace the artistry that C++ templates offer, we become artisans of the craft, our hands guided by the principles of generic design and our minds opened to the endless possibilities of elegant problem-solving. Here's to the beauty, simplicity, and power that templates bring to our lines of code—turning them from instructions to art. 🌟💖
 ***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+
+template<typename T>
+void _parseAllowMethods(std::istringstream &ss, T *server)
+{
+	std::string method;
+	while (ss >> method)
+	{
+		if (ss.fail())
+			throw std::runtime_error("Invalid method");
+		if (method == "GET" || method == "POST" || method == "DELETE")
+			server->addAllowMethods(method);
+		//std::cout << "Method : " << method << std::endl;
+	}
+}
 
 template<typename T>
 void	_parseRedirect(std::istringstream &ss, T* server)

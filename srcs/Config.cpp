@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/06 13:19:22 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/10 13:57:50 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ void Config::_parseServer(std::istringstream &ssold)
 			_parseCgiPath(ss, server);
 		else if (type == "cgi_ext")
 			_parseCgiExt(ss, server);
+		else if (type == "allow_methods")
+			_parseAllowMethods(ss, server);
 		else if (type == "autoindex")
 			_parseAutoIndex(ss, server);
 		else if (type == "client_max_body_size")
@@ -156,19 +158,6 @@ void Config::_parseLocation(std::istringstream &ss, Server *server)
 			return ;
 		else
 			throw std::runtime_error("Unknown type in configuration file");
-	}
-}
-
-void Config::_parseAllowMethods(std::istringstream &ss, Location *location)
-{
-	std::string method;
-	while (ss >> method)
-	{
-		if (ss.fail())
-			throw std::runtime_error("Invalid method");
-		if (method == "GET" || method == "POST" || method == "DELETE")
-			location->addAllowMethods(method);
-		//std::cout << "Method : " << method << std::endl;
 	}
 }
 
