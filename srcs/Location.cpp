@@ -207,6 +207,9 @@ Response* Location::_errorResponse(const std::string& error, int code, Request& 
 
 Response* Location::checkRequest(Request& request)
 {
+	try
+	{
+
 	if (_redirect)
 	{
 		request.setPath(_redirectURL);
@@ -238,6 +241,7 @@ Response* Location::checkRequest(Request& request)
 	stat(fullPath.c_str(), &statbuf);
 	if (access(fullPath.c_str(),F_OK))
 	{
+		std::cout << "full path : "<< fullPath << std::endl;
 		return (_errorResponse("404 Not Found", 404, request));
 	}
 	if (access(fullPath.c_str(),R_OK))
@@ -305,4 +309,9 @@ Response* Location::checkRequest(Request& request)
 		}
 	}
 	return NULL;
+	}catch (const std::exception &e)
+	{
+		std::cerr << e.what() << '\n';
+		return (_errorResponse("500 Internal Server Error", 500, request));
+	}
 }

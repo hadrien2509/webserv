@@ -22,18 +22,18 @@ bool fileExists(const std::string &filePath) {
 bool Request::createFileFromData(const std::string &folderPath)
 {
     std::cout << "start downloading..." << std::endl;
-	size_t startPos = 0;
-	size_t endPos = 0;
+    size_t startPos = 0;
+    size_t endPos = 0;
     while ((startPos = _querryString.find(_boundary, startPos)) != std::string::npos) {
-		startPos += _boundary.length();
-		endPos = _querryString.find(_boundary, startPos);
-		if (endPos == std::string::npos) {
-			if (startPos + 4 >= _contentLength)
-				return true;
-			std::cerr << "End delimiter found." << std::endl;
-			return false;
-		}
-		size_t filenamePos = _querryString.find("filename=\"", startPos);
+        startPos += _boundary.length();
+        endPos = _querryString.find(_boundary, startPos);
+        if (endPos == std::string::npos) {
+            if (startPos + 4 >= _contentLength)
+                return true;
+            std::cerr << "End delimiter found." << std::endl;
+            return false;
+        }
+        size_t filenamePos = _querryString.find("filename=\"", startPos);
         if (filenamePos == std::string::npos) {
             std::cerr << "Filename not found." << std::endl;
             return false;
@@ -49,41 +49,41 @@ bool Request::createFileFromData(const std::string &folderPath)
         std::string filename = _querryString.substr(filenamePos, filenameEnd - filenamePos);
 
         if (filename.empty()) 
-			filename = "untitled";
-		std::string filePath = folderPath + "/" + filename;
-		int fileIndex = 0;
-		std::string baseFilename = filename.substr(0, filename.find_last_of('.'));
-		size_t lastDotPos = filename.find_last_of('.');
-		std::string extension = "";
-		if (lastDotPos != std::string::npos)
-			extension = filename.substr(lastDotPos);
-		
-		while (fileExists(filePath)) {
-			// File with the same name already exists, append a number in parentheses
-			fileIndex++;
-			std::ostringstream oss;
-			oss << " (" << fileIndex << ")";
-			filename = baseFilename + oss.str() + extension;
-			filePath = folderPath + "/" + filename;
-		}
+            filename = "untitled";
+        std::string filePath = folderPath + "/" + filename;
+        int fileIndex = 0;
+        std::string baseFilename = filename.substr(0, filename.find_last_of('.'));
+        size_t lastDotPos = filename.find_last_of('.');
+        std::string extension = "";
+        if (lastDotPos != std::string::npos)
+            extension = filename.substr(lastDotPos);
+        
+        while (fileExists(filePath)) {
+            // File with the same name already exists, append a number in parentheses
+            fileIndex++;
+            std::ostringstream oss;
+            oss << " (" << fileIndex << ")";
+            filename = baseFilename + oss.str() + extension;
+            filePath = folderPath + "/" + filename;
+        }
 
-		size_t contentPos = _querryString.find("\r\n\r\n", startPos);
-		if (contentPos == std::string::npos) {
-			std::cerr << "File content not found." << std::endl;
-			return false;
-		}
+        size_t contentPos = _querryString.find("\r\n\r\n", startPos);
+        if (contentPos == std::string::npos) {
+            std::cerr << "File content not found." << std::endl;
+            return false;
+        }
 
-		contentPos += 4; // Move past the newline characters \r\n\r\n
-		std::string fileContent = _querryString.substr(contentPos, endPos - contentPos);
+        contentPos += 4; // Move past the newline characters \r\n\r\n
+        std::string fileContent = _querryString.substr(contentPos, endPos - contentPos);
 
-		std::ofstream outputFile(filePath.c_str(), std::ios::out | std::ios::binary);
-		if (!outputFile) {
-			std::cerr << "Failed to create the file." << std::endl;
-			return false;
-		}
-		outputFile.write(fileContent.c_str(), fileContent.size());
-		outputFile.close();
-		std::cerr << "File '" << filename << "' created in '" << folderPath << "'." << std::endl;
+        std::ofstream outputFile(filePath.c_str(), std::ios::out | std::ios::binary);
+        if (!outputFile) {
+            std::cerr << "Failed to create the file." << std::endl;
+            return false;
+        }
+        outputFile.write(fileContent.c_str(), fileContent.size());
+        outputFile.close(); // Fermeture du fichier après écriture
+        std::cerr << "File '" << filename << "' created in '" << folderPath << "'." << std::endl;
         startPos = endPos;
     }
     return true;

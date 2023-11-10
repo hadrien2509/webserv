@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "Config.hpp"
+#include <unistd.h>
+#include <fcntl.h>
 
 void Config::_readRequest(pollfd& poll, struct sockaddr_in addr) {
     char buffer[BUFFER_SIZE];
@@ -156,6 +158,7 @@ void Config::run()
 	{
 		if ((poll(_poll, _pollsize, -1)) <= 0)
 			continue;
+		
 		for (size_t i = 0; i < _pollsize; i++)
 		{
 			if (_poll[i].revents & POLLERR)
@@ -176,6 +179,7 @@ void Config::run()
 					sockaddr_in client_addr;
 					socklen_t client_addr_len = sizeof(client_addr);
 					int client_socket = accept(_poll[i].fd, (struct sockaddr *)&client_addr, &client_addr_len);
+					usleep(2500);
 					if (client_socket < 0)
 						continue;
 					_clientSocketToServer[client_socket] = server;

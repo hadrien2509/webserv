@@ -307,9 +307,13 @@ const int& Server::getRedirectCode() const
 
 std::string autoIndexGenerator(const std::string& root, const std::string& path)
 {
-	std::string html = "<html><head><title>Index of " + path + "</title></head><body><h1>Index of " + path + "</h1><hr><pre>";
-	struct dirent *dir;
+//	std::string path = "downloads";
+//	(void)root;
 	std::string	fullPath = root + path;
+	std::string newPath = fullPath;
+	newPath.erase(0, newPath.find("/") + 1);
+	std::string html = "<html><head><title>Index of " + newPath + "</title></head><body><h1>Index of " + newPath + "</h1><hr><pre>";
+	struct dirent *dir;
 	DIR *d = opendir(fullPath.c_str());
 	if (d)
 	{
@@ -317,9 +321,9 @@ std::string autoIndexGenerator(const std::string& root, const std::string& path)
 		{
 			std::string name = dir->d_name;
 			if (path[path.length() - 1] == '/')
-				html += "<a href=\"" + path + name + "\">" + name + "</a><br>";
+				html += "<a href=\"" + newPath + name + "\">" + name + "</a><br>";
 			else
-				html += "<a href=\"" + path + "/" + name + "\">" + name + "</a><br>";
+				html += "<a href=\"" + newPath + "/" + name + "\">" + name + "</a><br>";
 		}
 		closedir(d);
 	}
@@ -352,14 +356,19 @@ Location* Server::checkLocation(Request& request)
 			location = loc;
 		}
     }
-    if (location && bestMatch.length() > 1 && bestMatch.compare(request.getPath()) != 0)
-        request.setPath(request.getPath().substr(bestMatch.length()));
+	std::cout << "path : " << request.getPath() << std::endl;
+   if (location && bestMatch.length() > 1 )//&& bestMatch.compare(request.getPath()) != 0)
+   {
+        request.setPath(request.getPath().substr(request.getPath().find(bestMatch) + bestMatch.length()));
+		//request.setPath(location->getRootPath() + "/" + request.getPath());
+		std::cout << "apres : " << request.getPath() << std::endl;
+   }
     return location;
 }
 
 Response* Server::_errorResponse(const std::string& error, int code, Request& request)
 {
-	if (_errorPage.find(code) != _errorPage.end() && (access((_rootPath + "/" + _errorPage[code]).c_str(), F_OK) == 0))
+	if (_errorPage.find(code) != _errorPage.end() && (access((_rootPath + _errorPage[code]).c_str(), F_OK) == 0))
 	{
 		request.setPath(_rootPath + "/" + _errorPage[code]);
 		return (new Response(error, request, _mimeTypes));
@@ -375,7 +384,7 @@ Response* Server::checkRequest(Request& request)
 		request.setPath(_redirectURL);
 		_rootPath = "";
 	}
-	std::string	fullPath = _rootPath + request.getPath();
+	std::string	fullPath = request.getPath();
     struct stat statbuf;
 
 	if (!_checkMethod(request.getMethod()))

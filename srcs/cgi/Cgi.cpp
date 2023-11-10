@@ -192,7 +192,7 @@ const std::string& Cgi::run()
         	delete[] env[i];
 		delete[] env;
 		// throw CgiException();
-		exit(1);
+		std::exit(1);
 	}
 	else
 	{
@@ -211,7 +211,7 @@ const std::string& Cgi::run()
 			{
 				usleep(1000 * _timeOut);
 				kill(pid, SIGTERM);
-				exit(2);
+				std::exit(2);
 			}
 		}
 		close(fdIn[0]);
