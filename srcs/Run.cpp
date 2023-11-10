@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/10 14:16:11 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/10 14:37:07 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void Config::_readRequest(pollfd& poll, struct sockaddr_in addr) {
             return;
         }
         if (ret == -1) {
-            std::cout << "Error : " << strerror(errno) << std::endl;
             _endPoll(poll.fd);
             return;
         }

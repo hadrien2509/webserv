@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/10 14:26:51 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/10 14:36:51 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,11 +157,11 @@ void	Server::addPort(int port)
 	sockaddr.sin_addr.s_addr = INADDR_ANY;
 	sockaddr.sin_port = htons(port); // htons is necessary to convert a number to network byte order
 	if (bind(sockfd, (struct sockaddr *)&sockaddr, sizeof(sockaddr)) < 0)
-		throw std::runtime_error("Failed to bind to port. errno: ");
+		throw std::runtime_error("Failed to bind to port.");
 
 	// Start listening. Hold at most 50 connections in the queue
 	if (listen(sockfd, 200) < 0)
-		throw std::runtime_error("Failed to listen on socket. errno: ");
+		throw std::runtime_error("Failed to listen on socket.");
 	
 	struct pollfd poll_fd;
 	poll_fd.fd = sockfd;
