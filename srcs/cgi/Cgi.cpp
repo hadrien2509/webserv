@@ -129,13 +129,7 @@ const std::string& Cgi::run()
 		
 	_ressourceToEnv();
 	char **env = _mapToEnv(_env);
-
-	std::cout << "RUN" << std::endl;
 	
-	std::cerr << "CPT ICI" << std::endl;
-	fdInSave = dup(STDIN_FILENO); // CPT 
-	fdOutSave = dup(STDOUT_FILENO); // CPT
-
 	std::cout << "ENDRUN" << std::endl;
 	if (!arg[0] || std::string(arg[0]).size() == 0)
 	{
@@ -167,6 +161,9 @@ const std::string& Cgi::run()
 		delete[] env;
 		throw CgiPipeException();
 	}
+
+	fdInSave = dup(STDIN_FILENO); // CPT 
+	fdOutSave = dup(STDOUT_FILENO); // CPT
 
 	pid = fork();
 	if (pid == -1)
