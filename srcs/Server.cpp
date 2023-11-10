@@ -361,13 +361,8 @@ Location* Server::checkLocation(Request& request)
 			location = loc;
 		}
     }
-	std::cout << "path : " << request.getPath() << std::endl;
-   if (location && bestMatch.length() > 1 )//&& bestMatch.compare(request.getPath()) != 0)
-   {
+   if (location && bestMatch.length() > 1 && (request.getPath().find(bestMatch) == 0))
         request.setPath(request.getPath().substr(request.getPath().find(bestMatch) + bestMatch.length()));
-		//request.setPath(location->getRootPath() + "/" + request.getPath());
-		std::cout << "apres : " << request.getPath() << std::endl;
-   }
     return location;
 }
 
