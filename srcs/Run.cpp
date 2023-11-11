@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/11 19:27:49 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/11 20:15:31 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,9 @@ void Config::_sendResponse(int fd)
 	else
 		std::cout << RED_BOLD;
 	std::cout << "Response : status <"<< response->getStatus() << ">" << DEFAULT << std::endl;
+	// usleep(125000);
 	int ret = send(fd, response->get().c_str(), response->get().size(), 0);
+	// usleep(1250000);
 	if (ret == -1)
 	{
 		_endPoll(fd);
@@ -148,7 +150,7 @@ void Config::_addPollfd(int fd, short events)
 }
 
 void Config::run()
-{ 
+{
 	_createPoll();
 	while (1)
 	{
