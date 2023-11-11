@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:21:31 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/07 17:02:27 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/11 19:21:57 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,11 +266,15 @@ Response* Location::checkRequest(Request& request)
 				{
 					return (_errorResponse("500 Internal Server Error", 500, request));
 				}
-				catch(const std::exception& e)
+				catch(const Cgi::CgiNotCgiException& e)
 				{
 					if (_redirect)
 						return (redirectHandler(this, request));
 					return (new Response("200 OK", request, _mimeTypes));
+				}
+				catch(const std::exception& e)
+				{
+					std::cerr << e.what() << '\n';
 				}
 			}
 			else if (errno == EACCES)
@@ -302,11 +306,15 @@ Response* Location::checkRequest(Request& request)
 		{
 			return (_errorResponse("500 Internal Server Error", 500, request));
 		}
-		catch (const std::exception &e)
+		catch(const Cgi::CgiNotCgiException& e)
 		{
 			if (_redirect)
 				return (redirectHandler(this, request));
 			return (new Response("200 OK", request, _mimeTypes));
+		}
+		catch (const std::exception &e)
+		{
+			std::cerr << e.what() << '\n';
 		}
 	}
 	return NULL;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/10 14:37:07 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/11 19:27:49 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,6 @@ void Config::_sendResponse(int fd)
 	Response* response = _responses[fd].front();
 	if (response == NULL)
 		return;
-		/*
-		*/
 	if (response->getStatus() == "200 OK")
 		std::cout << GREEN;
 	else
@@ -177,7 +175,6 @@ void Config::run()
 					sockaddr_in client_addr;
 					socklen_t client_addr_len = sizeof(client_addr);
 					int client_socket = accept(_poll[i].fd, (struct sockaddr *)&client_addr, &client_addr_len);
-					usleep(2500);
 					if (client_socket < 0)
 						continue;
 					_clientSocketToServer[client_socket] = server;
@@ -201,8 +198,6 @@ void Config::run()
 				request->setBody();
 				if (request->isComplete())
 				{
-				/*
-				*/
 					if ( request->getMethod() == "GET")
 						std::cout << BLUE;
 					else
