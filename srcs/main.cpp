@@ -30,6 +30,7 @@ int main(int ac, char **av)
 	std::string configPath;
 	
 	displayName();
+	signal(SIGPIPE, SIG_IGN);
 	switch (ac)
 	{
 		case 1:
