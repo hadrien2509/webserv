@@ -85,6 +85,7 @@ void Cgi::_ressourceToEnv()
 	std::string realPath(_path);
 	realPath.erase(realPath.find_last_of('/'), realPath.size());
 	
+
 	_env["REQUEST_METHOD"] = _method;
 	_env["PWD"] = realPath;
 	if (_method != "POST")

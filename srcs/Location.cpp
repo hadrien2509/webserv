@@ -262,6 +262,7 @@ Response* Location::checkRequest(Request& request)
 					}
 					catch(const Cgi::CgiInternalException& e)
 					{
+						std::cerr << e.what() << '\n';
 						return (_errorResponse("500 Internal Server Error", 500, request));
 					}
 					catch(const Cgi::CgiNotCgiException& e)
@@ -302,9 +303,16 @@ Response* Location::checkRequest(Request& request)
 			}
 			catch(const Cgi::CgiInternalException& e)
 			{
+				std::cerr << e.what() << '\n';
 				return (_errorResponse("500 Internal Server Error", 500, request));
 			}
 			catch(const Cgi::CgiNotCgiException& e)
+			{
+				if (_redirect)
+					return (redirectHandler(this, request));
+				return (new Response("200 OK", request, _mimeTypes));
+			}
+			catch(const Cgi::CgiEnvExtException& e)
 			{
 				if (_redirect)
 					return (redirectHandler(this, request));

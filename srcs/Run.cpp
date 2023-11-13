@@ -177,7 +177,7 @@ void Config::run()
 			}
 			else if (_poll[i].revents & POLLHUP)
 			{
-				std::cerr << "POLLHUP" << std::endl;
+				//std::cerr << "POLLHUP" << std::endl;
 				_endPoll(fd);
 			}
 			else if (_poll[i].revents & POLLIN)
@@ -188,6 +188,7 @@ void Config::run()
 					sockaddr_in client_addr;
 					socklen_t client_addr_len = sizeof(client_addr);
 					int client_socket = accept(fd, (struct sockaddr *)&client_addr, &client_addr_len);
+					usleep(2500);
 					if (client_socket < 0)
 						continue;
 					_clientSocketToServer[client_socket] = server;
