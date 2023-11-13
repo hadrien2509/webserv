@@ -161,16 +161,6 @@ void Config::_parseLocation(std::istringstream &ss, Server *server)
 	}
 }
 
-void Config::_deleteResponse(int fd)
-{
-	if (_responses.find(fd) != _responses.end())
-	{
-		delete _responses[fd].front();
-		_responses[fd].pop_front();
-		if (_responses[fd].empty())
-			_responses.erase(fd);
-	}
-}
 
 void Config::_openConfig(const std::string &input)
 {
@@ -211,14 +201,6 @@ Config::~Config()
 		_configFile.close();
 	for (std::vector<Server*>::iterator it = _cluster.begin(); it != _cluster.end(); it++)
 		delete (*it);
-	for (std::map<int, std::deque<Response*> >::iterator it = _responses.begin(); it != _responses.end(); it++)
-	{
-		while (!it->second.empty())
-		{
-			delete it->second.front();
-			it->second.pop_front();
-		}
-	}
 	if (_poll)
 		delete [] _poll;
 }

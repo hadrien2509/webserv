@@ -209,115 +209,113 @@ Response* Location::checkRequest(Request& request)
 {
 	try
 	{
-
-	if (_redirect)
-	{
-		request.setPath(_redirectURL);
-		_rootPath = "";
-	}
-	std::string	fullPath = _rootPath + request.getPath();
-    struct stat statbuf;
-
-	if (!_checkMethod(request.getMethod()))
-	{
-		return (_errorResponse("403 Forbidden", 403, request));
-	}
-
-	if (request.getHeader().find("Content-Type: multipart/form-data") != std::string::npos)
-	{
-		if (request.createFileFromData(_rootPath + request.getPath()))
-			return (new Response("200 OK", "File Upload", request.getHttpVersion()));
-		return (_errorResponse("500 Internal Server Error", 500, request));
-	}
-	
-	for (size_t i = 0; i < fullPath.size(); i++)
-	{
-		if (fullPath[i] == '%' && fullPath[i + 1] == '2' && fullPath[i + 2] == '0')
+		if (_redirect)
 		{
-			fullPath[i] = ' ';
-			fullPath.erase(i + 1, 2);
+			request.setPath(_redirectURL);
+			_rootPath = "";
 		}
-	}
+		std::string	fullPath = _rootPath + request.getPath();
+		struct stat statbuf;
 
-	stat(fullPath.c_str(), &statbuf);
-	if (access(fullPath.c_str(),F_OK))
-	{
-		std::cout << "full path : "<< fullPath << std::endl;
-		return (_errorResponse("404 Not Found", 404, request));
-	}
-	if (access(fullPath.c_str(),R_OK))
-	{
-		return (_errorResponse("403 Forbidden", 403, request));
-	}
-	if (statbuf.st_mode & S_IFDIR)
-	{
-		for (std::vector<std::string>::const_iterator it = _index.begin(); it != _index.end(); it++)
+		if (!_checkMethod(request.getMethod()))
 		{
-			fullPath = _rootPath + request.getPath() + (*it);
-			if (access(fullPath.c_str(), F_OK) == 0)
+			return (_errorResponse("403 Forbidden", 403, request));
+		}
+
+		if (request.getHeader().find("Content-Type: multipart/form-data") != std::string::npos)
+		{
+			if (request.createFileFromData(_rootPath + request.getPath()))
+				return (new Response("200 OK", "File Upload", request.getHttpVersion()));
+			return (_errorResponse("500 Internal Server Error", 500, request));
+		}
+		
+		for (size_t i = 0; i < fullPath.size(); i++)
+		{
+			if (fullPath[i] == '%' && fullPath[i + 1] == '2' && fullPath[i + 2] == '0')
 			{
-				request.setPath(_rootPath + request.getPath() + (*it));
-				try
+				fullPath[i] = ' ';
+				fullPath.erase(i + 1, 2);
+			}
+		}
+
+		stat(fullPath.c_str(), &statbuf);
+		if (access(fullPath.c_str(),F_OK))
+		{
+			return (_errorResponse("404 Not Found", 404, request));
+		}
+		if (access(fullPath.c_str(),R_OK))
+		{
+			return (_errorResponse("403 Forbidden", 403, request));
+		}
+		if (statbuf.st_mode & S_IFDIR)
+		{
+			for (std::vector<std::string>::const_iterator it = _index.begin(); it != _index.end(); it++)
+			{
+				fullPath = _rootPath + request.getPath() + (*it);
+				if (access(fullPath.c_str(), F_OK) == 0)
 				{
-					Response *response = cgiHandler(request, this);
-					return (response);
+					request.setPath(_rootPath + request.getPath() + (*it));
+					try
+					{
+						Response *response = cgiHandler(request, this);
+						return (response);
+					}
+					catch(const Cgi::CgiInternalException& e)
+					{
+						return (_errorResponse("500 Internal Server Error", 500, request));
+					}
+					catch(const Cgi::CgiNotCgiException& e)
+					{
+						if (_redirect)
+							return (redirectHandler(this, request));
+						return (new Response("200 OK", request, _mimeTypes));
+					}
+					catch(const std::exception& e)
+					{
+						std::cerr << e.what() << '\n';
+					}
 				}
-				catch(const Cgi::CgiInternalException& e)
+				else if (errno == EACCES)
 				{
-					return (_errorResponse("500 Internal Server Error", 500, request));
-				}
-				catch(const Cgi::CgiNotCgiException& e)
-				{
-					if (_redirect)
-						return (redirectHandler(this, request));
-					return (new Response("200 OK", request, _mimeTypes));
-				}
-				catch(const std::exception& e)
-				{
-					std::cerr << e.what() << '\n';
+					return (_errorResponse("403 Forbidden", 403, request));
 				}
 			}
-			else if (errno == EACCES)
+			if (_autoIndex)
+			{
+				std::string autoIndex = autoIndexGenerator(_rootPath, request.getPath());
+				if (_redirect)
+					return (cgiRedirectHandler(this, autoIndex, request.getHttpVersion()));
+				return (new Response("200 OK", autoIndex, request.getHttpVersion()));
+			}
+			else
 			{
 				return (_errorResponse("403 Forbidden", 403, request));
 			}
 		}
-		if (_autoIndex)
+		if (statbuf.st_mode & S_IFREG)
 		{
-			std::string autoIndex = autoIndexGenerator(_rootPath, request.getPath());
-			if (_redirect)
-				return (cgiRedirectHandler(this, autoIndex, request.getHttpVersion()));
-			return (new Response("200 OK", autoIndex, request.getHttpVersion()));
+			request.setPath(fullPath);
+			try
+			{
+				Response *response = cgiHandler(request, this);
+				return (response);
+			}
+			catch(const Cgi::CgiInternalException& e)
+			{
+				return (_errorResponse("500 Internal Server Error", 500, request));
+			}
+			catch(const Cgi::CgiNotCgiException& e)
+			{
+				if (_redirect)
+					return (redirectHandler(this, request));
+				return (new Response("200 OK", request, _mimeTypes));
+			}
+			catch (const std::exception &e)
+			{
+				std::cerr << e.what() << '\n';
+			}
 		}
-		else
-		{
-			return (_errorResponse("403 Forbidden", 403, request));
-		}
-	}
-	if (statbuf.st_mode & S_IFREG)
-	{
-		request.setPath(fullPath);
-		try
-		{
-			Response *response = cgiHandler(request, this);
-			return (response);
-		}
-		catch(const Cgi::CgiInternalException& e)
-		{
-			return (_errorResponse("500 Internal Server Error", 500, request));
-		}
-		catch(const Cgi::CgiNotCgiException& e)
-		{
-			if (_redirect)
-				return (redirectHandler(this, request));
-			return (new Response("200 OK", request, _mimeTypes));
-		}
-		catch (const std::exception &e)
-		{
-			std::cerr << e.what() << '\n';
-		}
-	}
-	return NULL;
+		return NULL;
 	}catch (const std::exception &e)
 	{
 		std::cerr << e.what() << '\n';

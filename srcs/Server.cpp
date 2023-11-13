@@ -312,8 +312,6 @@ const int& Server::getRedirectCode() const
 
 std::string autoIndexGenerator(const std::string& root, const std::string& path)
 {
-//	std::string path = "downloads";
-//	(void)root;
 	std::string	fullPath = root + path;
 	std::string newPath = fullPath;
 	newPath.erase(0, newPath.find("/") + 1);
@@ -326,9 +324,9 @@ std::string autoIndexGenerator(const std::string& root, const std::string& path)
 		{
 			std::string name = dir->d_name;
 			if (path[path.length() - 1] == '/')
-				html += "<a href=\"" + newPath + name + "\">" + name + "</a><br>";
+				html += "<a href=\"/" + newPath + name + "\">" + name + "</a><br>";
 			else
-				html += "<a href=\"" + newPath + "/" + name + "\">" + name + "</a><br>";
+				html += "<a href=\"/" + newPath + "/" + name + "\">" + name + "</a><br>";
 		}
 		closedir(d);
 	}

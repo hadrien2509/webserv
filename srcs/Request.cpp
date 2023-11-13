@@ -151,6 +151,8 @@ void Request::appendRequest(char *str, int nb)
 
 void Request::setBody()
 {
+	if (_strRequest.empty() || !_contentLength)
+		return ;
 	if (_contentLength > 0 && _strRequest.size() > _contentLength && _querryString.empty())
 	{
 		_querryString = _strRequest.substr(_strRequest.find("\r\n\r\n") + 4);

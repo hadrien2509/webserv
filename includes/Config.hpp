@@ -35,6 +35,7 @@
 # include "Request.hpp"
 # include "Cgi.hpp"
 # include "Response.hpp"
+# include "Socket.hpp"
 
 #define BUFFER_SIZE 1024
 #define GREEN_BOLD "\033[1;32m"
@@ -51,31 +52,30 @@ class Config
 	
 		void 		_removePolls();
 		void 		_initializeFds();
+		Socket*		_getSocket(int fd);
+		pollfd*		_getPoll(int fd);
 		void		_openConfig(const std::string &);
 		std::string	_ignoreComments(std::string line);
-
 		void		_parseServer(std::istringstream &);
 		void		_parseLocation(std::istringstream &, Server *);
 		void		_parseServerName(std::istringstream &, Server *);
 		void		_parseListen(std::istringstream &, Server *);
 		std::string	_getRessourceType(std::istringstream &);
-		
 		void		_createPoll();
-		void		_addPollfd(int fd, short events);
+		void		_addPoll(int fd, short events);
 		void		_endPoll(int fd);
-		void		_deleteResponse(int fd);
-		void		_readRequest(pollfd& poll, struct sockaddr_in addr);
-		
+		void		_readRequest(Socket *socket, struct sockaddr_in addr);
+		void		_sendResponse(Socket *socket);
+
 		std::vector<Server*>							_cluster;
 		std::ifstream									_configFile;
 		size_t											_pollsize;
 		pollfd*											_poll;
 		
-		std::map<int, std::deque<Response*> >			_responses;
 		std::map<int, Server*>							_serverSocketToServer;
 		std::map<int, Server*>							_clientSocketToServer;
 		std::map<int, sockaddr_in>						_clientSocketToServerAddr;
-		std::map<int, Request*>							_requests;
+		std::vector<Socket*>							_sockets;
 		
 	public :
 		
@@ -83,7 +83,6 @@ class Config
 		~Config();
 
 		void run();
-		void _sendResponse(int fd);
 };
 
 /**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
