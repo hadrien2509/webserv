@@ -61,7 +61,7 @@
 		
 			<ul class="menu__box">
 				<li><a class="menu__item" href="index.html">Home</a></li>
-				<li><a class="menu__item" href="put.html">Upload</a></li>
+				<li><a class="menu__item" href="upload.html">Upload</a></li>
 				<li><a class="menu__item" href="/404">error 404</a></li>
 				<li><a class="menu__item" href="/downloads">downloads</a></li>
 				<li><a class="menu__item" href="form.html">form</a></li>
@@ -112,33 +112,15 @@
             </form>
         </div>
 		<div class="form-container">
-            <h2>POST FILE</h2>
-            <form action="cgi-bin/upload.php" enctype="multipart/form-data" method="post">
-				<label for="fichier">Sélectionnez un fichier :</label>
-                <input type="file" id="fichier" name="fichier" required>
-                <input type="submit" value="Soumettre (POST)">
-            </form>
-        </div>
-		<div class="form-container">
-            <h2>PUT</h2>
-            <form action="result.html" method="put">
+            <h2>GET INTO HTML</h2>
+            <form action="result.html" method="get">
                 <label for="get_name">Nom :</label>
                 <input type="text" id="name" name="name" value="jack sparrow" placeholder="Votre nom" required>
                 <label for="get_email">Email :</label>
                 <input type="text" id="email" name="email" value="jack.sparrow@gmail.com" placeholder="Votre email" required>
-                <input type="submit" value="Soumettre (PUT)">
+                <input type="submit" value="Soumettre (get)">
             </form>
         </div>
-		<div class="form-container">
-			<h2>PUT</h2>
-			<form id="putForm" action="result.php" method="post">
-				<label for="put_name">Nom :</label>
-				<input type="text" id="put_name" name="name" value="jack sparrow" placeholder="Votre nom" required>
-				<label for="put_email">Email :</label>
-				<input type="text" id="put_email" name="email" value="jack.sparrow@gmail.com" placeholder="Votre email" required>
-				<input type="submit" value="Soumettre (PUT)">
-			</form>
-		</div>
     </main>
 
     <footer>

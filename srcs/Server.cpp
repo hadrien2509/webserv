@@ -430,11 +430,6 @@ Response* Server::checkRequest(Request& request)
 						Response *response = cgiHandler(request, this);
 						return (response);
 					}
-					catch(const Cgi::CgiInternalException& e)
-					{
-						std::cerr << e.what() << '\n';
-						return (_errorResponse("500 Internal Server Error", 500, request));
-					}
 					catch(const Cgi::CgiNotCgiException& e)
 					{
 						if (_redirect)
@@ -446,10 +441,6 @@ Response* Server::checkRequest(Request& request)
 						if (_redirect)
 							return (redirectHandler(this, request));
 						return (new Response("200 OK", request, _mimeTypes));
-					}
-					catch(const std::exception& e)
-					{
-						std::cerr << e.what() << '\n';
 					}
 				}
 				else if (errno == EACCES)
@@ -477,19 +468,11 @@ Response* Server::checkRequest(Request& request)
 				Response *response = cgiHandler(request, this);
 				return (response);
 			}
-			catch(const Cgi::CgiInternalException& e)
-			{
-				return (_errorResponse("500 Internal Server Error", 500, request));
-			}
 			catch(const Cgi::CgiNotCgiException& e)
 			{
 				if (_redirect)
 					return (redirectHandler(this, request));
 				return (new Response("200 OK", request, _mimeTypes));
-			}
-			catch (const std::exception &e)
-			{
-				std::cerr << e.what() << '\n';
 			}
 		}
 		return NULL;

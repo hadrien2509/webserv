@@ -12,26 +12,27 @@
 
 #include "Cgi.hpp"
 
-Cgi::Cgi(const std::vector<std::string> & extension, std::vector<std::string> envExecutable, Request & req): _request(req)
+Cgi::Cgi(const std::vector<std::string> &extension, std::vector<std::string> envExecutable, Request &req)
+    : _request(req), _timeOut(0), _port(0) // modifié
 {
-	std::istringstream iss(req.getPath());
+    std::istringstream iss(req.getPath());
 
-	_port = htons(req.getSockAddr().sin_port);
-	_httpVersion = req.getHttpVersion();
-	if (envExecutable.size() != extension.size() || envExecutable.empty())
-		throw CgiEnvExtException();
-	
-	std::vector<std::string>::iterator itExe = envExecutable.begin();
-	for (std::vector<std::string>::iterator it = const_cast<std::vector<std::string> &> (extension).begin(); it != extension.end(); it++)
-	{
-		_exePath.insert(std::pair<std::string, std::string>(*it, *itExe));
-		itExe++;
-	}
-	_ressourcePath = req.getPath() + "?" + req.getQuerryString();
+    _port = htons(req.getSockAddr().sin_port);
+    _httpVersion = req.getHttpVersion();
+    if (envExecutable.size() != extension.size() || envExecutable.empty())
+        throw CgiEnvExtException();
 
-	_path = req.getPath();
-	_toIn = req.getQuerryString();
-	_method = req.getMethod();
+    std::vector<std::string>::iterator itExe = envExecutable.begin();
+    for (std::vector<std::string>::iterator it = const_cast<std::vector<std::string> &>(extension).begin(); it != extension.end(); it++)
+    {
+        _exePath.insert(std::pair<std::string, std::string>(*it, *itExe));
+        itExe++;
+    }
+    _ressourcePath = req.getPath() + "?" + req.getQuerryString();
+
+    _path = req.getPath();
+    _toIn = req.getQuerryString();
+    _method = req.getMethod();
 }
 
 Cgi::~Cgi()
@@ -59,23 +60,25 @@ size_t Cgi::getTimeOut(void) const
 	return (_timeOut);
 }
 
-char** Cgi::_mapToEnv(std::map<std::string, std::string> & env)
+char **Cgi::_mapToEnv(std::map<std::string, std::string> &env)
 {
-	char **ret = new char*[env.size() + 1];
-	
-	int i = 0;
-	if (!ret)
-		return (NULL);
-	for (std::map<std::string, std::string>::iterator it = env.begin(); it != env.end(); it++)
-	{
-		std::string tmp = it->first + "=" + it->second;
-		ret[i] = new char[tmp.size() + 1];
-		strcpy(ret[i], tmp.c_str());
-		i++;
-	}
-	ret[i] = NULL;
-	return (ret);
+    char **ret = new char *[env.size() + 1];
+
+    int i = 0;
+    if (!ret)
+        return (NULL);
+    std::map<std::string, std::string>::iterator it; // modifié
+    for (it = env.begin(); it != env.end(); it++) // modifié
+    {
+        std::string tmp = it->first + "=" + it->second;
+        ret[i] = new char[tmp.size() + 1];
+        strcpy(ret[i], tmp.c_str());
+        i++;
+    }
+    ret[i] = NULL;
+    return (ret);
 }
+
 
 void Cgi::_ressourceToEnv()
 {

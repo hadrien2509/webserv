@@ -41,7 +41,7 @@ void Config::_readRequest(Socket *socket, struct sockaddr_in addr) {
                 std::cerr << "Error : " << e.what() << std::endl;
                 socket->setResponse(new Response("413", "Payload Too Large", "HTTP/1.1"));
                 _sendResponse(socket);
-                _endPoll(socket->getFd()); // Pour éviter qu'il continue à envoyer
+                _endPoll(socket->getFd());
                 return;
             }
         } else
