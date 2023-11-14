@@ -340,21 +340,23 @@ std::string autoIndexGenerator(const std::string& root, const std::string& path)
 
 bool Server::_checkMethod(std::string method)
 {
+	std::cout << "CPT " << _allowMethods.size() << std::endl;
 	for (std::vector<std::string>::iterator it = _allowMethods.begin(); it != _allowMethods.end(); it++)
+	{
+		std::cout << "request : " << *it << std::endl;
+		std::cout << "METHOD: " << method << std::endl;
 		if (*it == method)
 			return (true);
+	}
 	return (false);
 }
 
+/*
 Location* Server::checkLocation(Request& request)
 {
     std::string bestMatch = "";
     Location* location = 0;
     const std::vector<Location*>& locations = _locations;
-	for (std::vector<Location*>::const_iterator it = locations.begin(); it != locations.end(); ++it)
-	{
-		Location* loc = *it;
-		const std::string& locationUri = loc->getUri();
 
 		std::stringstream ss(request.getPath());
 
@@ -364,6 +366,12 @@ Location* Server::checkLocation(Request& request)
 		std::getline(ss, aft, '/');
 
 		aft = "/" + aft;
+		std::cout << "BEF: " << bef << std::endl;
+		std::cout << "AFT: " << aft << std::endl;
+	for (std::vector<Location*>::const_iterator it = locations.begin(); it != locations.end(); ++it)
+	{
+		Location* loc = *it;
+		const std::string& locationUri = loc->getUri();
 
 		if (request.getPath().find(locationUri) != std::string::npos && locationUri.length() > bestMatch.length() && request.getPath() == locationUri)
 		{
@@ -372,6 +380,41 @@ Location* Server::checkLocation(Request& request)
 		}
     }
 	if (location && bestMatch.length() > 1 && (request.getPath().find(bestMatch) == 0) && request.getPath() == bestMatch)
+        request.setPath(request.getPath().substr(request.getPath().find(bestMatch) + bestMatch.length()));
+	std::cout << "PATH: " << request.getPath() << std::endl;
+	if (location)
+		std::cout << "LOCATION: " << location->getUri() << std::endl;
+	else
+		std::cout << "LOCATION: NULL" << std::endl;
+    return location;
+}
+*/
+
+Location* Server::checkLocation(Request& request)
+{
+    std::string bestMatch = "";
+    Location* location = 0;
+    const std::vector<Location*>& locations = _locations;
+	std::string requestPath = request.getPath();
+    size_t firstSlash = requestPath.find('/', 1);
+
+    if (firstSlash != std::string::npos)
+            requestPath = requestPath.substr(0, firstSlash + 1);
+	else if (requestPath.find('.') != std::string::npos)
+		requestPath = "/";
+	else
+		requestPath = requestPath + "/";
+
+	for (std::vector<Location*>::const_iterator it = locations.begin(); it != locations.end(); ++it) {
+		Location* loc = *it;
+		const std::string& locationUri = loc->getUri();
+		size_t match = requestPath.find(locationUri);
+		if (match != std::string::npos && match == 0 && (locationUri.length() == 1 || locationUri.length() + 1 == bestMatch.length())) {
+			bestMatch = locationUri;
+			location = loc;
+		}
+    }
+   	if (location && bestMatch.length() > 1 && (request.getPath().find(bestMatch) == 0))
         request.setPath(request.getPath().substr(request.getPath().find(bestMatch) + bestMatch.length()));
     return location;
 }
@@ -401,7 +444,7 @@ Response* Server::checkRequest(Request& request)
 
 		if (!_checkMethod(request.getMethod()))
 		{
-			// std::cerr << "403 HERE " << request.getMethod() << std::endl;
+			 std::cerr << "403 HERE " << request.getPath() << std::endl;
 			return (_errorResponse("403 Forbidden", 403, request));
 		}
 
