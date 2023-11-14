@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/11 19:23:30 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/14 19:27:51 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -351,15 +351,27 @@ Location* Server::checkLocation(Request& request)
     std::string bestMatch = "";
     Location* location = 0;
     const std::vector<Location*>& locations = _locations;
-	for (std::vector<Location*>::const_iterator it = locations.begin(); it != locations.end(); ++it) {
+	for (std::vector<Location*>::const_iterator it = locations.begin(); it != locations.end(); ++it)
+	{
 		Location* loc = *it;
 		const std::string& locationUri = loc->getUri();
-		if (request.getPath().find(locationUri) != std::string::npos && locationUri.length() > bestMatch.length()) {
+
+		std::stringstream ss(request.getPath());
+
+		std::string bef, aft;
+
+		std::getline(ss, bef, '/');
+		std::getline(ss, aft, '/');
+
+		aft = "/" + aft;
+
+		if (request.getPath().find(locationUri) != std::string::npos && locationUri.length() > bestMatch.length() && request.getPath() == locationUri)
+		{
 			bestMatch = locationUri;
 			location = loc;
 		}
     }
-   if (location && bestMatch.length() > 1 && (request.getPath().find(bestMatch) == 0))
+	if (location && bestMatch.length() > 1 && (request.getPath().find(bestMatch) == 0) && request.getPath() == bestMatch)
         request.setPath(request.getPath().substr(request.getPath().find(bestMatch) + bestMatch.length()));
     return location;
 }
@@ -389,6 +401,7 @@ Response* Server::checkRequest(Request& request)
 
 		if (!_checkMethod(request.getMethod()))
 		{
+			// std::cerr << "403 HERE " << request.getMethod() << std::endl;
 			return (_errorResponse("403 Forbidden", 403, request));
 		}
 
