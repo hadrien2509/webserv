@@ -19,6 +19,7 @@
 Location::Location(Server *server)
 {
 	_rootPath = server->getRootPath();
+	_serverRoot = server->getRootPath();
 	_autoIndex = server->getAutoIndex();
 	_allowMethods = server->getAllowMethods();
 	_cgiExtension = server->getCgiExtension();
@@ -196,9 +197,9 @@ bool Location::_checkMethod(std::string method)
 
 Response* Location::_errorResponse(const std::string& error, int code, Request& request)
 {
-	if (_errorPage.find(code) != _errorPage.end() && (access((_rootPath + "/" + _errorPage[code]).c_str(), F_OK) == 0))
+	if (_errorPage.find(code) != _errorPage.end() && (access((_serverRoot + _errorPage[code]).c_str(), F_OK) == 0))
 	{
-		request.setPath(_rootPath + "/" + _errorPage[code]);
+		request.setPath(_serverRoot + _errorPage[code]);
 		return (new Response(error, request, _mimeTypes));
 	}
 	else
@@ -237,7 +238,6 @@ Response* Location::checkRequest(Request& request)
 				fullPath.erase(i + 1, 2);
 			}
 		}
-
 		stat(fullPath.c_str(), &statbuf);
 		if (access(fullPath.c_str(),F_OK))
 		{

@@ -340,11 +340,8 @@ std::string autoIndexGenerator(const std::string& root, const std::string& path)
 
 bool Server::_checkMethod(std::string method)
 {
-	std::cout << "CPT " << _allowMethods.size() << std::endl;
 	for (std::vector<std::string>::iterator it = _allowMethods.begin(); it != _allowMethods.end(); it++)
 	{
-		std::cout << "request : " << *it << std::endl;
-		std::cout << "METHOD: " << method << std::endl;
 		if (*it == method)
 			return (true);
 	}
@@ -400,23 +397,28 @@ Location* Server::checkLocation(Request& request)
 
     if (firstSlash != std::string::npos)
             requestPath = requestPath.substr(0, firstSlash + 1);
+/*
 	else if (requestPath.find('.') != std::string::npos)
 		requestPath = "/";
 	else
 		requestPath = requestPath + "/";
-
+*/	
+	else if (requestPath.find('.') == std::string::npos)
+		requestPath = requestPath + "/";
 	for (std::vector<Location*>::const_iterator it = locations.begin(); it != locations.end(); ++it) {
 		Location* loc = *it;
 		const std::string& locationUri = loc->getUri();
 		size_t match = requestPath.find(locationUri);
-		if (match != std::string::npos && match == 0 && (locationUri.length() == 1 || locationUri.length() + 1 == bestMatch.length())) {
+		if (match != std::string::npos && match == 0 && (locationUri.length() == 1 || locationUri.length() + 1 == requestPath.length())) {
 			bestMatch = locationUri;
 			location = loc;
 		}
     }
    	if (location && bestMatch.length() > 1 && (request.getPath().find(bestMatch) == 0))
         request.setPath(request.getPath().substr(request.getPath().find(bestMatch) + bestMatch.length()));
-    return location;
+    if (location)
+		std::cout<< "LOCATION: " << location->getUri() << std::endl;
+	return location;
 }
 
 Response* Server::_errorResponse(const std::string& error, int code, Request& request)
@@ -439,12 +441,11 @@ Response* Server::checkRequest(Request& request)
 			request.setPath(_redirectURL);
 			_rootPath = "";
 		}
-		std::string	fullPath = request.getPath();
+		std::string	fullPath = _rootPath + request.getPath();
 		struct stat statbuf;
 
 		if (!_checkMethod(request.getMethod()))
 		{
-			 std::cerr << "403 HERE " << request.getPath() << std::endl;
 			return (_errorResponse("403 Forbidden", 403, request));
 		}
 
@@ -463,7 +464,6 @@ Response* Server::checkRequest(Request& request)
 				fullPath.erase(i + 1, 2);
 			}
 		}
-
 		stat(fullPath.c_str(), &statbuf);
 		if (access(fullPath.c_str(),F_OK))
 		{

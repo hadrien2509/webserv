@@ -33,6 +33,7 @@ class Location
 		
 		std::vector<std::string>			_index;
 		std::string							_rootPath;
+		std::string							_serverRoot;
 		bool								_autoIndex;
 		std::vector<std::string>			_allowMethods;
 		std::map<std::string, std::string>	_mimeTypes;
