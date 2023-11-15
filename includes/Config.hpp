@@ -243,14 +243,16 @@ Response *cgiHandler(Request & req, T *serv)
 {
 	Cgi cgi(serv->getCgiExtension(), serv->getCgiPath(), req);
 	cgi.setTimeOut(serv->getTimeout());
-
+/*
 	try
 	{
+*/
 		if (serv->getRedirect())
 		{
 			return (cgiRedirectHandler(serv, cgi.run(), req.getHttpVersion()));
 		}
 		return (new Response("200 OK", cgi.run(), req.getHttpVersion()));
+	/*
 	}
 	catch(const Cgi::CgiFileException& e)
 	{
@@ -268,6 +270,7 @@ Response *cgiHandler(Request & req, T *serv)
 	{
 		throw Cgi::CgiException();
 	}
+	*/
 }
 
 #endif

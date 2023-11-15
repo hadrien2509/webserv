@@ -215,7 +215,6 @@ Response* Location::checkRequest(Request& request)
 			request.setPath(_redirectURL);
 			_rootPath = "";
 		}
-		std::string leftPath = _rootPath.substr(_serverRoot.length());
 		std::string	fullPath = _rootPath + request.getPath();
 		struct stat statbuf;
 
@@ -259,9 +258,26 @@ Response* Location::checkRequest(Request& request)
 					try
 					{
 						Response *response = cgiHandler(request, this);
+						
 						return (response);
 					}
 					catch(const Cgi::CgiNotCgiException& e)
+					{
+						if (_redirect)
+						{
+							return (redirectHandler(this, request));
+						}
+						return (new Response("200 OK", request, _mimeTypes));
+					}
+					catch(const Cgi::CgiPathException& e)
+					{
+						if (_redirect)
+						{
+							return (redirectHandler(this, request));
+						}
+						return (new Response("200 OK", request, _mimeTypes));
+					}
+					catch(const Cgi::CgiEnvExtException& e)
 					{
 						if (_redirect)
 							return (redirectHandler(this, request));
@@ -275,7 +291,7 @@ Response* Location::checkRequest(Request& request)
 			}
 			if (_autoIndex)
 			{
-				std::string autoIndex = autoIndexGenerator(_serverRoot + leftPath, request.getPath(), _uri);
+				std::string autoIndex = autoIndexGenerator(_rootPath, request.getPath(), _uri);
 				if (_redirect)
 					return (cgiRedirectHandler(this, autoIndex, request.getHttpVersion()));
 				return (new Response("200 OK", autoIndex, request.getHttpVersion()));
@@ -297,6 +313,14 @@ Response* Location::checkRequest(Request& request)
 			{
 				if (_redirect)
 					return (redirectHandler(this, request));
+				return (new Response("200 OK", request, _mimeTypes));
+			}
+			catch(const Cgi::CgiPathException& e)
+			{
+				if (_redirect)
+				{
+					return (redirectHandler(this, request));
+				}
 				return (new Response("200 OK", request, _mimeTypes));
 			}
 			catch(const Cgi::CgiEnvExtException& e)

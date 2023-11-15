@@ -13,7 +13,7 @@
 #include "Cgi.hpp"
 
 Cgi::Cgi(const std::vector<std::string> &extension, std::vector<std::string> envExecutable, Request &req)
-    : _request(req), _timeOut(0), _port(0) // modifié
+    : _request(req), _timeOut(0), _port(0)
 {
     std::istringstream iss(req.getPath());
 
@@ -67,8 +67,8 @@ char **Cgi::_mapToEnv(std::map<std::string, std::string> &env)
     int i = 0;
     if (!ret)
         return (NULL);
-    std::map<std::string, std::string>::iterator it; // modifié
-    for (it = env.begin(); it != env.end(); it++) // modifié
+    std::map<std::string, std::string>::iterator it;
+    for (it = env.begin(); it != env.end(); it++)
     {
         std::string tmp = it->first + "=" + it->second;
         ret[i] = new char[tmp.size() + 1];
@@ -222,7 +222,7 @@ const std::string& Cgi::run()
 		close(fdOut[1]);
 		dup2(fdIn[1], STDIN_FILENO);
 		dup2(fdOut[0], STDOUT_FILENO);
-		if (_method == "POST" || _method == "DELETE") // fix dans le cas des requests delete
+		if (_method == "POST" || _method == "DELETE")
 		{
 			std::stringstream ss;
 			ss << _toIn.size();

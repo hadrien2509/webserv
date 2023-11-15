@@ -323,10 +323,7 @@ std::string autoIndexGenerator(const std::string& root, const std::string& path,
 		while ((dir = readdir(d)) != NULL)
 		{
 			std::string name = dir->d_name;
-			//if (path[path.length() - 1] == '/')
-			//	html += "<a href=\"/" + uri + name + "\">" + name + "</a><br>";
-			//else
-				html += "<a href=\"" + uri + path + name + "\">" + name + "</a><br>";
+			html += "<a href=\"" + uri + path + name + "\">" + name + "</a><br>";
 		}
 		closedir(d);
 	}
@@ -371,8 +368,7 @@ Location* Server::checkLocation(Request& request)
     }
 	if (!location)
 		return (NULL);
-	std::string leftPath = location->getRootPath().substr(_rootPath.length());
-  	request.setPath(request.getPath().substr(location->getUri().length()));
+	request.setPath(request.getPath().substr(location->getUri().length()));
 	if (request.getPath()[0] !='/')
   		request.setPath("/" + request.getPath());
 	if (request.getPath().size() > 1 && request.getPath().find('.') == std::string::npos && request.getPath().find('/', 1) == std::string::npos)
@@ -451,6 +447,14 @@ Response* Server::checkRequest(Request& request)
 							return (redirectHandler(this, request));
 						return (new Response("200 OK", request, _mimeTypes));
 					}
+					catch(const Cgi::CgiPathException& e)
+					{
+						if (_redirect)
+						{
+							return (redirectHandler(this, request));
+						}
+						return (new Response("200 OK", request, _mimeTypes));
+					}
 					catch(const Cgi::CgiEnvExtException& e)
 					{
 						if (_redirect)
@@ -484,6 +488,20 @@ Response* Server::checkRequest(Request& request)
 				return (response);
 			}
 			catch(const Cgi::CgiNotCgiException& e)
+			{
+				if (_redirect)
+					return (redirectHandler(this, request));
+				return (new Response("200 OK", request, _mimeTypes));
+			}
+			catch(const Cgi::CgiPathException& e)
+			{
+				if (_redirect)
+				{
+					return (redirectHandler(this, request));
+				}
+				return (new Response("200 OK", request, _mimeTypes));
+			}
+			catch(const Cgi::CgiEnvExtException& e)
 			{
 				if (_redirect)
 					return (redirectHandler(this, request));
