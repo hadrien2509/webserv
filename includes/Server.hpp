@@ -96,6 +96,6 @@ class Server
 
 };
 
-std::string autoIndexGenerator(const std::string& root, const std::string& path);
+std::string autoIndexGenerator(const std::string& root, const std::string& path, const std::string& uri);
 
 #endif

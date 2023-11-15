@@ -215,6 +215,7 @@ Response* Location::checkRequest(Request& request)
 			request.setPath(_redirectURL);
 			_rootPath = "";
 		}
+		std::string leftPath = _rootPath.substr(_serverRoot.length());
 		std::string	fullPath = _rootPath + request.getPath();
 		struct stat statbuf;
 
@@ -274,7 +275,7 @@ Response* Location::checkRequest(Request& request)
 			}
 			if (_autoIndex)
 			{
-				std::string autoIndex = autoIndexGenerator(_rootPath, request.getPath());
+				std::string autoIndex = autoIndexGenerator(_serverRoot + leftPath, request.getPath(), _uri);
 				if (_redirect)
 					return (cgiRedirectHandler(this, autoIndex, request.getHttpVersion()));
 				return (new Response("200 OK", autoIndex, request.getHttpVersion()));

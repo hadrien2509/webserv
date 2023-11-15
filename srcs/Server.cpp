@@ -310,10 +310,10 @@ const int& Server::getRedirectCode() const
 /* ----------------------------- AUTO-INDEX ----------------------------------*/
 /* ************************************************************************** */
 
-std::string autoIndexGenerator(const std::string& root, const std::string& path)
+std::string autoIndexGenerator(const std::string& root, const std::string& path, const std::string& uri)
 {
 	std::string	fullPath = root + path;
-	std::string newPath = fullPath;
+	std::string newPath = path;//fullPath;
 	newPath.erase(0, newPath.find("/") + 1);
 	std::string html = "<html><head><title>Index of " + newPath + "</title></head><body><h1>Index of " + newPath + "</h1><hr><pre>";
 	struct dirent *dir;
@@ -323,10 +323,10 @@ std::string autoIndexGenerator(const std::string& root, const std::string& path)
 		while ((dir = readdir(d)) != NULL)
 		{
 			std::string name = dir->d_name;
-			if (path[path.length() - 1] == '/')
-				html += "<a href=\"/" + newPath + name + "\">" + name + "</a><br>";
-			else
-				html += "<a href=\"/" + newPath + "/" + name + "\">" + name + "</a><br>";
+			//if (path[path.length() - 1] == '/')
+			//	html += "<a href=\"/" + uri + name + "\">" + name + "</a><br>";
+			//else
+				html += "<a href=\"" + uri + path + name + "\">" + name + "</a><br>";
 		}
 		closedir(d);
 	}
@@ -348,45 +348,6 @@ bool Server::_checkMethod(std::string method)
 	return (false);
 }
 
-/*
-Location* Server::checkLocation(Request& request)
-{
-    std::string bestMatch = "";
-    Location* location = 0;
-    const std::vector<Location*>& locations = _locations;
-
-		std::stringstream ss(request.getPath());
-
-		std::string bef, aft;
-
-		std::getline(ss, bef, '/');
-		std::getline(ss, aft, '/');
-
-		aft = "/" + aft;
-		std::cout << "BEF: " << bef << std::endl;
-		std::cout << "AFT: " << aft << std::endl;
-	for (std::vector<Location*>::const_iterator it = locations.begin(); it != locations.end(); ++it)
-	{
-		Location* loc = *it;
-		const std::string& locationUri = loc->getUri();
-
-		if (request.getPath().find(locationUri) != std::string::npos && locationUri.length() > bestMatch.length() && request.getPath() == locationUri)
-		{
-			bestMatch = locationUri;
-			location = loc;
-		}
-    }
-	if (location && bestMatch.length() > 1 && (request.getPath().find(bestMatch) == 0) && request.getPath() == bestMatch)
-        request.setPath(request.getPath().substr(request.getPath().find(bestMatch) + bestMatch.length()));
-	std::cout << "PATH: " << request.getPath() << std::endl;
-	if (location)
-		std::cout << "LOCATION: " << location->getUri() << std::endl;
-	else
-		std::cout << "LOCATION: NULL" << std::endl;
-    return location;
-}
-*/
-
 Location* Server::checkLocation(Request& request)
 {
     std::string bestMatch = "";
@@ -396,13 +357,7 @@ Location* Server::checkLocation(Request& request)
     size_t firstSlash = requestPath.find('/', 1);
 
     if (firstSlash != std::string::npos)
-            requestPath = requestPath.substr(0, firstSlash + 1);
-/*
-	else if (requestPath.find('.') != std::string::npos)
-		requestPath = "/";
-	else
-		requestPath = requestPath + "/";
-*/	
+        requestPath = requestPath.substr(0, firstSlash + 1);	
 	else if (requestPath.find('.') == std::string::npos)
 		requestPath = requestPath + "/";
 	for (std::vector<Location*>::const_iterator it = locations.begin(); it != locations.end(); ++it) {
@@ -414,8 +369,14 @@ Location* Server::checkLocation(Request& request)
 			location = loc;
 		}
     }
-   	if (location && bestMatch.length() > 1 && (request.getPath().find(bestMatch) == 0))
-        request.setPath(request.getPath().substr(request.getPath().find(bestMatch) + bestMatch.length()));
+	if (!location)
+		return (NULL);
+	std::string leftPath = location->getRootPath().substr(_rootPath.length());
+  	request.setPath(request.getPath().substr(location->getUri().length()));
+	if (request.getPath()[0] !='/')
+  		request.setPath("/" + request.getPath());
+	if (request.getPath().size() > 1 && request.getPath().find('.') == std::string::npos && request.getPath().find('/', 1) == std::string::npos)
+		request.setPath(request.getPath() + "/");
 	return location;
 }
 
@@ -504,7 +465,7 @@ Response* Server::checkRequest(Request& request)
 			}
 			if (_autoIndex)
 			{
-				std::string autoIndex = autoIndexGenerator(_rootPath, request.getPath());
+				std::string autoIndex = autoIndexGenerator(_rootPath, request.getPath(), _rootPath);
 				if (_redirect)
 					return (cgiRedirectHandler(this, autoIndex, request.getHttpVersion()));
 				return (new Response("200 OK", autoIndex, request.getHttpVersion()));
