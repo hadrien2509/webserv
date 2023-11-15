@@ -1,5 +1,7 @@
 #include "Socket.hpp"
 #include <iostream>
+#include <unistd.h>
+
 /* ************************************************************************** */
 /*                          Constructor & Destructor                          */
 /* ************************************************************************** */
@@ -10,6 +12,8 @@ Socket::~Socket(void) {
 		delete _request;
 	if (_response)
 		delete _response;
+	if (_fd != -1)
+		close(_fd);
 }
 
 

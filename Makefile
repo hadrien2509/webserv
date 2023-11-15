@@ -11,7 +11,8 @@ FILES = main.cpp\
 		Run.cpp\
 		Request.cpp\
 		Response.cpp\
-		cgi/Cgi.cpp
+		cgi/Cgi.cpp\
+		poll.cpp
 # FILES_CGI = Cgi.cpp
 INCLUDE_DIR = includes
 

@@ -103,15 +103,6 @@ void Config::_parseServer(std::istringstream &ssold)
 	}
 }
 
-std::string Config::_getRessourceType(std::istringstream &ss)
-{
-	std::string ressourceType;
-	ss >> ressourceType;
-	if (ss.fail())
-		throw std::runtime_error("Invalid ressource type");
-	return ressourceType;
-}
-
 void Config::_parseLocation(std::istringstream &ss, Server *server)
 {
 	std::string	ressourceType;
@@ -167,6 +158,34 @@ void Config::_openConfig(const std::string &input)
 	_configFile.open(input.c_str());
 	if (!_configFile.is_open())
 		throw std::runtime_error("Failed to open configuration file");
+}
+
+/* ************************************************************************** */
+/* -------------------------------- GETTER ---------------------------------- */
+/* ************************************************************************** */
+std::string Config::_getRessourceType(std::istringstream &ss)
+{
+	std::string ressourceType;
+	ss >> ressourceType;
+	if (ss.fail())
+		throw std::runtime_error("Invalid ressource type");
+	return ressourceType;
+}
+
+pollfd *Config::_getPoll(int fd)
+{
+	for (size_t i = 0; i < _pollsize; i++)
+		if (_poll[i].fd == fd)
+			return &_poll[i];
+	return NULL;
+}
+
+Socket *Config::_getSocket(int fd)
+{
+	for (size_t i = 0; i < _sockets.size(); i++)
+		if (_sockets[i]->getFd() == fd)
+			return _sockets[i];
+	return NULL;
 }
 
 /* ************************************************************************** */

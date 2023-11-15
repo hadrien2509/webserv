@@ -416,8 +416,6 @@ Location* Server::checkLocation(Request& request)
     }
    	if (location && bestMatch.length() > 1 && (request.getPath().find(bestMatch) == 0))
         request.setPath(request.getPath().substr(request.getPath().find(bestMatch) + bestMatch.length()));
-    if (location)
-		std::cout<< "LOCATION: " << location->getUri() << std::endl;
 	return location;
 }
 
