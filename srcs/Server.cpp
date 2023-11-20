@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/14 19:27:51 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/20 20:03:34 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -398,8 +398,10 @@ Response* Server::checkRequest(Request& request)
 	{
 		if (_redirect)
 		{
-			request.setPath(_redirectURL);
-			_rootPath = "";
+			if (_redirectCode == 301)
+				return (new Response("301 Moved Permanently\r\nLocation: " + _redirectURL, "301 Moved Permanently", request.getHttpVersion()));
+			else if (_redirectCode == 302)
+				return (new Response("302 Found\r\nLocation: " + _redirectURL, "302 Found", request.getHttpVersion()));
 		}
 		std::string	fullPath = _rootPath + request.getPath();
 		struct stat statbuf;

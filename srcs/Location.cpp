@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:21:31 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/11 19:21:57 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/20 20:03:13 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,8 +212,10 @@ Response* Location::checkRequest(Request& request)
 	{
 		if (_redirect)
 		{
-			request.setPath(_redirectURL);
-			_rootPath = "";
+			if (_redirectCode == 301)
+				return (new Response("301 Moved Permanently\r\nLocation: " + _redirectURL, "301 Moved Permanently", request.getHttpVersion()));
+			else if (_redirectCode == 302)
+				return (new Response("302 Found\r\nLocation: " + _redirectURL, "302 Found", request.getHttpVersion()));
 		}
 		std::string	fullPath = _rootPath + request.getPath();
 		struct stat statbuf;
