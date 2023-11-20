@@ -62,9 +62,7 @@ void Config::_sendResponse(Socket *socket) {
         std::cout << GREEN;
     else
         std::cout << RED_BOLD;
-
-    std::cout << "Response : status <" << response->getStatus() << ">" << DEFAULT << std::endl;
-
+	std::cout << "Response : status <" << response->getStatus() << ">" << DEFAULT << std::endl;
     int ret = send(socket->getFd(), response->get().c_str(), response->get().size(), 0);
 
     if (ret == -1) {
@@ -80,20 +78,20 @@ void Config::run()
 	_createPoll();
 	while (1)
 	{
+		usleep(2000);
 		if ((poll(_poll, _pollsize, -1)) <= 0)
 			continue;
+
 		for (size_t i = 0; i < _pollsize; i++)
 		{
 			int fd = _poll[i].fd;
 			Socket *socket = _getSocket(fd);
 			if (_poll[i].revents & POLLERR)
 			{
-				std::cerr << "POLL QUIT " << fd << std::endl;
 				_endPoll(fd);
 			}
 			else if (_poll[i].revents & POLLHUP)
 			{
-				//std::cerr << "POLLHUP" << std::endl;
 				_endPoll(fd);
 			}
 			else if (_poll[i].revents & POLLIN)
@@ -104,7 +102,6 @@ void Config::run()
 					sockaddr_in client_addr;
 					socklen_t client_addr_len = sizeof(client_addr);
 					int client_socket = accept(fd, (struct sockaddr *)&client_addr, &client_addr_len);
-					usleep(2500);
 					if (client_socket < 0)
 						continue;
 					_clientSocketToServer[client_socket] = server;
@@ -113,6 +110,7 @@ void Config::run()
 					getsockname(fd, (struct sockaddr *)&server_addr, &server_addr_len);
 					_clientSocketToServerAddr[client_socket] = server_addr;
 					_addPoll(client_socket, POLLIN | POLLOUT);
+					break;
 				}
 				else
 				{

@@ -12,7 +12,7 @@ Socket::~Socket(void) {
 		delete _request;
 	if (_response)
 		delete _response;
-	if (_fd != -1)
+	if (_fd > 2)
 		close(_fd);
 }
 

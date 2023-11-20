@@ -51,19 +51,20 @@ void Config::_endPoll(int fd)
 
 void Config::_addPoll(int fd, short events)
 {
-	for (size_t i = 0; i < _pollsize; i++)
-		if (_poll[i].fd == fd)
-			return;
-	struct pollfd *newPoll = new struct pollfd[_pollsize + 1];
-	for (size_t i = 0; i < _pollsize; i++)
-		newPoll[i] = _poll[i];
-	newPoll[_pollsize].fd = fd;
-	newPoll[_pollsize].events = events;
-	Socket *socket = new Socket;
-	socket->setFd(fd);
-	_sockets.push_back(socket);
-	
-	delete[] _poll;
-	_poll = newPoll;
-	_pollsize++;
+    for (size_t i = 0; i < _pollsize; i++)
+        if (_poll[i].fd == fd)
+            return;
+    struct pollfd *newPoll = new struct pollfd[_pollsize + 1];
+    Socket *socket = new Socket;
+    socket->setFd(fd);
+    _sockets.push_back(socket);
+    newPoll[0].fd = fd;
+    newPoll[0].events = events;
+    for (size_t i = 0; i < _pollsize; i++)
+    {
+        newPoll[i + 1] = _poll[i];
+    }
+    delete[] _poll;
+    _poll = newPoll;
+    _pollsize++;
 }
