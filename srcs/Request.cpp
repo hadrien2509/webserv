@@ -119,7 +119,8 @@ Request::Request(char* str, int nb, int fd, Server *server, struct sockaddr_in a
 	_contentLength = 0;
 	appendRequest(str, nb);
 	_parseRequest(_strRequest);
-	std::cout << "HSOT" << _host << std::endl;
+	if (_host != "localhost" && _host != "127.0.0.1" && _host != server->getServerName())
+		throw Request::HostNotFoundException();
 	_serverName = server->getServerName();
 	if (server->getMaxBodySize() < _contentLength)
 	{
@@ -192,7 +193,12 @@ void Request::_extractData(const std::string &header)
 			else if (headerName == "Content-Type")
 				_extractBoundary(headerValue);
 			else if (headerName == "Host")
+			{
 				_host = headerValue;
+				_host.resize(_host.size() - 1);
+				if (_host.find(':') != std::string::npos)
+					_host.resize(_host.find(':'));
+			}
 		}
 	}
 }

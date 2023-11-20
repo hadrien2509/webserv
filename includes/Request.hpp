@@ -62,13 +62,22 @@ public:
 	bool isComplete();
 	bool createFileFromData(const std::string &folderPath);
 	class BodyTooLargeException: public std::exception
-		{
-			public:
-				const char * what() const throw()
-				{
-					return ("body too large");
-				}
-		};
+	{
+		public:
+			const char * what() const throw()
+			{
+				return ("body too large");
+			}
+	};
+	class HostNotFoundException: public std::exception
+	{
+		public:
+			const char * what() const throw()
+			{
+				return ("wrong host name");
+			}
+	};
+
 };
 
 #endif
