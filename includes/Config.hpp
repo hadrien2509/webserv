@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/10 14:32:12 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/20 15:59:06 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ void _parseAllowMethods(std::istringstream &ss, T *server)
 			throw std::runtime_error("Invalid method");
 		if (method == "GET" || method == "POST" || method == "DELETE")
 			server->addAllowMethods(method);
-		//std::cout << "Method : " << method << std::endl;
 	}
 }
 
@@ -200,7 +199,6 @@ void _parseRoot(std::istringstream &ss, T* location)
 		throw std::runtime_error("Invalid root file path");
 	closedir(dir);
 	location->setRoot(root);
-	//std::cout << "Root : " << root << std::endl;
 }
 
 template<typename T>
@@ -213,7 +211,6 @@ void _parseIndex(std::istringstream &ss, T*	location)
 		if (ss.fail())
 			throw std::runtime_error("Invalid index");
 		location->addIndex(_index);
-		//std::cout << "Index : " << _index << std::endl;
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/14 18:54:46 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/20 15:39:11 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,14 @@ void Config::_readRequest(Socket *socket, struct sockaddr_in addr) {
             requestComplete = true;
         }
     }
+}
+
+static void ft_sleep(int ms)
+{
+	struct timeval tv;
+	tv.tv_sec = ms / 1000;
+	tv.tv_usec = (ms % 1000) * 1000;
+	select(0, NULL, NULL, NULL, &tv);
 }
 
 void Config::_sendResponse(Socket *socket) {
@@ -103,7 +111,7 @@ void Config::run()
 					int client_socket = accept(fd, (struct sockaddr *)&client_addr, &client_addr_len);
 					if (client_socket < 0)
 						continue;
-					usleep(2000);
+					ft_sleep(3);
 					_clientSocketToServer[client_socket] = server;
 					sockaddr_in server_addr;
 					socklen_t server_addr_len = sizeof(server_addr);

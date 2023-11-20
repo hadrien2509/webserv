@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/11/11 19:05:11 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/20 15:37:36 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,13 @@ char **Cgi::_mapToEnv(std::map<std::string, std::string> &env)
     return (ret);
 }
 
+static void ft_sleep(int ms)
+{
+	struct timeval tv;
+	tv.tv_sec = ms / 1000;
+	tv.tv_usec = (ms % 1000) * 1000;
+	select(0, NULL, NULL, NULL, &tv);
+}
 
 void Cgi::_ressourceToEnv()
 {
@@ -213,7 +220,7 @@ const std::string& Cgi::run()
 			}
 			else if (!pidTimeOut)
 			{
-				usleep(1000 * _timeOut);
+				ft_sleep(_timeOut);
 				kill(pid, SIGTERM);
 				std::exit(2);
 			}
