@@ -50,7 +50,7 @@ int main(int ac, char **av)
 	}
 	catch (std::exception &e)
 	{
-		std::cerr << e.what() << std::endl;
+		std::cerr << RED_BOLD << e.what() << DEFAULT << std::endl;
 	}
 	return (0);
 }

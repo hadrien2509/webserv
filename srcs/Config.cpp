@@ -97,10 +97,15 @@ void Config::_parseServer(std::istringstream &ssold)
 		else if (type == "return")
 			_parseRedirect(ss, server);
 		else if (type == "}")
+		{
+			if (server->getNumberPorts() == 0)
+				throw std::runtime_error("No port specified");
 			return ;
+		}
 		else
 			throw std::runtime_error("Unknown type in configuration file");
 	}
+	throw std::runtime_error("No end of server block");
 }
 
 void Config::_parseLocation(std::istringstream &ss, Server *server)
@@ -113,6 +118,11 @@ void Config::_parseLocation(std::istringstream &ss, Server *server)
 	server->addLocation(location);
 	location->setUri(ressourceType);
 	std::string line;
+
+	std::string	brace;
+	ss >> brace;
+	if ((brace != "{") || ss.fail())
+		throw std::runtime_error("Invalid Location block");
 	while (std::getline(_configFile, line))
 	{
 		std::string type;
@@ -135,8 +145,6 @@ void Config::_parseLocation(std::istringstream &ss, Server *server)
 			_parseErrorPage(ss, location);
 		else if (type == "timeout")
 			_parseTimeout(ss, location);
-		// else if (type == "client_max_body_size")
-		// 	_parseClientMaxBodySize(ss, location);
 		else if (type == "allow_methods")
 			_parseAllowMethods(ss, location);
 		else if (type == "cgi_path")
@@ -212,6 +220,8 @@ Config::Config(const std::string &input) : _pollsize(0), _poll(NULL)
 		else
 			throw std::runtime_error("Unknown type in configuration file");
 	}
+	if (_cluster.size() == 0)
+		throw std::runtime_error("No server in configuration file");
 }
 
 Config::~Config()

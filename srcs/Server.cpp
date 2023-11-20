@@ -86,7 +86,7 @@ void Server::_initMimeTypes()
 	_mimeTypes[".7z"] = "application/x-7z-compressed";
 }
 
-Server::Server() : _autoIndex(false), _maxBodySize(0), _timeout(100)
+Server::Server() : _autoIndex(false), _maxBodySize(0), _timeout(100), _nbPorts(0)
 {
 	_initMimeTypes();
 }
@@ -168,6 +168,7 @@ void	Server::addPort(int port)
 	poll_fd.events = POLLIN;
 
 	_pollfds.push_back(poll_fd);
+	_nbPorts++;
 }
 
 void Server::addLocation(Location *location)
@@ -304,6 +305,10 @@ const std::string&	Server::getRedirectURL() const
 const int& Server::getRedirectCode() const
 {
 	return (_redirectCode);
+}
+const int& Server::getNumberPorts() const
+{
+	return (_nbPorts);
 }
 
 /* ************************************************************************** */

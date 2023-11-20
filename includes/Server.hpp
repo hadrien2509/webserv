@@ -48,7 +48,7 @@ class Server
 		std::string							_redirectURL;
 		int									_redirectCode;
 		bool								_redirect;
-
+		int									_nbPorts;
     public:
         Server();
         ~Server();
@@ -90,6 +90,7 @@ class Server
 		const std::string&							getRedirectURL() const;
 		const bool&									getRedirect() const;
 		const int&									getRedirectCode() const;
+		const int&									getNumberPorts() const;
 
 		Response*					checkRequest(Request &request);
 		Location*					checkLocation(Request &request);
