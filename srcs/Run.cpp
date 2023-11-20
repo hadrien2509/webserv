@@ -78,7 +78,6 @@ void Config::run()
 	_createPoll();
 	while (1)
 	{
-		usleep(2000);
 		if ((poll(_poll, _pollsize, -1)) <= 0)
 			continue;
 
@@ -104,6 +103,7 @@ void Config::run()
 					int client_socket = accept(fd, (struct sockaddr *)&client_addr, &client_addr_len);
 					if (client_socket < 0)
 						continue;
+					usleep(2000);
 					_clientSocketToServer[client_socket] = server;
 					sockaddr_in server_addr;
 					socklen_t server_addr_len = sizeof(server_addr);
