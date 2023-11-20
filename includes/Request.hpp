@@ -29,6 +29,7 @@ private:
 	std::string _method;
 	std::string _path;
 	std::string _header;
+	std::string _host;
 	std::string _httpVersion;
 	std::string _querryString;
 	std::string	_boundary;
