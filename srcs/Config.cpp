@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 22:22:14 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/10 13:57:50 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/20 18:40:16 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,7 +209,6 @@ Config::Config(const std::string &input) : _pollsize(0), _poll(NULL)
 		std::string type;
 		line = _ignoreComments(line);
 		std::istringstream ss(line);
-		//std::cout << "line config : " << line << std::endl;
 		if (ss.eof())
 			continue ;
 		ss >> type;
@@ -228,6 +227,8 @@ Config::~Config()
 {
 	if (_configFile.is_open())
 		_configFile.close();
+	for (std::vector<Socket*>::iterator it = _sockets.begin(); it != _sockets.end(); it++)
+		delete (*it);
 	for (std::vector<Server*>::iterator it = _cluster.begin(); it != _cluster.end(); it++)
 		delete (*it);
 	if (_poll)

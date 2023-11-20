@@ -6,13 +6,15 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/20 15:39:11 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/20 18:27:47 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Config.hpp"
 #include <unistd.h>
 #include <fcntl.h>
+
+extern int g_escape;
 
 void Config::_readRequest(Socket *socket, struct sockaddr_in addr) {
     char buffer[BUFFER_SIZE];
@@ -90,7 +92,7 @@ void Config::_sendResponse(Socket *socket) {
 void Config::run()
 {
 	_createPoll();
-	while (1)
+	while (g_escape)
 	{
 		if ((poll(_poll, _pollsize, -1)) <= 0)
 			continue;

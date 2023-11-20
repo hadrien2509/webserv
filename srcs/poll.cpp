@@ -12,6 +12,7 @@ void Config::_createPoll()
   	for (size_t j = 0; j < temp.size(); j++)
 	{
       Socket *socket = new Socket;
+
       socket->setFd(temp[j].fd);
       _sockets.push_back(socket);
       _poll[currentIndex++] = temp[j];

@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: samy <samy@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:44:27 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/10/11 08:57:33 by samy             ###   ########.fr       */
+/*   Updated: 2023/11/20 18:41:41 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Config.hpp"
 #include <sys/socket.h> // For socket functions
 #include <netinet/in.h> // For sockaddr_in
+
+int g_escape = 1;
 
 void displayName() {
     std::cout << "$$\\      $$\\ $$$$$$$$\\ $$$$$$$\\   $$$$$$\\  $$$$$$$$\\ $$$$$$$\\  $$\\    $$\\" << std::endl;
@@ -25,12 +27,23 @@ void displayName() {
     std::cout << "\\__/     \\__|\\________|\\_______/  \\______/ \\________|\\__|  \\__|    \\_/" << std::endl;
 }
 
+static void signalHandler(int signum)
+{
+	if (signum == SIGINT)
+	{
+		std::cout << std::endl << "Exiting..." << std::endl;
+		g_escape = 0;
+	}
+}
+
 int main(int ac, char **av)
 {
 	std::string configPath;
 	
+	// g_escape = 1;
 	displayName();
 	signal(SIGPIPE, SIG_IGN);
+	signal(SIGINT, signalHandler);
 	switch (ac)
 	{
 		case 1:
