@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/21 14:57:41 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/21 19:12:05 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void Config::_sendResponse(Socket *socket) {
     Response *response = socket->getResponse();
     if (!response)
         return;
-    if (response->getStatus() == "200 OK")
+    if (response->getStatus() == "200 OK" || std::atoi(response->getStatus().c_str()) / 100 == 2)
         std::cout << GREEN;
     else
         std::cout << RED_BOLD;
