@@ -24,7 +24,6 @@ class Server;
 class Request
 {
 private:
-	const int _connection;
 	std::string _strRequest;
 	std::string _method;
 	std::string _path;
@@ -42,8 +41,9 @@ private:
 	void _extractBoundary(const std::string& httpRequest);
 
 public:
-	Request(const char *str, int nb, int fd, Server *, struct sockaddr_in addr);
+	Request(const char *str, int fd, Server *, struct sockaddr_in addr);
 	Request(const Request &);
+	Request();
 	~Request();
 	Request &operator=(const Request &);
 

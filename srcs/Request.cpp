@@ -114,7 +114,7 @@ void Request::setHeader(const std::string &request) {
     }
 }
 
-Request::Request(const char* str, int nb, int fd, Server *server, struct sockaddr_in addr) : _connection(fd), _addr(addr)
+Request::Request(const char* str, int nb, Server *server, struct sockaddr_in addr) : _addr(addr)
 {
 	_contentLength = 0;
 	appendRequest(str, nb);
@@ -123,13 +123,13 @@ Request::Request(const char* str, int nb, int fd, Server *server, struct sockadd
 		throw Request::HostNotFoundException();
 	_serverName = server->getServerName();
 	if (server->getMaxBodySize() < _contentLength)
-	{
-		std::cout << "max body size : " << server->getMaxBodySize() << std::endl;
 		throw Request::BodyTooLargeException();
-	}
+}
+Request::Request(){
+	_httpVersion = "HTTP/1.1";
 }
 
-Request::Request(const Request &src) : _connection(src._connection)
+Request::Request(const Request &src)
 {
 	*this = src;
 }

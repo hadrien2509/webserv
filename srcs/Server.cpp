@@ -381,15 +381,17 @@ Location* Server::checkLocation(Request& request)
 	return location;
 }
 
-Response* Server::_errorResponse(const std::string& error, int code, Request& request)
+Response* Server::errorResponse(const std::string& error, int code, Request* request)
 {
-	if (_errorPage.find(code) != _errorPage.end() && (access((_rootPath + _errorPage[code]).c_str(), F_OK) == 0))
+	if (!request)
+		request = new Request();
+	if (_errorPage.find(code) != _errorPage.end() && (access((_rootPath + _errorPage[code]).c_str(), R_OK) == 0))
 	{
-		request.setPath(_rootPath + "/" + _errorPage[code]);
-		return (new Response(error, request, _mimeTypes));
+		request->setPath(_rootPath + "/" + _errorPage[code]);
+		return (new Response(error, *request, _mimeTypes));
 	}
 	else
-		return (new Response(error, request));
+		return (new Response(error, *request));
 }
 
 Response* Server::checkRequest(Request& request)
@@ -408,14 +410,14 @@ Response* Server::checkRequest(Request& request)
 
 		if (!_checkMethod(request.getMethod()))
 		{
-			return (_errorResponse("403 Forbidden", 403, request));
+			return (errorResponse("405 Method Not Allowed", 405, &request));
 		}
 
 		if (request.getHeader().find("Content-Type: multipart/form-data") != std::string::npos)
 		{
 			if (request.createFileFromData(_rootPath + request.getPath()))
 				return (new Response("200 OK", "File Upload", request.getHttpVersion()));
-			return (_errorResponse("500 Internal Server Error", 500, request));
+			return (errorResponse("500 Internal Server Error", 500, &request));
 		}
 		
 		for (size_t i = 0; i < fullPath.size(); i++)
@@ -429,11 +431,11 @@ Response* Server::checkRequest(Request& request)
 		stat(fullPath.c_str(), &statbuf);
 		if (access(fullPath.c_str(),F_OK))
 		{
-			return (_errorResponse("404 Not Found", 404, request));
+			return (errorResponse("404 Not Found", 404, &request));
 		}
 		if (access(fullPath.c_str(),R_OK))
 		{
-			return (_errorResponse("403 Forbidden", 403, request));
+			return (errorResponse("403 Forbidden", 403, &request));
 		}
 		if (statbuf.st_mode & S_IFDIR)
 		{
@@ -463,7 +465,7 @@ Response* Server::checkRequest(Request& request)
 				}
 				else if (errno == EACCES)
 				{
-					return (_errorResponse("403 Forbidden", 403, request));
+					return (errorResponse("403 Forbidden", 403, &request));
 				}
 			}
 			if (_autoIndex)
@@ -473,7 +475,7 @@ Response* Server::checkRequest(Request& request)
 			}
 			else
 			{
-				return (_errorResponse("403 Forbidden", 403, request));
+				return (errorResponse("403 Forbidden", 403, &request));
 			}
 		}
 		if (statbuf.st_mode & S_IFREG)
@@ -501,6 +503,6 @@ Response* Server::checkRequest(Request& request)
 	}catch (const std::exception &e)
 	{
 		std::cerr << e.what() << '\n';
-		return (_errorResponse("500 Internal Server Error", 500, request));
+		return (errorResponse("500 Internal Server Error", 500, &request));
 	}
 }

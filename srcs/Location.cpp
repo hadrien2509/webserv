@@ -222,13 +222,13 @@ Response* Location::checkRequest(Request& request)
 
 		if (!_checkMethod(request.getMethod()))
 		{
-			return (_errorResponse("403 Forbidden", 403, request));
+			return (_errorResponse("405 Method Not Allowed", 405, request));
 		}
 
 		if (request.getHeader().find("Content-Type: multipart/form-data") != std::string::npos)
 		{
 			if (request.createFileFromData(_rootPath + request.getPath()))
-				return (new Response("200 OK", "File Upload", request.getHttpVersion()));
+				return (new Response("201 Created", "File Upload", request.getHttpVersion()));
 			return (_errorResponse("500 Internal Server Error", 500, request));
 		}
 		

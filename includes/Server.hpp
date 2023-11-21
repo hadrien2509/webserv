@@ -24,7 +24,6 @@ class Server
 {
     private:
 		void		_initMimeTypes();
-		Response*	_errorResponse(const std::string &response, int code, Request &request);
 		bool		_checkMethod(std::string method);
 
 		std::vector<struct pollfd>			_pollfds;
@@ -70,6 +69,7 @@ class Server
 		void	setTimeout(size_t timeout);
 		void	setRedirectURL(std::string url, int code);
 
+		Response*									errorResponse(const std::string &response, int code, Request *request);
 		const std::string&							getServerName() const;
 		const std::string&							getRootPath() const;
 		const std::vector<std::string>&				getIndex() const;

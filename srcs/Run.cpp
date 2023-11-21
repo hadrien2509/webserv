@@ -45,16 +45,16 @@ void Config::_readRequest(Socket *socket, struct sockaddr_in addr) {
 	if (socket->getRequest() == NULL) {
 		try {
 			Server *server = _clientSocketToServer[socket->getFd()];
-			socket->setRequest(new Request(totalBuff.c_str(), totalBuff.size(), socket->getFd(), server, addr));
+			socket->setRequest(new Request(totalBuff.c_str(), totalBuff.size(), server, addr));
 		} catch (Request::BodyTooLargeException &e) {
-			std::cerr << "Error : " << e.what() << std::endl;
-			socket->setResponse(new Response("413 Payload Too Large", "Payload Too Large", "HTTP/1.1"));
+			std::cerr << RED_BOLD << "Error : " << e.what() << DEFAULT << std::endl;
+			socket->setResponse(_clientSocketToServer[socket->getFd()]->errorResponse("413 Payload Too Large", 413, NULL));
 			_sendResponse(socket);
 			_endPoll(socket->getFd());
 			return;
 		}catch (Request::HostNotFoundException &e) {
-			std::cerr << "Error : " << e.what() << std::endl;
-			socket->setResponse(new Response("400 Bad Request", "Bad Request", "HTTP/1.1"));
+			std::cerr << RED_BOLD << "Error : " << e.what() << DEFAULT << std::endl;
+			socket->setResponse(_clientSocketToServer[socket->getFd()]->errorResponse("400 Bad Request", 400, NULL));
 			_sendResponse(socket);
 			_endPoll(socket->getFd());
 			return;
