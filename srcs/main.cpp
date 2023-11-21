@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:44:27 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/20 18:41:41 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/21 13:53:01 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,7 @@ static void signalHandler(int signum)
 int main(int ac, char **av)
 {
 	std::string configPath;
-	
-	// g_escape = 1;
+
 	displayName();
 	signal(SIGPIPE, SIG_IGN);
 	signal(SIGINT, signalHandler);
