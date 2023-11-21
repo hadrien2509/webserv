@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/21 13:38:49 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/21 13:51:36 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,30 +219,7 @@ Response *cgiHandler(Request & req, T *serv)
 {
 	Cgi cgi(serv->getCgiExtension(), serv->getCgiPath(), req);
 	cgi.setTimeOut(serv->getTimeout());
-/*
-	try
-	{
-*/
 	return (new Response("200 OK", cgi.run(), req.getHttpVersion()));
-	/*
-	}
-	catch(const Cgi::CgiFileException& e)
-	{
-		throw Cgi::CgiFileException();
-	}
-	catch(const Cgi::CgiNotCgiException& e)
-	{
-		throw Cgi::CgiNotCgiException();
-	}
-	catch(const Cgi::CgiInternalException& e)
-	{
-		throw Cgi::CgiInternalException();
-	}
-	catch(const std::exception& e)
-	{
-		throw Cgi::CgiException();
-	}
-	*/
 }
 
 #endif
