@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/21 13:37:18 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/21 17:27:13 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -318,9 +318,7 @@ const int& Server::getNumberPorts() const
 std::string autoIndexGenerator(const std::string& root, const std::string& path, const std::string& uri)
 {
 	std::string	fullPath = root + path;
-	std::string newPath = path;//fullPath;
-	newPath.erase(0, newPath.find("/") + 1);
-	std::string html = "<html><head><title>Index of " + newPath + "</title></head><body><h1>Index of " + newPath + "</h1><hr><pre>";
+	std::string html = "<html><head><title>Index of " + uri + path + "</title></head><body><h1>Index of " + uri + path + "</h1><hr><pre>";
 	struct dirent *dir;
 	DIR *d = opendir(fullPath.c_str());
 	if (d)
@@ -328,7 +326,10 @@ std::string autoIndexGenerator(const std::string& root, const std::string& path,
 		while ((dir = readdir(d)) != NULL)
 		{
 			std::string name = dir->d_name;
-			html += "<a href=\"" + uri + path + name + "\">" + name + "</a><br>";
+			if (path[path.length() - 1] == '/')
+				html += "<a href=\"" + uri + path + name + "\">" + name + "</a><br>";
+			else
+				html += "<a href=\"" + uri + path + "/" + name + "\">" + name + "</a><br>";
 		}
 		closedir(d);
 	}
