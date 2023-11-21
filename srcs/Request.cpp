@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:01 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/09 18:33:39 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/21 14:59:40 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void Request::setHeader(const std::string &request) {
     }
 }
 
-Request::Request(char* str, int nb, int fd, Server *server, struct sockaddr_in addr) : _connection(fd), _addr(addr)
+Request::Request(const char* str, int nb, int fd, Server *server, struct sockaddr_in addr) : _connection(fd), _addr(addr)
 {
 	_contentLength = 0;
 	appendRequest(str, nb);
@@ -146,7 +146,7 @@ Request &Request::operator=(const Request &rhs)
 	return (*this);
 }
 
-void Request::appendRequest(char *str, int nb)
+void Request::appendRequest(const char *str, int nb)
 {
 	_strRequest.append(str, nb);
 }

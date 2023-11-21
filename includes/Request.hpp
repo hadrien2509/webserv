@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:58:25 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/09 18:31:12 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/21 14:46:02 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ private:
 	void _extractBoundary(const std::string& httpRequest);
 
 public:
-	Request(char *str, int nb, int fd, Server *, struct sockaddr_in addr);
+	Request(const char *str, int nb, int fd, Server *, struct sockaddr_in addr);
 	Request(const Request &);
 	~Request();
 	Request &operator=(const Request &);
@@ -54,7 +54,7 @@ public:
 	const std::string &getStrRequest() const;
 	const std::string &getServerName() const;
 	const sockaddr_in &getSockAddr() const;
-	void appendRequest(char *str, int nb);
+	void appendRequest(const char *str, int nb);
 	std::string &getQuerryString();
 	void setHeader(const std::string &request);
 	void setPath(std::string path);

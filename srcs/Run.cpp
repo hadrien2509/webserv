@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/20 18:27:47 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/21 14:57:41 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,12 @@ void Config::_readRequest(Socket *socket, struct sockaddr_in addr) {
     char buffer[BUFFER_SIZE];
     bool requestComplete = false;
     memset(buffer, 0, BUFFER_SIZE);
+	std::string totalBuff;
 
     while (!requestComplete) {
         int ret = recv(socket->getFd(), buffer, BUFFER_SIZE - 1, 0);
+		buffer[BUFFER_SIZE - 1] = '\0';
+		totalBuff += buffer;
 
         if (ret == 0) {
             std::cout << "Socket disconnected" << std::endl;
@@ -34,32 +37,31 @@ void Config::_readRequest(Socket *socket, struct sockaddr_in addr) {
             _endPoll(socket->getFd());
             return;
         }
-
-        if (socket->getRequest() == NULL) {
-            try {
-                Server *server = _clientSocketToServer[socket->getFd()];
-                socket->setRequest(new Request(buffer, ret, socket->getFd(), server, addr));
-            } catch (Request::BodyTooLargeException &e) {
-                std::cerr << "Error : " << e.what() << std::endl;
-                socket->setResponse(new Response("413 Payload Too Large", "Payload Too Large", "HTTP/1.1"));
-                _sendResponse(socket);
-                _endPoll(socket->getFd());
-                return;
-            }catch (Request::HostNotFoundException &e) {
-                std::cerr << "Error : " << e.what() << std::endl;
-                socket->setResponse(new Response("400 Bad Request", "Bad Request", "HTTP/1.1"));
-                _sendResponse(socket);
-                _endPoll(socket->getFd());
-                return;
-            }
-        } else
-            socket->getRequest()->appendRequest(buffer, ret);
-
-        size_t pos = socket->getRequest()->getStrRequest().find("\r\n\r\n");
+        size_t pos = totalBuff.find("\r\n\r\n");
         if (pos != std::string::npos) {
             requestComplete = true;
         }
-    }
+	}
+	if (socket->getRequest() == NULL) {
+		try {
+			Server *server = _clientSocketToServer[socket->getFd()];
+			socket->setRequest(new Request(totalBuff.c_str(), totalBuff.size(), socket->getFd(), server, addr));
+		} catch (Request::BodyTooLargeException &e) {
+			std::cerr << "Error : " << e.what() << std::endl;
+			socket->setResponse(new Response("413 Payload Too Large", "Payload Too Large", "HTTP/1.1"));
+			_sendResponse(socket);
+			_endPoll(socket->getFd());
+			return;
+		}catch (Request::HostNotFoundException &e) {
+			std::cerr << "Error : " << e.what() << std::endl;
+			socket->setResponse(new Response("400 Bad Request", "Bad Request", "HTTP/1.1"));
+			_sendResponse(socket);
+			_endPoll(socket->getFd());
+			return;
+		}
+	} else
+		socket->getRequest()->appendRequest(totalBuff.c_str(), totalBuff.size());
+
 }
 
 static void ft_sleep(int ms)
