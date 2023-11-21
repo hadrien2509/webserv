@@ -22,7 +22,6 @@ void Config::_readRequest(Socket *socket, struct sockaddr_in addr) {
 	std::string totalBuff;
 
     while (!requestComplete) {
-		memset(buffer, 0, BUFFER_SIZE);
         int ret = recv(socket->getFd(), buffer, BUFFER_SIZE - 1, 0);
 		if (ret == 0) {
             std::cerr << "Socket disconnected" << std::endl;
@@ -34,6 +33,7 @@ void Config::_readRequest(Socket *socket, struct sockaddr_in addr) {
             _endPoll(socket->getFd());
             return;
         }
+		buffer[ret] = '\0';
 		totalBuff.append(buffer, ret);
         size_t pos = totalBuff.find("\r\n\r\n");
         if (pos != std::string::npos) {
