@@ -357,6 +357,7 @@ Location* Server::checkLocation(Request& request)
     Location* location = 0;
     const std::vector<Location*>& locations = _locations;
 	std::string requestPath = request.getPath();
+	std::string originalPath = request.getPath();
     size_t firstSlash = requestPath.find('/', 1);
 
     if (firstSlash != std::string::npos)
@@ -374,11 +375,9 @@ Location* Server::checkLocation(Request& request)
     }
 	if (!location)
 		return (NULL);
-	request.setPath(request.getPath().substr(location->getUri().length()));
-	if (request.getPath()[0] !='/')
-  		request.setPath("/" + request.getPath());
-	if (request.getPath().size() > 1 && request.getPath().find('.') == std::string::npos && request.getPath().find('/', 1) == std::string::npos)
-		request.setPath(request.getPath() + "/");
+	request.setPath(originalPath.substr(location->getUri().length()));
+	if (originalPath[0] !='/')
+  		request.setPath("/" + originalPath);
 	return location;
 }
 
