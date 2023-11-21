@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/11/21 14:32:33 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/21 17:25:49 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,12 +229,13 @@ const std::string& Cgi::run()
 		close(fdOut[1]);
 		dup2(fdIn[1], STDIN_FILENO);
 		dup2(fdOut[0], STDOUT_FILENO);
+		int retW = 0;
 		if (_method == "POST" || _method == "DELETE")
 		{
 			std::stringstream ss;
 			ss << _toIn.size();
 			_env["CONTENT_LENGTH"] = std::string(ss.str());
-			write(fdIn[1], _toIn.c_str(), _toIn.size());
+			retW = write(fdIn[1], _toIn.c_str(), _toIn.size());
 		}
 		int retVal = 0;
 		waitpid(pid, &retVal, 0);
@@ -243,6 +244,11 @@ const std::string& Cgi::run()
 		while (retVal == 0 && ret > 0)
 		{
 			ret = read(fdOut[0], buffer, 1023);
+			if (ret == -1)
+			{
+				retVal = -1;
+				break;
+			}
 			buffer[ret] = '\0';
 			_fromOut += std::string(buffer, ret);
 			if (ret < 1023)
@@ -252,7 +258,7 @@ const std::string& Cgi::run()
 		close(fdOut[0]);
 		dup2(fdInSave, STDIN_FILENO);
 		dup2(fdOutSave, STDOUT_FILENO);
-		if (retVal != 0)
+		if (retVal != 0 || ((_method == "POST" || _method == "DELETE") && retW != _toIn.size()))
 		{
 			for (int i = 0; env[i] != NULL; i++)
 				delete[] env[i];
