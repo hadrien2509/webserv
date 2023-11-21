@@ -19,28 +19,28 @@ extern int g_escape;
 void Config::_readRequest(Socket *socket, struct sockaddr_in addr) {
     char buffer[BUFFER_SIZE];
     bool requestComplete = false;
-    memset(buffer, 0, BUFFER_SIZE);
 	std::string totalBuff;
 
     while (!requestComplete) {
+		memset(buffer, 0, BUFFER_SIZE);
         int ret = recv(socket->getFd(), buffer, BUFFER_SIZE - 1, 0);
-		buffer[BUFFER_SIZE - 1] = '\0';
-		totalBuff += buffer;
-
-        if (ret == 0) {
-            std::cout << "Socket disconnected" << std::endl;
+		if (ret == 0) {
+            std::cerr << "Socket disconnected" << std::endl;
             _endPoll(socket->getFd());
             return;
         }
-
         if (ret == -1) {
+			std::cerr << "Error reading request" << std::endl;
             _endPoll(socket->getFd());
             return;
         }
+		totalBuff.append(buffer, ret);
         size_t pos = totalBuff.find("\r\n\r\n");
         if (pos != std::string::npos) {
             requestComplete = true;
         }
+		if (ret < BUFFER_SIZE - 1)
+			requestComplete = true;
 	}
 	if (socket->getRequest() == NULL) {
 		try {
@@ -61,7 +61,6 @@ void Config::_readRequest(Socket *socket, struct sockaddr_in addr) {
 		}
 	} else
 		socket->getRequest()->appendRequest(totalBuff.c_str(), totalBuff.size());
-
 }
 
 static void ft_sleep(int ms)
