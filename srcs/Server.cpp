@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/20 20:03:34 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/21 13:37:18 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -450,22 +450,14 @@ Response* Server::checkRequest(Request& request)
 					}
 					catch(const Cgi::CgiNotCgiException& e)
 					{
-						if (_redirect)
-							return (redirectHandler(this, request));
 						return (new Response("200 OK", request, _mimeTypes));
 					}
 					catch(const Cgi::CgiPathException& e)
 					{
-						if (_redirect)
-						{
-							return (redirectHandler(this, request));
-						}
 						return (new Response("200 OK", request, _mimeTypes));
 					}
 					catch(const Cgi::CgiEnvExtException& e)
 					{
-						if (_redirect)
-							return (redirectHandler(this, request));
 						return (new Response("200 OK", request, _mimeTypes));
 					}
 				}
@@ -477,8 +469,6 @@ Response* Server::checkRequest(Request& request)
 			if (_autoIndex)
 			{
 				std::string autoIndex = autoIndexGenerator(_rootPath, request.getPath(), _rootPath);
-				if (_redirect)
-					return (cgiRedirectHandler(this, autoIndex, request.getHttpVersion()));
 				return (new Response("200 OK", autoIndex, request.getHttpVersion()));
 			}
 			else
@@ -496,22 +486,14 @@ Response* Server::checkRequest(Request& request)
 			}
 			catch(const Cgi::CgiNotCgiException& e)
 			{
-				if (_redirect)
-					return (redirectHandler(this, request));
 				return (new Response("200 OK", request, _mimeTypes));
 			}
 			catch(const Cgi::CgiPathException& e)
 			{
-				if (_redirect)
-				{
-					return (redirectHandler(this, request));
-				}
 				return (new Response("200 OK", request, _mimeTypes));
 			}
 			catch(const Cgi::CgiEnvExtException& e)
 			{
-				if (_redirect)
-					return (redirectHandler(this, request));
 				return (new Response("200 OK", request, _mimeTypes));
 			}
 		}

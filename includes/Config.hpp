@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 14:41:26 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/20 18:24:45 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/21 13:38:49 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,27 +215,6 @@ void _parseIndex(std::istringstream &ss, T*	location)
 }
 
 template<typename T>
-Response *redirectHandler(T* serv, Request& req)
-{
-	std::map<std::string, std::string> mime = serv->getMimeTypes();
-	if (serv->getRedirectCode() == 301)
-		return (new Response("301 Moved Permanently", req, mime));
-	if (serv->getRedirectCode() == 302)
-		return (new Response("302 Found", req, mime));
-	return (NULL);
-}
-
-template<typename T>
-Response *cgiRedirectHandler(T* serv, std::string run, std::string version)
-{
-	if (serv->getRedirectCode() == 301)
-		return (new Response("301 Moved Permanently", run, version));
-	if (serv->getRedirectCode() == 302)
-		return (new Response("302 Found", run, version));
-	return (NULL);
-}
-
-template<typename T>
 Response *cgiHandler(Request & req, T *serv)
 {
 	Cgi cgi(serv->getCgiExtension(), serv->getCgiPath(), req);
@@ -244,11 +223,7 @@ Response *cgiHandler(Request & req, T *serv)
 	try
 	{
 */
-		if (serv->getRedirect())
-		{
-			return (cgiRedirectHandler(serv, cgi.run(), req.getHttpVersion()));
-		}
-		return (new Response("200 OK", cgi.run(), req.getHttpVersion()));
+	return (new Response("200 OK", cgi.run(), req.getHttpVersion()));
 	/*
 	}
 	catch(const Cgi::CgiFileException& e)
