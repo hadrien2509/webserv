@@ -65,6 +65,7 @@ class Location
 		void			setAutoIndex(bool);
 		void			setTimeout(size_t);
 		void			setRedirectURL(std::string, int code);
+		void			clearAllowMethods();
 
 		std::string									getRootPath() const;
 		const std::vector<std::string>&				getIndex() const;

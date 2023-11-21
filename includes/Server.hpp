@@ -68,7 +68,7 @@ class Server
 		void	addLocation(Location *location);
 		void	setTimeout(size_t timeout);
 		void	setRedirectURL(std::string url, int code);
-
+		void	clearAllowMethods();
 		Response*									errorResponse(const std::string &response, int code, Request *request);
 		const std::string&							getServerName() const;
 		const std::string&							getRootPath() const;

@@ -102,6 +102,7 @@ class Config
 template<typename T>
 void _parseAllowMethods(std::istringstream &ss, T *server)
 {
+	server->clearAllowMethods();
 	std::string method;
 	while (ss >> method)
 	{

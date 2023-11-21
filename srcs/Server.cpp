@@ -394,6 +394,11 @@ Response* Server::errorResponse(const std::string& error, int code, Request* req
 		return (new Response(error, *request));
 }
 
+void	Server::clearAllowMethods()
+{
+	this->_allowMethods.clear();
+}
+
 Response* Server::checkRequest(Request& request)
 {
 	try

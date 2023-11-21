@@ -59,6 +59,11 @@ Location &Location::operator=(const Location &copy)
 	return (*this);
 }
 
+void	Location::clearAllowMethods()
+{
+	this->_allowMethods.clear();
+}
+
 /* ************************************************************************** */
 /* -------------------------- GETTERS & SETTERS ----------------------------- */
 /* ************************************************************************** */
