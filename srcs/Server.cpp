@@ -317,8 +317,14 @@ const int& Server::getNumberPorts() const
 
 std::string autoIndexGenerator(const std::string& root, const std::string& path, const std::string& uri)
 {
+	std::string	uricopy;
+
+	if (uri[uri.length() - 1] == '/')
+		uricopy = uri.substr(0, uri.length() - 1);
+	else
+		uricopy = uri;
 	std::string	fullPath = root + path;
-	std::string html = "<html><head><title>Index of " + uri + path + "</title></head><body><h1>Index of " + uri + path + "</h1><hr><pre>";
+	std::string html = "<html><head><title>Index of " + uricopy + path + "</title></head><body><h1>Index of " + uricopy + path + "</h1><hr><pre>";
 	struct dirent *dir;
 	DIR *d = opendir(fullPath.c_str());
 	if (d)
@@ -327,9 +333,9 @@ std::string autoIndexGenerator(const std::string& root, const std::string& path,
 		{
 			std::string name = dir->d_name;
 			if (path[path.length() - 1] == '/')
-				html += "<a href=\"" + uri + path + name + "\">" + name + "</a><br>";
+				html += "<a href=\"" + uricopy + path + name + "\">" + name + "</a><br>";
 			else
-				html += "<a href=\"" + uri + path + "/" + name + "\">" + name + "</a><br>";
+				html += "<a href=\"" + uricopy + path + "/" + name + "\">" + name + "</a><br>";
 		}
 		closedir(d);
 	}
@@ -375,7 +381,8 @@ Location* Server::checkLocation(Request& request)
     }
 	if (!location)
 		return (NULL);
-	request.setPath(originalPath.substr(location->getUri().length()));
+	if (location->getUri() != "/")
+		request.setPath(originalPath.substr(location->getUri().length()));
 	if (originalPath[0] !='/')
   		request.setPath("/" + originalPath);
 	return location;

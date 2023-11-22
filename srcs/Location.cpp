@@ -224,7 +224,6 @@ Response* Location::checkRequest(Request& request)
 		}
 		std::string	fullPath = _rootPath + request.getPath();
 		struct stat statbuf;
-
 		if (!_checkMethod(request.getMethod()))
 		{
 			return (_errorResponse("405 Method Not Allowed", 405, request));
