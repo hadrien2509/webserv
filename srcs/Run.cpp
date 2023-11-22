@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Run.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:33:20 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/21 19:12:05 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/22 12:40:02 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,11 @@ void Config::_sendResponse(Socket *socket) {
         _endPoll(socket->getFd());
         return;
     }
+
+	if (ret == 0) {
+		_endPoll(socket->getFd());
+		return;
+	}
 
     socket->deleteResponse();
 }
