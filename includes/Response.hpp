@@ -36,7 +36,7 @@ class Response
 		
 	public :
 		Response();
-		Response(std::string code, Request& req);
+		Response(const std::string& code, Request& req);
 		Response(std::string code, std::string content, std::string version);
 		Response(std::string code, Request& req, std::map<std::string, std::string>& mimeTypes);
 		~Response();

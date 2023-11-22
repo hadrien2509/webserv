@@ -202,7 +202,7 @@ bool Location::_checkMethod(std::string method)
 
 Response* Location::_errorResponse(const std::string& error, int code, Request& request)
 {
-	if (_errorPage.find(code) != _errorPage.end() && (access((_serverRoot + _errorPage[code]).c_str(), F_OK) == 0))
+	if (_errorPage.find(code) != _errorPage.end() && (access((_serverRoot + _errorPage[code]).c_str(), R_OK) == 0))
 	{
 		request.setPath(_serverRoot + _errorPage[code]);
 		return (new Response(error, request, _mimeTypes));

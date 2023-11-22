@@ -16,36 +16,11 @@
 /* ------------------------------ CONSTRUCTORS ------------------------------ */
 /**************************************************************************** */
 
-Response::Response(std::string code, Request& req) : _version(req.getHttpVersion()), _status(code)
+Response::Response(const std::string& code, Request& req) : _version(req.getHttpVersion()), _status(code)
 {
 	_header = _version + " " + _status + "\r\n";
 	_header += "Content-Type: text/html\r\n";
-
-	if (code == "400 Bad Request")
-	{
-		_content = "<html><body><h1>400 Bad Request</h1></body></html>";
-	}
-	else if (code == "401 Unauthorized")
-	{
-		_content = "<html><body><h1>401 Unauthorized</h1></body></html>";
-	}
-	else if (code == "403 Forbidden")
-	{
-		_content = "<html><body><h1>403 Forbidden</h1></body></html>";
-	}
-	else if (code == "404 File Not Found")
-	{
-		_content = "<html><body><h1>404 File Not Found</h1></body></html>";
-	}
-	else if (code == "405 Method Not Allowed")
-	{
-		_content = "<html><body><h1>405 Method Not Allowed</h1></body></html>";
-	}
-	else if (code == "500 Internal Server Error")
-	{
-		_content = "<html><body><h1>500 Internal Server Error</h1></body></html>";
-	}
-	
+	_content = "<html><body><h1>" + code + "</h1></body></html>";
 	std::stringstream ss;	
 	ss << _content.length();
 	_contentLength = ss.str();
