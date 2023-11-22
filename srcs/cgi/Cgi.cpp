@@ -6,7 +6,7 @@
 /*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/11/21 17:35:15 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/22 12:52:44 by jusilanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,11 @@ const std::string& Cgi::run()
 		if (!chdir(totalPath.c_str()))
 			execve(_exePath[_varExtension].c_str(), const_cast<char *const *> (arg), env);
 		std::cerr << "CGI exception: execve failed" << std::endl;
-		write(fdOut[1], "500 Internal Server Error\n", 26);
+		
+		int writeReturn = 0;
+		for (int i = 0; writeReturn != 26 && i < 20; i++)
+			writeReturn = write(fdOut[1], "500 Internal Server Error\n", 26);
+		
 		for (int i = 0; env[i] != NULL; i++)
         	delete[] env[i];
 		delete[] env;
