@@ -73,10 +73,13 @@ static void ft_sleep(int ms)
 
 void Config::_sendResponse(Socket *socket) {
     Response *response = socket->getResponse();
+	int code = std::atoi(response->getStatus().c_str()) / 100;
     if (!response)
         return;
-    if (response->getStatus() == "200 OK" || std::atoi(response->getStatus().c_str()) / 100 == 2)
+    if ( code == 2)
         std::cout << GREEN;
+	else if ( code == 3)
+		std::cout << AMBER;
     else
         std::cout << RED_BOLD;
 	std::cout << "Response : status <" << response->getStatus() << ">" << DEFAULT << std::endl;
