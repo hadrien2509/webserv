@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jusilanc <jusilanc@s19.be>                 +#+  +:+       +#+        */
+/*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:28:09 by jusilanc          #+#    #+#             */
-/*   Updated: 2023/11/21 17:35:15 by jusilanc         ###   ########.fr       */
+/*   Updated: 2023/11/22 12:59:23 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,9 @@ const std::string& Cgi::run()
 		if (!chdir(totalPath.c_str()))
 			execve(_exePath[_varExtension].c_str(), const_cast<char *const *> (arg), env);
 		std::cerr << "CGI exception: execve failed" << std::endl;
-		write(fdOut[1], "500 Internal Server Error\n", 26);
+		int ret = write(fdOut[1], "500 Internal Server Error\n", 26);
+		if (ret <= 0)
+			std::cerr << "CGI exception: write failed" << std::endl;
 		for (int i = 0; env[i] != NULL; i++)
         	delete[] env[i];
 		delete[] env;

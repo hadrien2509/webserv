@@ -6,7 +6,7 @@
 /*   By: hgeissle <hgeissle@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 14:09:10 by hgeissle          #+#    #+#             */
-/*   Updated: 2023/11/21 17:27:13 by hgeissle         ###   ########.fr       */
+/*   Updated: 2023/11/22 12:55:27 by hgeissle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -454,7 +454,7 @@ Response* Server::checkRequest(Request& request)
 			for (std::vector<std::string>::const_iterator it = _index.begin(); it != _index.end(); it++)
 			{
 				fullPath = _rootPath + request.getPath() + (*it);
-				if (access(fullPath.c_str(), F_OK) == 0)
+				if (access(fullPath.c_str(), R_OK) == 0)
 				{
 					request.setPath(_rootPath + request.getPath() + (*it));
 					try
@@ -474,10 +474,6 @@ Response* Server::checkRequest(Request& request)
 					{
 						return (new Response("200 OK", request, _mimeTypes));
 					}
-				}
-				else if (errno == EACCES)
-				{
-					return (errorResponse("403 Forbidden", 403, &request));
 				}
 			}
 			if (_autoIndex)
