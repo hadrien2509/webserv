@@ -1,5 +1,3 @@
-Here's a comprehensive and engaging README for the "/Volumes/Storage/goinfre/hgeissle/webserv" repository:
-
 # Webserv
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/your-repo/actions)
