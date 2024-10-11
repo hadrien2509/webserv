@@ -61,7 +61,7 @@ To run the Webserv project locally, follow these steps:
 ## Project Structure
 
 ```
-/Volumes/Storage/goinfre/hgeissle/webserv
+webserv
 ├── .git/
 ├── includes/
 │   ├── Cgi.hpp
